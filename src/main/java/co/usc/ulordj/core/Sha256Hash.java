@@ -17,6 +17,7 @@
 
 package co.usc.ulordj.core;
 
+import co.usc.ulord.CryptoHelloContext;
 import com.google.common.io.ByteStreams;
 import com.google.common.primitives.*;
 
@@ -41,7 +42,8 @@ public class Sha256Hash implements Serializable, Comparable<Sha256Hash> {
 
     private final byte[] bytes;
 
-    /**
+
+     /**
      * Use {@link #wrap(byte[])} instead.
      */
     @Deprecated
@@ -221,6 +223,12 @@ public class Sha256Hash implements Serializable, Comparable<Sha256Hash> {
         digest.update(input1, offset1, length1);
         digest.update(input2, offset2, length2);
         return digest.digest(digest.digest());
+    }
+
+    public static byte[] cryptoHelloHash(byte[] input) {
+        byte[] output = new byte[LENGTH];
+        CryptoHelloContext.helloHash(input, input.length, output);
+        return output;
     }
 
     @Override

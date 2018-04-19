@@ -39,7 +39,7 @@ import static co.usc.ulordj.core.Sha256Hash.*;
  * more detail on blocks. <p/>
  *
  * <p>To get a block, you can either build one from the raw bytes you can get from another implementation, or request one
- * specifically using {@link Peer#getBlock(Sha256Hash)}, or grab one from a downloaded {@link BtcBlockChain}.</p>
+ * specifically using {@link //Peer#getBlock(Sha256Hash)}, or grab one from a downloaded {@link BtcBlockChain}.</p>
  * 
  * <p>Instances of this class are not safe for use by multiple threads.</p>
  */
@@ -404,7 +404,8 @@ public class BtcBlock extends Message {
         try {
             ByteArrayOutputStream bos = new UnsafeByteArrayOutputStream(HEADER_SIZE);
             writeHeader(bos);
-            return Sha256Hash.wrapReversed(Sha256Hash.hashTwice(bos.toByteArray()));
+            //return Sha256Hash.wrapReversed(Sha256Hash.hashTwice(bos.toByteArray()));
+            return Sha256Hash.wrapReversed(Sha256Hash.cryptoHelloHash(bos.toByteArray()));
         } catch (IOException e) {
             throw new RuntimeException(e); // Cannot happen.
         }
