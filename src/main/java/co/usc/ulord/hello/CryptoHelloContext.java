@@ -1,11 +1,17 @@
-package co.usc.ulord;
+package co.usc.ulord.hello;
 
 /**
  * This class holds the context reference used in native methods to handle Hashing operations.
  */
 public class CryptoHelloContext {
     static {
-        System.loadLibrary("hello/CryotoHello");
+        try {
+            System.loadLibrary("hello/CryotoHello");
+        } catch (UnsatisfiedLinkError e) {
+            System.err.println("Native code library failed to load.\n" + e);
+            System.exit(1);
+        }
+
     }
 
     /**
@@ -15,5 +21,5 @@ public class CryptoHelloContext {
     * @param messLen the length of message
     * @param outPut  the result of hashing
     */
-    public static native void helloHash(byte[] mess, long messLen, byte[] outPut);
+    public static native void helloHash(String mess, long messLen, String outPut);
 }

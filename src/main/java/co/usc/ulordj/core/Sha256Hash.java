@@ -17,7 +17,7 @@
 
 package co.usc.ulordj.core;
 
-import co.usc.ulord.CryptoHelloContext;
+import co.usc.ulord.hello.CryptoHelloContext;
 import com.google.common.io.ByteStreams;
 import com.google.common.primitives.*;
 
@@ -226,9 +226,9 @@ public class Sha256Hash implements Serializable, Comparable<Sha256Hash> {
     }
 
     public static byte[] cryptoHelloHash(byte[] input) {
-        byte[] output = new byte[LENGTH];
-        CryptoHelloContext.helloHash(input, input.length, output);
-        return output;
+        String output = "";
+        CryptoHelloContext.helloHash(input.toString(), input.length, output);
+        return output.getBytes();
     }
 
     @Override
