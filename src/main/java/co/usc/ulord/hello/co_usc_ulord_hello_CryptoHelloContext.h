@@ -10,10 +10,10 @@ extern "C" {
 /*
  * Class:     co_usc_ulord_hello_CryptoHelloContext
  * Method:    helloHash
- * Signature: (Ljava/lang/String;JLjava/lang/String;)V
+ * Signature: (Ljava/lang/String;J[B)V
  */
 JNIEXPORT void JNICALL Java_co_usc_ulord_hello_CryptoHelloContext_helloHash
-  (JNIEnv *, jclass, jstring, jlong, jstring);
+  (JNIEnv *, jclass, jstring, jlong, jbyteArray);
 
 #ifdef __cplusplus
 }

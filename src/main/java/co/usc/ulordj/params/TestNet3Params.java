@@ -53,7 +53,7 @@ public class TestNet3Params extends AbstractUlordNetParams {
         genesisBlock.setNonce(1081); // TODO: VERIFY NONCE
         spendableCoinbaseDepth = 100;
         subsidyDecreaseBlockCount = 840960;
-        String genesisHash = "000e0979b2a26db104fb4d8c2c8d572919a56662cecdcadc3d0583ac8d548e23"; //genesisBlock.getHashAsString();
+        String genesisHash = genesisBlock.getHashAsString();
         checkState(genesisHash.equals("000e0979b2a26db104fb4d8c2c8d572919a56662cecdcadc3d0583ac8d548e23"));
 
         dnsSeeds = new String[] {

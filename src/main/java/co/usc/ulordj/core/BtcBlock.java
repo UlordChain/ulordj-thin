@@ -404,7 +404,10 @@ public class BtcBlock extends Message {
         try {
             ByteArrayOutputStream bos = new UnsafeByteArrayOutputStream(HEADER_SIZE);
             writeHeader(bos);
-            //return Sha256Hash.wrapReversed(Sha256Hash.hashTwice(bos.toByteArray()));
+            System.out.println(Sha256Hash.hashTwice(bos.toByteArray()));
+            System.out.println(Sha256Hash.wrapReversed(Sha256Hash.hashTwice(bos.toByteArray())));
+            System.out.println(Sha256Hash.cryptoHelloHash(bos.toByteArray()));
+            System.out.println(Sha256Hash.wrapReversed(Sha256Hash.cryptoHelloHash(bos.toByteArray())));
             return Sha256Hash.wrapReversed(Sha256Hash.cryptoHelloHash(bos.toByteArray()));
         } catch (IOException e) {
             throw new RuntimeException(e); // Cannot happen.

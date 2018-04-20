@@ -6,7 +6,8 @@ package co.usc.ulord.hello;
 public class CryptoHelloContext {
     static {
         try {
-            System.loadLibrary("hello/CryotoHello");
+            //System.out.println(System.getProperty("java.library.path"));
+            System.loadLibrary("CryptoHello");
         } catch (UnsatisfiedLinkError e) {
             System.err.println("Native code library failed to load.\n" + e);
             System.exit(1);
@@ -21,5 +22,5 @@ public class CryptoHelloContext {
     * @param messLen the length of message
     * @param outPut  the result of hashing
     */
-    public static native void helloHash(String mess, long messLen, String outPut);
+    public static native void helloHash(String mess, long messLen, byte[] outPut);
 }
