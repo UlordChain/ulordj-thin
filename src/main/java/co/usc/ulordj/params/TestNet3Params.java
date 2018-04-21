@@ -27,7 +27,7 @@ import co.usc.ulordj.core.Utils;
 import co.usc.ulordj.core.VerificationException;
 import co.usc.ulordj.store.BtcBlockStore;
 import co.usc.ulordj.store.BlockStoreException;
-
+import co.usc.ulordj.core.Sha256Hash;
 import static com.google.common.base.Preconditions.checkState;
 
 /**
@@ -39,7 +39,7 @@ public class TestNet3Params extends AbstractUlordNetParams {
         super();
         id = ID_TESTNET;
         // Genesis hash is 000e0979b2a26db104fb4d8c2c8d572919a56662cecdcadc3d0583ac8d548e23
-        packetMagic = 0x0b110907;
+        packetMagic = 0xC2E6CEF3;
         interval = INTERVAL;
         targetTimespan = TARGET_TIMESPAN;
         maxTarget = Utils.decodeCompactBits(521142271L);
@@ -50,11 +50,14 @@ public class TestNet3Params extends AbstractUlordNetParams {
         dumpedPrivateKeyHeader = 239;   // Ulord Testnet private keys start with either '9' or 'c' (same as bitcoin)
         genesisBlock.setTime(1520308246L);
         genesisBlock.setDifficultyTarget(521142271L);
-        genesisBlock.setNonce(1081); // TODO: VERIFY NONCE
+        genesisBlock.setNonce(new Sha256Hash("000020f00dd1af082323e02e1f5b1d866d777abbcf63ba720d35dcf585840073")); // TODO: VERIFY NONCE
+        genesisBlock.setMerkleRoot(new Sha256Hash("a12949fc4a1735c8cbd6444bf9b4aea61300bc7aee9fec741af5a8c2fe386216"));
         spendableCoinbaseDepth = 100;
         subsidyDecreaseBlockCount = 840960;
         String genesisHash = genesisBlock.getHashAsString();
-        checkState(genesisHash.equals("000e0979b2a26db104fb4d8c2c8d572919a56662cecdcadc3d0583ac8d548e23"));
+
+        checkState(genesisHash.equals("000f378be841f44e75346eebd931b13041f0dee561af6a80cfea6669c1bfec03"));
+
 
         dnsSeeds = new String[] {
                 "testnet-seed1.ulord.one",

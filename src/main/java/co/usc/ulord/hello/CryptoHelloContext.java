@@ -22,5 +22,5 @@ public class CryptoHelloContext {
     * @param messLen the length of message
     * @param outPut  the result of hashing
     */
-    public static native void helloHash(String mess, long messLen, byte[] outPut);
+    public static native void helloHash(byte[] mess, long messLen, byte[] outPut);
 }

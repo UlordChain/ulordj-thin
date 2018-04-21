@@ -287,6 +287,16 @@ public abstract class Message {
         return length;
     }
 
+    protected Sha256Hash readUint256() throws ProtocolException {
+        try {
+            Sha256Hash u = Utils.readUint256(payload, cursor);
+            cursor += 4;
+            return u;
+        } catch (ArrayIndexOutOfBoundsException e) {
+            throw new ProtocolException(e);
+        }
+    }
+
     protected long readUint32() throws ProtocolException {
         try {
             long u = Utils.readUint32(payload, cursor);

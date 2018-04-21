@@ -95,7 +95,7 @@ public class BtcBlock extends Message {
     private Sha256Hash merkleRoot;
     private long time;
     private long difficultyTarget; // "nBits"
-    private long nonce;
+    private Sha256Hash nonce;
 
     // TODO: Get rid of all the direct accesses to this field. It's a long-since unnecessary holdover from the Dalvik days.
     /** If null, it means this object holds only the headers. */
@@ -193,7 +193,7 @@ public class BtcBlock extends Message {
      * @param transactions List of transactions including the coinbase.
      */
     public BtcBlock(NetworkParameters params, long version, Sha256Hash prevBlockHash, Sha256Hash merkleRoot, long time,
-                    long difficultyTarget, long nonce, List<BtcTransaction> transactions) {
+                    long difficultyTarget, Sha256Hash nonce, List<BtcTransaction> transactions) {
         super(params);
         this.version = version;
         this.prevBlockHash = prevBlockHash;
@@ -256,7 +256,7 @@ public class BtcBlock extends Message {
         merkleRoot = readHash();
         time = readUint32();
         difficultyTarget = readUint32();
-        nonce = readUint32();
+        nonce = readUint256();
         hash = Sha256Hash.wrapReversed(Sha256Hash.hashTwice(payload, offset, cursor - offset));
         headerBytesValid = serializer.isParseRetainMode();
 
@@ -402,13 +402,12 @@ public class BtcBlock extends Message {
      */
     private Sha256Hash calculateHash() {
         try {
-            ByteArrayOutputStream bos = new UnsafeByteArrayOutputStream(HEADER_SIZE);
+            //ByteArrayOutputStream bos = new UnsafeByteArrayOutputStream(HEADER_SIZE);
+            ByteArrayOutputStream bos = new UnsafeByteArrayOutputStream(140);
             writeHeader(bos);
-            System.out.println(Sha256Hash.hashTwice(bos.toByteArray()));
-            System.out.println(Sha256Hash.wrapReversed(Sha256Hash.hashTwice(bos.toByteArray())));
-            System.out.println(Sha256Hash.cryptoHelloHash(bos.toByteArray()));
-            System.out.println(Sha256Hash.wrapReversed(Sha256Hash.cryptoHelloHash(bos.toByteArray())));
-            return Sha256Hash.wrapReversed(Sha256Hash.cryptoHelloHash(bos.toByteArray()));
+            Sha256Hash hash = Sha256Hash.wrapReversed(Sha256Hash.cryptoHelloHash(bos.toByteArray()));
+            System.out.println("Output hash: " + hash);
+            return hash;
         } catch (IOException e) {
             throw new RuntimeException(e); // Cannot happen.
         }
@@ -747,7 +746,7 @@ public class BtcBlock extends Message {
     }
 
     /** Exists only for unit testing. */
-    void setMerkleRoot(Sha256Hash value) {
+    public void setMerkleRoot(Sha256Hash value) {
         unCacheHeader();
         merkleRoot = value;
         hash = null;
@@ -839,12 +838,12 @@ public class BtcBlock extends Message {
      * Returns the nonce, an arbitrary value that exists only to make the hash of the block header fall below the
      * difficulty target.
      */
-    public long getNonce() {
+    public Sha256Hash getNonce() {
         return nonce;
     }
 
     /** Sets the nonce and clears any cached data. */
-    public void setNonce(long nonce) {
+    public void setNonce(Sha256Hash nonce) {
         unCacheHeader();
         this.nonce = nonce;
         this.hash = null;

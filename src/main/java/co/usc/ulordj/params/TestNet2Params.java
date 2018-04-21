@@ -43,7 +43,7 @@ public class TestNet2Params extends AbstractUlordNetParams {
         dumpedPrivateKeyHeader = 239;
         genesisBlock.setTime(1520308246L);
         genesisBlock.setDifficultyTarget(521142271L);
-        genesisBlock.setNonce(439);
+        //genesisBlock.setNonce(439);
         spendableCoinbaseDepth = 100;
         subsidyDecreaseBlockCount = 840960;
         String genesisHash = genesisBlock.getHashAsString();
