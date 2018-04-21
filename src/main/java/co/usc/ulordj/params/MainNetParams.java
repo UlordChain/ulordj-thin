@@ -19,6 +19,8 @@ package co.usc.ulordj.params;
 
 import co.usc.ulordj.core.*;
 
+import java.math.BigInteger;
+
 import static com.google.common.base.Preconditions.*;
 
 /**
@@ -39,7 +41,7 @@ public class MainNetParams extends AbstractUlordNetParams {
         p2shHeader = 63;    // Ulord script addresses start with 'S'
         acceptableAddressCodes = new int[] { addressHeader, p2shHeader };
         port = 9888;
-        packetMagic = 0xf9beb4d9L;
+        packetMagic = 0xb3016fb1;
         bip32HeaderPub = 0x0488B21E; //The 4 byte header that serializes in base58 to "xpub".
         bip32HeaderPriv = 0x0488ADE4; //The 4 byte header that serializes in base58 to "xprv"
         bip44HeaderCoin = 0x800000f7; // Ulord BIP44 coin type '247'
@@ -50,13 +52,14 @@ public class MainNetParams extends AbstractUlordNetParams {
 
         genesisBlock.setDifficultyTarget(0x1e1d1459L);
         genesisBlock.setTime(1519894519L);
-        genesisBlock.setNonce(80400);   // TODO: VERIFY NONCE
+        genesisBlock.setNonce(new BigInteger("0000be7245a98c700f01293501a062837cb465afd70da22ee812b69a0c131f8c", 16));
+
         id = ID_MAINNET;
         subsidyDecreaseBlockCount = 840960;
         spendableCoinbaseDepth = 100;
         //String genesisHash = "000000e32e974118821c865e0f79cd851edd96ccdf161de997ee85c438d0e7e3";
         String genesisHash = genesisBlock.getHashAsString();
-        checkState(genesisHash.equals("000000e32e974118821c865e0f79cd851edd96ccdf161de997ee85c438d0e7e3"),
+        checkState(genesisHash.equals("0000083331b8aa57aaae020d79aabe4136ebea6ce29be3a50fcaa2a55777e79c"),
                 genesisHash);
 
         // TODO: Update below Params

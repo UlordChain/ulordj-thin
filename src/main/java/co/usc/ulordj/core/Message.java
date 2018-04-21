@@ -287,10 +287,10 @@ public abstract class Message {
         return length;
     }
 
-    protected Sha256Hash readUint256() throws ProtocolException {
+    protected BigInteger readUint256() throws ProtocolException {
         try {
-            Sha256Hash u = Utils.readUint256(payload, cursor);
-            cursor += 4;
+            BigInteger u = Utils.readUint256(payload, cursor);
+            cursor += 32;
             return u;
         } catch (ArrayIndexOutOfBoundsException e) {
             throw new ProtocolException(e);

@@ -95,7 +95,7 @@ public class BtcBlock extends Message {
     private Sha256Hash merkleRoot;
     private long time;
     private long difficultyTarget; // "nBits"
-    private Sha256Hash nonce;
+    private BigInteger nonce;
 
     // TODO: Get rid of all the direct accesses to this field. It's a long-since unnecessary holdover from the Dalvik days.
     /** If null, it means this object holds only the headers. */
@@ -193,7 +193,7 @@ public class BtcBlock extends Message {
      * @param transactions List of transactions including the coinbase.
      */
     public BtcBlock(NetworkParameters params, long version, Sha256Hash prevBlockHash, Sha256Hash merkleRoot, long time,
-                    long difficultyTarget, Sha256Hash nonce, List<BtcTransaction> transactions) {
+                    long difficultyTarget, BigInteger nonce, List<BtcTransaction> transactions) {
         super(params);
         this.version = version;
         this.prevBlockHash = prevBlockHash;
@@ -285,7 +285,7 @@ public class BtcBlock extends Message {
         stream.write(getMerkleRoot().getReversedBytes());
         Utils.uint32ToByteStreamLE(time, stream);
         Utils.uint32ToByteStreamLE(difficultyTarget, stream);
-        Utils.uint32ToByteStreamLE(nonce, stream);
+        Utils.uint256ToByteStreamLE(nonce, stream);
     }
 
     private void writeTransactions(OutputStream stream) throws IOException {
@@ -405,6 +405,7 @@ public class BtcBlock extends Message {
             //ByteArrayOutputStream bos = new UnsafeByteArrayOutputStream(HEADER_SIZE);
             ByteArrayOutputStream bos = new UnsafeByteArrayOutputStream(140);
             writeHeader(bos);
+
             Sha256Hash hash = Sha256Hash.wrapReversed(Sha256Hash.cryptoHelloHash(bos.toByteArray()));
             System.out.println("Output hash: " + hash);
             return hash;
@@ -514,7 +515,7 @@ public class BtcBlock extends Message {
                 if (checkProofOfWork(false))
                     return;
                 // No, so increment the nonce and try again.
-                setNonce(getNonce() + 1);
+                setNonce(getNonce().add(BigInteger.ONE));
             } catch (VerificationException e) {
                 throw new RuntimeException(e); // Cannot happen.
             }
@@ -838,12 +839,12 @@ public class BtcBlock extends Message {
      * Returns the nonce, an arbitrary value that exists only to make the hash of the block header fall below the
      * difficulty target.
      */
-    public Sha256Hash getNonce() {
+    public BigInteger getNonce() {
         return nonce;
     }
 
     /** Sets the nonce and clears any cached data. */
-    public void setNonce(Sha256Hash nonce) {
+    public void setNonce(BigInteger nonce) {
         unCacheHeader();
         this.nonce = nonce;
         this.hash = null;

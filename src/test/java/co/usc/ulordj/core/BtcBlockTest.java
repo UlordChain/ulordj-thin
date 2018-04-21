@@ -78,7 +78,7 @@ public class BtcBlockTest {
         // This params accepts any difficulty target.
         NetworkParameters params = UnitTestParams.get();
         BtcBlock block = params.getDefaultSerializer().makeBlock(blockBytes);
-        block.setNonce(12346);
+        block.setNonce(new BigInteger("12346"));
         try {
             block.verify(BtcBlock.BLOCK_HEIGHT_GENESIS, EnumSet.noneOf(BtcBlock.VerifyFlag.class));
             fail();
@@ -91,7 +91,7 @@ public class BtcBlockTest {
         // Now it should pass.
         block.verify(BtcBlock.BLOCK_HEIGHT_GENESIS, EnumSet.noneOf(BtcBlock.VerifyFlag.class));
         // Break the nonce again at the lower difficulty level so we can try solving for it.
-        block.setNonce(1);
+        block.setNonce(new BigInteger("1"));
         try {
             block.verify(BtcBlock.BLOCK_HEIGHT_GENESIS, EnumSet.noneOf(BtcBlock.VerifyFlag.class));
             fail();

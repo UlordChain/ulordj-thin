@@ -26,6 +26,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
+import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
@@ -231,8 +232,8 @@ public class ParseByteCacheTest {
         bRef = (BtcBlock) bsRef.deserialize(ByteBuffer.wrap(blockBytes));
 
         // change a value in header
-        b1.setNonce(23);
-        bRef.setNonce(23);
+        b1.setNonce(new BigInteger("23"));
+        bRef.setNonce(new BigInteger("23"));
         assertFalse(b1.isHeaderBytesValid());
         assertEquals(retain , b1.isTransactionBytesValid());
         // does it still match ref block?

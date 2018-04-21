@@ -121,6 +121,10 @@ public class Utils {
         stream.write((int) (0xFF & (val >> 56)));
     }
 
+    public static void uint256ToByteStreamLE(BigInteger val, OutputStream stream) throws IOException {
+        stream.write(val.toByteArray());
+    }
+
     public static void uint64ToByteStreamLE(BigInteger val, OutputStream stream) throws IOException {
         byte[] bytes = val.toByteArray();
         if (bytes.length > 8) {
@@ -207,8 +211,8 @@ public class Utils {
     }
 
     /** Parse 32 bytes from the byte array (starting at the offset) as unsigned 256-bit integer in little endian format. */
-    public static Sha256Hash readUint256(byte[] bytes, int offset) {
-        return (bytes[offset] & 0xffl) |
+    public static BigInteger readUint256(byte[] bytes, int offset) {
+        return  BigInteger.valueOf((bytes[offset] & 0xffl) |
                 ((bytes[offset + 1] & 0xffl) << 8) |
                 ((bytes[offset + 2] & 0xffl) << 16) |
                 ((bytes[offset + 3] & 0xffl) << 24) |
@@ -239,7 +243,7 @@ public class Utils {
                 ((bytes[offset + 28] & 0xffl) << 224) |
                 ((bytes[offset + 29] & 0xffl) << 232) |
                 ((bytes[offset + 30] & 0xffl) << 240) |
-                ((bytes[offset + 31] & 0xffl) << 248);
+                ((bytes[offset + 31] & 0xffl) << 248));
     }
 
     /** Parse 4 bytes from the byte array (starting at the offset) as unsigned 32-bit integer in big endian format. */
