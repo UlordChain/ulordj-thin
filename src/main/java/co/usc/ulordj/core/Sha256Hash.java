@@ -244,7 +244,6 @@ public class Sha256Hash implements Serializable, Comparable<Sha256Hash> {
 
     public static byte[] cryptoHelloHash(byte[] input) {
         byte[] output = new byte[LENGTH];
-        System.out.println("Input data: " + input.toString() + ", Size: " + input.length);
         CryptoHelloContext.helloHash(input, input.length, output);
         return output;
     }

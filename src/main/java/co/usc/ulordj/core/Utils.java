@@ -123,10 +123,14 @@ public class Utils {
 
     public static void uint256ToByteStreamLE(BigInteger val, OutputStream stream) throws IOException {
         byte[] bytes = val.toByteArray();
-        if(bytes.length > 32)
+        if(bytes.length > 32) {
             throw new RuntimeException("Input too large to encode into a uint256");
+        }
         bytes = reverseBytes(bytes);
         stream.write(bytes);
+        if(bytes.length < 32)
+            for (int i = 0; i < 32 - bytes.length; i++)
+                stream.write(0);
     }
 
     public static void uint64ToByteStreamLE(BigInteger val, OutputStream stream) throws IOException {

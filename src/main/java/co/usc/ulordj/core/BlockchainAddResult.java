@@ -14,16 +14,16 @@ public class BlockchainAddResult {
 
 	private Boolean success = Boolean.FALSE;
 
-	private List<BtcBlock> orphansBlocksConnected = new ArrayList<BtcBlock>();
+	private List<UldBlock> orphansBlocksConnected = new ArrayList<UldBlock>();
 	private List<FilteredBlock> orphansFilteredBlocksConnected = new ArrayList<FilteredBlock>();
 
 
 
-	public void addConnectedOrphan(BtcBlock block) {
+	public void addConnectedOrphan(UldBlock block) {
 		orphansBlocksConnected.add(block);
 	}
 
-	public void addConnectedOrphans(List<BtcBlock> blocks) {
+	public void addConnectedOrphans(List<UldBlock> blocks) {
 		orphansBlocksConnected.addAll(blocks);
 	}
 
@@ -35,7 +35,7 @@ public class BlockchainAddResult {
 		orphansFilteredBlocksConnected.addAll(blocks);
 	}
 
-	public List<BtcBlock> getOrphansBlockConnected() {
+	public List<UldBlock> getOrphansBlockConnected() {
 		return orphansBlocksConnected;
 	}
 	

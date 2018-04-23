@@ -16,7 +16,7 @@
 
 package co.usc.ulordj.script;
 
-import co.usc.ulordj.core.BtcTransaction;
+import co.usc.ulordj.core.UldTransaction;
 import com.google.common.collect.Lists;
 import co.usc.ulordj.core.Address;
 import co.usc.ulordj.core.BtcECKey;
@@ -37,7 +37,7 @@ import static co.usc.ulordj.script.ScriptOpCodes.*;
 
 /**
  * <p>Tools for the construction of commonly used script types. You don't normally need this as it's hidden behind
- * convenience methods on {@link BtcTransaction}, but they are useful when working with the
+ * convenience methods on {@link UldTransaction}, but they are useful when working with the
  * protocol at a lower level.</p>
  */
 public class ScriptBuilder {

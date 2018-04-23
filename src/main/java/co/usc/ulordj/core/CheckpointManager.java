@@ -53,7 +53,7 @@ import static com.google.common.base.Preconditions.*;
  *    headers from the genesis block.</li>
  * </ol>
  *
- * <p>Checkpoints are used by the SPV {@link BtcBlockChain} to initialize fresh
+ * <p>Checkpoints are used by the SPV {@link UldBlockChain} to initialize fresh
  * {@link org.bitcoinj.store.SPVBlockStore}s. They are not used by fully validating mode, which instead has a
  * different concept of checkpoints that are used to hard-code the validity of blocks that violate BIP30 (duplicate
  * coinbase transactions). Those "checkpoints" can be found in NetworkParameters.</p>
@@ -194,7 +194,7 @@ public class CheckpointManager {
             // This is thread safe because the map never changes after creation.
             Map.Entry<Long, StoredBlock> entry = checkpoints.floorEntry(time);
             if (entry != null) return entry.getValue();
-            BtcBlock genesis = params.getGenesisBlock().cloneAsHeader();
+            UldBlock genesis = params.getGenesisBlock().cloneAsHeader();
             return new StoredBlock(genesis, genesis.getWork(), 0);
         } catch (VerificationException e) {
             throw new RuntimeException(e);  // Cannot happen.

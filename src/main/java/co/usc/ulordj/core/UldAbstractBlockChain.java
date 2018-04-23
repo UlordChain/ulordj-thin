@@ -29,7 +29,7 @@ import java.util.*;
 import static com.google.common.base.Preconditions.*;
 
 /**
- * <p>An AbstractBlockChain holds a series of {@link BtcBlock} objects, links them together, and knows how to verify that
+ * <p>An AbstractBlockChain holds a series of {@link UldBlock} objects, links them together, and knows how to verify that
  * the chain follows the rules of the {@link NetworkParameters} for this chain.</p>
  *
  * <p>It can be connected to a {@link Wallet}, and also {@link TransactionReceivedInBlockListener}s that can receive transactions and
@@ -44,7 +44,7 @@ import static com.google.common.base.Preconditions.*;
  * verification.  It verifies headers and is implements most of what is required to implement SPV mode, but
  * also provides callback hooks which can be used to do full verification.</p>
  *
- * <p>There are two subclasses of AbstractBlockChain that are useful: {@link BtcBlockChain}, which is the simplest
+ * <p>There are two subclasses of AbstractBlockChain that are useful: {@link UldBlockChain}, which is the simplest
  * class and implements <i>simplified payment verification</i>. This is a lightweight and efficient mode that does
  * not verify the contents of blocks, just their headers. A {@link FullPrunedBlockChain} paired with a
  * {@link co.usc.ulordj.store.H2FullPrunedBlockStore} implements full verification, which is equivalent to
@@ -53,7 +53,7 @@ import static com.google.common.base.Preconditions.*;
  *
  * <b>Theory</b>
  *
- * <p>The 'chain' is actually a tree although in normal operation it operates mostly as a list of {@link BtcBlock}s.
+ * <p>The 'chain' is actually a tree although in normal operation it operates mostly as a list of {@link UldBlock}s.
  * When multiple new head blocks are found simultaneously, there are multiple stories of the economy competing to become
  * the one true consensus. This can happen naturally when two miners solve a block within a few seconds of each other,
  * or it can happen when the chain is under attack.</p>
@@ -71,8 +71,8 @@ import static com.google.common.base.Preconditions.*;
  * <p>Every so often the block chain passes a difficulty transition point. At that time, all the blocks in the last
  * 2016 blocks are examined and a new difficulty target is calculated from them.</p>
  */
-public abstract class BtcAbstractBlockChain {
-    private static final Logger log = LoggerFactory.getLogger(BtcAbstractBlockChain.class);
+public abstract class UldAbstractBlockChain {
+    private static final Logger log = LoggerFactory.getLogger(UldAbstractBlockChain.class);
 
     /** Keeps a map of block hashes to StoredBlocks. */
     private final BtcBlockStore blockStore;
@@ -98,11 +98,11 @@ public abstract class BtcAbstractBlockChain {
 
     // Holds a block header and, optionally, a list of tx hashes or block's transactions
     class OrphanBlock {
-        final BtcBlock block;
+        final UldBlock block;
         final FilteredBlock filteredBlock;
         final List<Sha256Hash> filteredTxHashes;
-        final Map<Sha256Hash, BtcTransaction> filteredTxn;
-        OrphanBlock(BtcBlock block, @Nullable List<Sha256Hash> filteredTxHashes, @Nullable Map<Sha256Hash, BtcTransaction> filteredTxn, FilteredBlock filteredBlock) {
+        final Map<Sha256Hash, UldTransaction> filteredTxn;
+        OrphanBlock(UldBlock block, @Nullable List<Sha256Hash> filteredTxHashes, @Nullable Map<Sha256Hash, UldTransaction> filteredTxn, FilteredBlock filteredBlock) {
             final boolean filtered = filteredTxHashes != null && filteredTxn != null;
             Preconditions.checkArgument((block.transactions == null && filtered)
                                         || (block.transactions != null && !filtered));
@@ -130,8 +130,8 @@ public abstract class BtcAbstractBlockChain {
 
     private final VersionTally versionTally;
 
-    /** See {@link #BtcAbstractBlockChain(Context, BtcBlockStore)} */
-    public BtcAbstractBlockChain(NetworkParameters params,
+    /** See {@link #UldAbstractBlockChain(Context, BtcBlockStore)} */
+    public UldAbstractBlockChain(NetworkParameters params,
                                  BtcBlockStore blockStore) throws BlockStoreException {
         this(Context.getOrCreate(params), blockStore);
     }
@@ -139,7 +139,7 @@ public abstract class BtcAbstractBlockChain {
     /**
      * Constructs a BlockChain connected to the given list of listeners (eg, wallets) and a store.
      */
-    public BtcAbstractBlockChain(Context context,
+    public UldAbstractBlockChain(Context context,
                                  BtcBlockStore blockStore) throws BlockStoreException {
         this.blockStore = blockStore;
         chainHead = blockStore.getChainHead();
@@ -158,17 +158,17 @@ public abstract class BtcAbstractBlockChain {
     }
     
     /**
-     * Adds/updates the given {@link BtcBlock} with the block store.
+     * Adds/updates the given {@link UldBlock} with the block store.
      * This version is used when the transactions have not been verified.
      * @param storedPrev The {@link StoredBlock} which immediately precedes block.
-     * @param block The {@link BtcBlock} to add/update.
+     * @param block The {@link UldBlock} to add/update.
      * @return the newly created {@link StoredBlock}
      */
-    protected abstract StoredBlock addToBlockStore(StoredBlock storedPrev, BtcBlock block)
+    protected abstract StoredBlock addToBlockStore(StoredBlock storedPrev, UldBlock block)
             throws BlockStoreException, VerificationException;
     
     /**
-     * Rollback the block store to a given height. This is currently only supported by {@link BtcBlockChain} instances.
+     * Rollback the block store to a given height. This is currently only supported by {@link UldBlockChain} instances.
      * 
      * @throws BlockStoreException
      *             if the operation fails or is unsupported.
@@ -202,7 +202,7 @@ public abstract class BtcAbstractBlockChain {
      * If the block can be connected to the chain, returns true.
      * Accessing block's transactions in another thread while this method runs may result in undefined behavior.
      */
-    public boolean add(BtcBlock block) throws VerificationException {
+    public boolean add(UldBlock block) throws VerificationException {
         return addBlock(block).success();
     }
     
@@ -219,7 +219,7 @@ public abstract class BtcAbstractBlockChain {
      * Same as add(Block block) method, but returns an BlockchainAddResult that informs the global result plus a list 
      * of blocks added during the execution of the add process.
      */
-    public BlockchainAddResult addBlock(BtcBlock block) throws VerificationException {
+    public BlockchainAddResult addBlock(UldBlock block) throws VerificationException {
         return runAddProcces(block, true, null, null, null);
     }
     
@@ -234,8 +234,8 @@ public abstract class BtcAbstractBlockChain {
     /**
      * This code was duplicated on add(Block) and in add(FilteredBlock), as the original comment says. The way to handle exceptions should be improved
      */
-    private BlockchainAddResult runAddProcces(BtcBlock block, boolean tryConnecting,
-                                              @Nullable List<Sha256Hash> filteredTxHashList, @Nullable Map<Sha256Hash, BtcTransaction> filteredTxn, FilteredBlock filteredBlock) throws VerificationException{
+    private BlockchainAddResult runAddProcces(UldBlock block, boolean tryConnecting,
+                                              @Nullable List<Sha256Hash> filteredTxHashList, @Nullable Map<Sha256Hash, UldTransaction> filteredTxn, FilteredBlock filteredBlock) throws VerificationException{
         try {
             // The block has a list of hashes of transactions that matched the Bloom filter, and a list of associated
             // Transaction objects. There may be fewer Transaction objects than hashes, this is expected. It can happen
@@ -267,8 +267,8 @@ public abstract class BtcAbstractBlockChain {
     
 
     // filteredTxHashList contains all transactions, filteredTxn just a subset
-    private BlockchainAddResult add(BtcBlock block, boolean tryConnecting,
-                                    @Nullable List<Sha256Hash> filteredTxHashList, @Nullable Map<Sha256Hash, BtcTransaction> filteredTxn, FilteredBlock filteredBlock)
+    private BlockchainAddResult add(UldBlock block, boolean tryConnecting,
+                                    @Nullable List<Sha256Hash> filteredTxHashList, @Nullable Map<Sha256Hash, UldTransaction> filteredTxn, FilteredBlock filteredBlock)
             throws BlockStoreException, VerificationException {
         // TODO: Use read/write locks to ensure that during chain download properties are still low latency.
         BlockchainAddResult result = new BlockchainAddResult();
@@ -357,16 +357,16 @@ public abstract class BtcAbstractBlockChain {
     // expensiveChecks enables checks that require looking at blocks further back in the chain
     // than the previous one when connecting (eg median timestamp check)
     // It could be exposed, but for now we just set it to shouldVerifyTransactions()
-    private void connectBlock(final BtcBlock block, StoredBlock storedPrev, boolean expensiveChecks,
+    private void connectBlock(final UldBlock block, StoredBlock storedPrev, boolean expensiveChecks,
                               @Nullable final List<Sha256Hash> filteredTxHashList,
-                              @Nullable final Map<Sha256Hash, BtcTransaction> filteredTxn) throws BlockStoreException, VerificationException {
+                              @Nullable final Map<Sha256Hash, UldTransaction> filteredTxn) throws BlockStoreException, VerificationException {
         boolean filtered = filteredTxHashList != null && filteredTxn != null;
         // Check that we aren't connecting a block that fails a checkpoint check
         if (!params.passesCheckpoint(storedPrev.getHeight() + 1, block.getHash()))
             throw new VerificationException("Block failed checkpoint lockin at " + (storedPrev.getHeight() + 1));
         if (shouldVerifyTransactions()) {
             checkNotNull(block.transactions);
-            for (BtcTransaction tx : block.transactions)
+            for (UldTransaction tx : block.transactions)
                 if (!tx.isFinal(storedPrev.getHeight() + 1, block.getTimeSeconds()))
                    throw new VerificationException("Block contains non-final transaction");
         }
@@ -385,8 +385,8 @@ public abstract class BtcAbstractBlockChain {
             // NOTE: This requires 1,000 blocks since the last checkpoint (on main
             // net, less on test) in order to be applied. It is also limited to
             // stopping addition of new v2/3 blocks to the tip of the chain.
-            if (block.getVersion() == BtcBlock.BLOCK_VERSION_BIP34
-                || block.getVersion() == BtcBlock.BLOCK_VERSION_BIP66) {
+            if (block.getVersion() == UldBlock.BLOCK_VERSION_BIP34
+                || block.getVersion() == UldBlock.BLOCK_VERSION_BIP66) {
                 final Integer count = versionTally.getCountAtOrAbove(block.getVersion() + 1);
                 if (count != null
                     && count >= params.getMajorityRejectBlockOutdated()) {
@@ -460,7 +460,7 @@ public abstract class BtcAbstractBlockChain {
      * if (shouldVerifyTransactions)
      *     Either newChainHead needs to be in the block store as a FullStoredBlock, or (block != null && block.transactions != null)
      */
-    private void handleNewBestChain(StoredBlock storedPrev, StoredBlock newChainHead, BtcBlock block, boolean expensiveChecks)
+    private void handleNewBestChain(StoredBlock storedPrev, StoredBlock newChainHead, UldBlock block, boolean expensiveChecks)
             throws BlockStoreException, VerificationException {
         // This chain has overtaken the one we currently believe is best. Reorganize is required.
         //
@@ -605,7 +605,7 @@ public abstract class BtcAbstractBlockChain {
      * @return from or one of froms parents, or null if "from" does not identify an orphan block
      */
     @Nullable
-    public BtcBlock getOrphanRoot(Sha256Hash from) {
+    public UldBlock getOrphanRoot(Sha256Hash from) {
         try {
             OrphanBlock cursor = orphanBlocks.get(from);
             if (cursor == null)

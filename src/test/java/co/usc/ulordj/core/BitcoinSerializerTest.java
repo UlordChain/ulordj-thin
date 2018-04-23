@@ -59,7 +59,7 @@ public class BitcoinSerializerTest {
         MessageSerializer serializer = MainNetParams.get().getSerializer(true);
         
         // first try writing to a fields to ensure uncaching and children are not affected
-        BtcTransaction transaction = (BtcTransaction) serializer.deserialize(ByteBuffer.wrap(TRANSACTION_MESSAGE_BYTES));
+        UldTransaction transaction = (UldTransaction) serializer.deserialize(ByteBuffer.wrap(TRANSACTION_MESSAGE_BYTES));
         assertNotNull(transaction);
         assertTrue(transaction.isCached());
 
@@ -74,7 +74,7 @@ public class BitcoinSerializerTest {
         assertFalse(Arrays.equals(TRANSACTION_MESSAGE_BYTES, bos.toByteArray()));
 
         // now try writing to a child to ensure uncaching is propagated up to parent but not to siblings
-        transaction = (BtcTransaction) serializer.deserialize(ByteBuffer.wrap(TRANSACTION_MESSAGE_BYTES));
+        transaction = (UldTransaction) serializer.deserialize(ByteBuffer.wrap(TRANSACTION_MESSAGE_BYTES));
         assertNotNull(transaction);
         assertTrue(transaction.isCached());
 
@@ -89,7 +89,7 @@ public class BitcoinSerializerTest {
         assertFalse(Arrays.equals(TRANSACTION_MESSAGE_BYTES, bos.toByteArray()));
 
         // deserialize/reserialize to check for equals.
-        transaction = (BtcTransaction) serializer.deserialize(ByteBuffer.wrap(TRANSACTION_MESSAGE_BYTES));
+        transaction = (UldTransaction) serializer.deserialize(ByteBuffer.wrap(TRANSACTION_MESSAGE_BYTES));
         assertNotNull(transaction);
         assertTrue(transaction.isCached());
         bos = new ByteArrayOutputStream();
@@ -97,7 +97,7 @@ public class BitcoinSerializerTest {
         assertTrue(Arrays.equals(TRANSACTION_MESSAGE_BYTES, bos.toByteArray()));
 
         // deserialize/reserialize to check for equals.  Set a field to it's existing value to trigger uncache
-        transaction = (BtcTransaction) serializer.deserialize(ByteBuffer.wrap(TRANSACTION_MESSAGE_BYTES));
+        transaction = (UldTransaction) serializer.deserialize(ByteBuffer.wrap(TRANSACTION_MESSAGE_BYTES));
         assertNotNull(transaction);
         assertTrue(transaction.isCached());
 

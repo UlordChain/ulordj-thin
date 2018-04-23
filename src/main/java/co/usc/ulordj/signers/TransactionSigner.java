@@ -16,7 +16,7 @@
 
 package co.usc.ulordj.signers;
 
-import co.usc.ulordj.core.BtcTransaction;
+import co.usc.ulordj.core.UldTransaction;
 import co.usc.ulordj.wallet.KeyBag;
 
 /**
@@ -35,9 +35,9 @@ public interface TransactionSigner {
      */
     class ProposedTransaction {
 
-        public final BtcTransaction partialTx;
+        public final UldTransaction partialTx;
 
-        public ProposedTransaction(BtcTransaction partialTx) {
+        public ProposedTransaction(UldTransaction partialTx) {
             this.partialTx = partialTx;
         }
     }

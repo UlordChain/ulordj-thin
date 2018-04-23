@@ -41,12 +41,12 @@ public class TransactionOutPoint extends ChildMessage {
     private long index;
 
     // This is not part of bitcoin serialization. It points to the connected transaction.
-    BtcTransaction fromTx;
+    UldTransaction fromTx;
 
     // The connected output.
     TransactionOutput connectedOutput;
 
-    public TransactionOutPoint(NetworkParameters params, long index, @Nullable BtcTransaction fromTx) {
+    public TransactionOutPoint(NetworkParameters params, long index, @Nullable UldTransaction fromTx) {
         super(params);
         this.index = index;
         if (fromTx != null) {

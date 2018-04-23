@@ -16,7 +16,7 @@
 
 package co.usc.ulordj.params;
 
-import co.usc.ulordj.core.BtcBlock;
+import co.usc.ulordj.core.UldBlock;
 
 import java.math.BigInteger;
 
@@ -48,10 +48,10 @@ public class RegTestParams extends TestNet2Params {
         return true;
     }
 
-    private static BtcBlock genesis;
+    private static UldBlock genesis;
 
     @Override
-    public BtcBlock getGenesisBlock() {
+    public UldBlock getGenesisBlock() {
         synchronized (RegTestParams.class) {
             if (genesis == null) {
                 genesis = super.getGenesisBlock();

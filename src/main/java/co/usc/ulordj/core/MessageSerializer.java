@@ -55,7 +55,7 @@ public abstract class MessageSerializer {
      * Make a block from the payload, using an offset of zero and the payload
      * length as block length.
      */
-    public final BtcBlock makeBlock(byte[] payloadBytes) throws ProtocolException {
+    public final UldBlock makeBlock(byte[] payloadBytes) throws ProtocolException {
         return makeBlock(payloadBytes, 0, payloadBytes.length);
     }
 
@@ -63,7 +63,7 @@ public abstract class MessageSerializer {
      * Make a block from the payload, using an offset of zero and the provided
      * length as block length.
      */
-    public final BtcBlock makeBlock(byte[] payloadBytes, int length) throws ProtocolException {
+    public final UldBlock makeBlock(byte[] payloadBytes, int length) throws ProtocolException {
         return makeBlock(payloadBytes, 0, length);
     }
 
@@ -72,7 +72,7 @@ public abstract class MessageSerializer {
      * length as block length. Extension point for alternative
      * serialization format support.
      */
-    public abstract BtcBlock makeBlock(final byte[] payloadBytes, final int offset, final int length) throws ProtocolException, UnsupportedOperationException;
+    public abstract UldBlock makeBlock(final byte[] payloadBytes, final int offset, final int length) throws ProtocolException, UnsupportedOperationException;
 
     /**
      * Make a filtered block from the payload. Extension point for alternative
@@ -89,7 +89,7 @@ public abstract class MessageSerializer {
      * serializer (i.e. for messages with no network parameters), or because
      * it does not support deserializing transactions.
      */
-    public abstract BtcTransaction makeTransaction(byte[] payloadBytes, int offset, int length, byte[] hash) throws ProtocolException, UnsupportedOperationException;
+    public abstract UldTransaction makeTransaction(byte[] payloadBytes, int offset, int length, byte[] hash) throws ProtocolException, UnsupportedOperationException;
 
     /**
      * Make a transaction from the payload. Extension point for alternative
@@ -100,7 +100,7 @@ public abstract class MessageSerializer {
      * serializer (i.e. for messages with no network parameters), or because
      * it does not support deserializing transactions.
      */
-    public final BtcTransaction makeTransaction(byte[] payloadBytes) throws ProtocolException, UnsupportedOperationException {
+    public final UldTransaction makeTransaction(byte[] payloadBytes) throws ProtocolException, UnsupportedOperationException {
         return makeTransaction(payloadBytes, 0);
     }
 
@@ -113,7 +113,7 @@ public abstract class MessageSerializer {
      * serializer (i.e. for messages with no network parameters), or because
      * it does not support deserializing transactions.
      */
-    public final BtcTransaction makeTransaction(byte[] payloadBytes, int offset) throws ProtocolException {
+    public final UldTransaction makeTransaction(byte[] payloadBytes, int offset) throws ProtocolException {
         return makeTransaction(payloadBytes, offset, payloadBytes.length, null);
     }
 

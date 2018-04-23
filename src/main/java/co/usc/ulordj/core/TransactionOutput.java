@@ -59,7 +59,7 @@ public class TransactionOutput extends ChildMessage {
     /**
      * Deserializes a transaction output message. This is usually part of a transaction message.
      */
-    public TransactionOutput(NetworkParameters params, @Nullable BtcTransaction parent, byte[] payload,
+    public TransactionOutput(NetworkParameters params, @Nullable UldTransaction parent, byte[] payload,
                              int offset) throws ProtocolException {
         super(params, payload, offset);
         setParent(parent);
@@ -75,7 +75,7 @@ public class TransactionOutput extends ChildMessage {
      * @param serializer the serializer to use for this message.
      * @throws ProtocolException
      */
-    public TransactionOutput(NetworkParameters params, @Nullable BtcTransaction parent, byte[] payload, int offset, MessageSerializer serializer) throws ProtocolException {
+    public TransactionOutput(NetworkParameters params, @Nullable UldTransaction parent, byte[] payload, int offset, MessageSerializer serializer) throws ProtocolException {
         super(params, payload, offset, parent, serializer, UNKNOWN_LENGTH);
         availableForSpending = true;
     }
@@ -83,22 +83,22 @@ public class TransactionOutput extends ChildMessage {
     /**
      * Creates an output that sends 'value' to the given address (public key hash). The amount should be created with
      * something like {@link Coin#valueOf(int, int)}. Typically you would use
-     * {@link BtcTransaction#addOutput(Coin, Address)} instead of creating a TransactionOutput directly.
+     * {@link UldTransaction#addOutput(Coin, Address)} instead of creating a TransactionOutput directly.
      */
-    public TransactionOutput(NetworkParameters params, @Nullable BtcTransaction parent, Coin value, Address to) {
+    public TransactionOutput(NetworkParameters params, @Nullable UldTransaction parent, Coin value, Address to) {
         this(params, parent, value, ScriptBuilder.createOutputScript(to).getProgram());
     }
 
     /**
      * Creates an output that sends 'value' to the given public key using a simple CHECKSIG script (no addresses). The
      * amount should be created with something like {@link Coin#valueOf(int, int)}. Typically you would use
-     * {@link BtcTransaction#addOutput(Coin, BtcECKey)} instead of creating an output directly.
+     * {@link UldTransaction#addOutput(Coin, BtcECKey)} instead of creating an output directly.
      */
-    public TransactionOutput(NetworkParameters params, @Nullable BtcTransaction parent, Coin value, BtcECKey to) {
+    public TransactionOutput(NetworkParameters params, @Nullable UldTransaction parent, Coin value, BtcECKey to) {
         this(params, parent, value, ScriptBuilder.createOutputScript(to).getProgram());
     }
 
-    public TransactionOutput(NetworkParameters params, @Nullable BtcTransaction parent, Coin value, byte[] scriptBytes) {
+    public TransactionOutput(NetworkParameters params, @Nullable UldTransaction parent, Coin value, byte[] scriptBytes) {
         super(params);
         // Negative values obviously make no sense, except for -1 which is used as a sentinel value when calculating
         // SIGHASH_SINGLE signatures, so unfortunately we have to allow that here.
@@ -241,10 +241,10 @@ public class TransactionOutput extends ChildMessage {
     /**
      * Returns the minimum value for this output to be considered "not dust", i.e. the transaction will be relayable
      * and mined by default miners. For normal pay to address outputs, this is 2730 satoshis, the same as
-     * {@link BtcTransaction#MIN_NONDUST_OUTPUT}.
+     * {@link UldTransaction#MIN_NONDUST_OUTPUT}.
      */
     public Coin getMinNonDustValue() {
-        return getMinNonDustValue(BtcTransaction.REFERENCE_DEFAULT_MIN_TX_FEE.multiply(3));
+        return getMinNonDustValue(UldTransaction.REFERENCE_DEFAULT_MIN_TX_FEE.multiply(3));
     }
 
     /**
@@ -372,8 +372,8 @@ public class TransactionOutput extends ChildMessage {
      * Returns the transaction that owns this output.
      */
     @Nullable
-    public BtcTransaction getParentTransaction() {
-        return (BtcTransaction)parent;
+    public UldTransaction getParentTransaction() {
+        return (UldTransaction)parent;
     }
 
     /**

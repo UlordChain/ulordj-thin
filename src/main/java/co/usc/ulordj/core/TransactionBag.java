@@ -19,7 +19,7 @@ package co.usc.ulordj.core;
 import co.usc.ulordj.script.Script;
 
 /**
- * This interface is used to abstract the {@link co.usc.ulordj.wallet.Wallet} and the {@link BtcTransaction}
+ * This interface is used to abstract the {@link co.usc.ulordj.wallet.Wallet} and the {@link UldTransaction}
  */
 public interface TransactionBag {
     /** Returns true if this wallet contains a public key which hashes to the given hash. */

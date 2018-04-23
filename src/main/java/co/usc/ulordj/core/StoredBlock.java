@@ -27,7 +27,7 @@ import java.util.Locale;
 import static com.google.common.base.Preconditions.checkState;
 
 /**
- * Wraps a {@link BtcBlock} object with extra data that can be derived from the block chain but is slow or inconvenient to
+ * Wraps a {@link UldBlock} object with extra data that can be derived from the block chain but is slow or inconvenient to
  * calculate. By storing it alongside the block header we reduce the amount of work required significantly.
  * Recalculation is slow because the fields are cumulative - to find the chainWork you have to iterate over every
  * block in the chain back to the genesis block, which involves lots of seeking/loading etc. So we just keep a
@@ -41,13 +41,13 @@ public class StoredBlock {
     // bytes to represent this field, so 12 bytes should be plenty for now.
     public static final int CHAIN_WORK_BYTES = 12;
     public static final byte[] EMPTY_BYTES = new byte[CHAIN_WORK_BYTES];
-    public static final int COMPACT_SERIALIZED_SIZE = BtcBlock.HEADER_SIZE + CHAIN_WORK_BYTES + 4;  // for height
+    public static final int COMPACT_SERIALIZED_SIZE = UldBlock.HEADER_SIZE + CHAIN_WORK_BYTES + 4;  // for height
 
-    private BtcBlock header;
+    private UldBlock header;
     private BigInteger chainWork;
     private int height;
 
-    public StoredBlock(BtcBlock header, BigInteger chainWork, int height) {
+    public StoredBlock(UldBlock header, BigInteger chainWork, int height) {
         this.header = header;
         this.chainWork = chainWork;
         this.height = height;
@@ -56,7 +56,7 @@ public class StoredBlock {
     /**
      * The block header this object wraps. The referenced block object must not have any transactions in it.
      */
-    public BtcBlock getHeader() {
+    public UldBlock getHeader() {
         return header;
     }
 
@@ -97,7 +97,7 @@ public class StoredBlock {
     /**
      * Creates a new StoredBlock, calculating the additional fields by adding to the values in this block.
      */
-    public StoredBlock build(BtcBlock block) throws VerificationException {
+    public StoredBlock build(UldBlock block) throws VerificationException {
         // Stored blocks track total work done in this chain, because the canonical chain is the one that represents
         // the largest amount of work done not the tallest.
         BigInteger chainWork = this.chainWork.add(block.getWork());
@@ -128,7 +128,7 @@ public class StoredBlock {
         // Using unsafeBitcoinSerialize here can give us direct access to the same bytes we read off the wire,
         // avoiding serialization round-trips.
         byte[] bytes = getHeader().unsafeBitcoinSerialize();
-        buffer.put(bytes, 0, BtcBlock.HEADER_SIZE);  // Trim the trailing 00 byte (zero transactions).
+        buffer.put(bytes, 0, UldBlock.HEADER_SIZE);  // Trim the trailing 00 byte (zero transactions).
     }
 
     /** De-serializes the stored block from a custom packed format. Used by {@link CheckpointManager}. */
@@ -137,8 +137,8 @@ public class StoredBlock {
         buffer.get(chainWorkBytes);
         BigInteger chainWork = new BigInteger(1, chainWorkBytes);
         int height = buffer.getInt();  // +4 bytes
-        byte[] header = new byte[BtcBlock.HEADER_SIZE + 1];    // Extra byte for the 00 transactions length.
-        buffer.get(header, 0, BtcBlock.HEADER_SIZE);
+        byte[] header = new byte[UldBlock.HEADER_SIZE + 1];    // Extra byte for the 00 transactions length.
+        buffer.get(header, 0, UldBlock.HEADER_SIZE);
         return new StoredBlock(params.getDefaultSerializer().makeBlock(header), chainWork, height);
     }
 

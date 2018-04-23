@@ -29,7 +29,7 @@ import co.usc.ulordj.store.BlockStoreException;
  * choice to use for programs that have limited resources as it won't verify transactions signatures or attempt to store
  * all of the block chain. Really, this class should be called SPVBlockChain but for backwards compatibility it is not.
  */
-public class BtcBlockChain extends BtcAbstractBlockChain {
+public class UldBlockChain extends UldAbstractBlockChain {
     /** Keeps a map of block hashes to StoredBlocks. */
     protected final BtcBlockStore blockStore;
 
@@ -38,13 +38,13 @@ public class BtcBlockChain extends BtcAbstractBlockChain {
      * Constructs a BlockChain that has no wallet at all. This is helpful when you don't actually care about sending
      * and receiving coins but rather, just want to explore the network data structures.
      */
-    public BtcBlockChain(Context context, BtcBlockStore blockStore) throws BlockStoreException {
+    public UldBlockChain(Context context, BtcBlockStore blockStore) throws BlockStoreException {
         super(context, blockStore);
         this.blockStore = blockStore;
     }
 
     @Override
-    protected StoredBlock addToBlockStore(StoredBlock storedPrev, BtcBlock blockHeader)
+    protected StoredBlock addToBlockStore(StoredBlock storedPrev, UldBlock blockHeader)
             throws BlockStoreException, VerificationException {
         StoredBlock newBlock = storedPrev.build(blockHeader);
         blockStore.put(newBlock);

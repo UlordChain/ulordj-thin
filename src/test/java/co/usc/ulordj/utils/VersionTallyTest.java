@@ -16,7 +16,7 @@
 
 package co.usc.ulordj.utils;
 
-import co.usc.ulordj.core.BtcBlockChain;
+import co.usc.ulordj.core.UldBlockChain;
 import co.usc.ulordj.core.Context;
 import co.usc.ulordj.core.NetworkParameters;
 import co.usc.ulordj.core.StoredBlock;
@@ -94,7 +94,7 @@ public class VersionTallyTest {
     @Test
     public void testInitialize() throws BlockStoreException {
         final BtcBlockStore blockStore = new BtcMemoryBlockStore(PARAMS);
-        final BtcBlockChain chain = new BtcBlockChain(new Context(PARAMS), blockStore);
+        final UldBlockChain chain = new UldBlockChain(new Context(PARAMS), blockStore);
 
         // Build a historical chain of version 2 blocks
         long timeSeconds = 1231006505;

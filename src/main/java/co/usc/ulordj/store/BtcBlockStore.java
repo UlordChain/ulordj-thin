@@ -16,7 +16,7 @@
 
 package co.usc.ulordj.store;
 
-import co.usc.ulordj.core.BtcBlockChain;
+import co.usc.ulordj.core.UldBlockChain;
 import co.usc.ulordj.core.NetworkParameters;
 import co.usc.ulordj.core.Sha256Hash;
 import co.usc.ulordj.core.StoredBlock;
@@ -47,8 +47,8 @@ public interface BtcBlockStore {
 
     /**
      * Returns the {@link StoredBlock} that represents the top of the chain of greatest total work. Note that this
-     * can be arbitrarily expensive, you probably should use {@link BtcBlockChain#getChainHead()}
-     * or perhaps {@link BtcBlockChain#getBestChainHeight()} which will run in constant time and
+     * can be arbitrarily expensive, you probably should use {@link UldBlockChain#getChainHead()}
+     * or perhaps {@link UldBlockChain#getBestChainHeight()} which will run in constant time and
      * not take any heavyweight locks.
      */
     StoredBlock getChainHead() throws BlockStoreException;

@@ -54,14 +54,14 @@ import java.math.BigInteger;
  * 
  * <p>Instances of this class are not safe for use by multiple threads.</p>
  */
-public class BtcTransaction extends ChildMessage {
+public class UldTransaction extends ChildMessage {
     /**
      * A comparator that can be used to sort transactions by their updateTime field. The ordering goes from most recent
      * into the past.
      */
-    public static final Comparator<BtcTransaction> SORT_TX_BY_UPDATE_TIME = new Comparator<BtcTransaction>() {
+    public static final Comparator<UldTransaction> SORT_TX_BY_UPDATE_TIME = new Comparator<UldTransaction>() {
         @Override
-        public int compare(final BtcTransaction tx1, final BtcTransaction tx2) {
+        public int compare(final UldTransaction tx1, final UldTransaction tx2) {
             final long time1 = tx1.getUpdateTime().getTime();
             final long time2 = tx2.getUpdateTime().getTime();
             final int updateTimeComparison = -(Longs.compare(time1, time2));
@@ -69,7 +69,7 @@ public class BtcTransaction extends ChildMessage {
             return updateTimeComparison != 0 ? updateTimeComparison : tx1.getHash().compareTo(tx2.getHash());
         }
     };
-    private static final Logger log = LoggerFactory.getLogger(BtcTransaction.class);
+    private static final Logger log = LoggerFactory.getLogger(UldTransaction.class);
 
     /** Threshold for lockTime: below this value it is interpreted as block number, otherwise as timestamp. **/
     public static final int LOCKTIME_THRESHOLD = 500000000; // Tue Nov  5 00:53:20 1985 UTC
@@ -163,7 +163,7 @@ public class BtcTransaction extends ChildMessage {
     @Nullable
     private String memo;
 
-    public BtcTransaction(NetworkParameters params) {
+    public UldTransaction(NetworkParameters params) {
         super(params);
         version = 1;
         inputs = new ArrayList<TransactionInput>();
@@ -176,14 +176,14 @@ public class BtcTransaction extends ChildMessage {
     /**
      * Creates a transaction from the given serialized bytes, eg, from a block or a tx network message.
      */
-    public BtcTransaction(NetworkParameters params, byte[] payloadBytes) throws ProtocolException {
+    public UldTransaction(NetworkParameters params, byte[] payloadBytes) throws ProtocolException {
         super(params, payloadBytes, 0);
     }
 
     /**
      * Creates a transaction by reading payload starting from offset bytes in. Length of a transaction is fixed.
      */
-    public BtcTransaction(NetworkParameters params, byte[] payload, int offset) throws ProtocolException {
+    public UldTransaction(NetworkParameters params, byte[] payload, int offset) throws ProtocolException {
         super(params, payload, offset);
         // inputs/outputs will be created in parse()
     }
@@ -200,7 +200,7 @@ public class BtcTransaction extends ChildMessage {
      * as the length will be provided as part of the header.  If unknown then set to Message.UNKNOWN_LENGTH
      * @throws ProtocolException
      */
-    public BtcTransaction(NetworkParameters params, byte[] payload, int offset, @Nullable Message parent, MessageSerializer setSerializer, int length)
+    public UldTransaction(NetworkParameters params, byte[] payload, int offset, @Nullable Message parent, MessageSerializer setSerializer, int length)
             throws ProtocolException {
         super(params, payload, offset, parent, setSerializer, length);
     }
@@ -208,7 +208,7 @@ public class BtcTransaction extends ChildMessage {
     /**
      * Creates a transaction by reading payload. Length of a transaction is fixed.
      */
-    public BtcTransaction(NetworkParameters params, byte[] payload, @Nullable Message parent, MessageSerializer setSerializer, int length)
+    public UldTransaction(NetworkParameters params, byte[] payload, @Nullable Message parent, MessageSerializer setSerializer, int length)
             throws ProtocolException {
         super(params, payload, 0, parent, setSerializer, length);
     }
@@ -430,7 +430,7 @@ public class BtcTransaction extends ChildMessage {
     @Nullable private TransactionBag cachedForBag;
 
     /**
-     * Returns the difference of {@link BtcTransaction#getValueSentToMe(TransactionBag)} and {@link BtcTransaction#getValueSentFromMe(TransactionBag)}.
+     * Returns the difference of {@link UldTransaction#getValueSentToMe(TransactionBag)} and {@link UldTransaction#getValueSentFromMe(TransactionBag)}.
      */
 // Oscar comment: comment out until we implement a UTXOProvider compliant solution
 //    public Coin getValue(TransactionBag wallet) throws ScriptException {
@@ -732,7 +732,7 @@ public class BtcTransaction extends ChildMessage {
      * A human readable version of the transaction useful for debugging. The format is not guaranteed to be stable.
      * @param chain If provided, will be used to estimate lock times (if set). Can be null.
      */
-    public String toString(@Nullable BtcAbstractBlockChain chain) {
+    public String toString(@Nullable UldAbstractBlockChain chain) {
         StringBuilder s = new StringBuilder();
         s.append("  ").append(getHashAsString()).append('\n');
         if (updatedAt != null)
@@ -907,7 +907,7 @@ public class BtcTransaction extends ChildMessage {
     }
 
     /**
-     * Same as {@link #addSignedInput(TransactionOutPoint, co.usc.ulordj.script.Script, BtcECKey, BtcTransaction.SigHash, boolean)}
+     * Same as {@link #addSignedInput(TransactionOutPoint, co.usc.ulordj.script.Script, BtcECKey, UldTransaction.SigHash, boolean)}
      * but defaults to {@link SigHash#ALL} and "false" for the anyoneCanPay flag. This is normally what you want.
      */
     public TransactionInput addSignedInput(TransactionOutPoint prevOut, Script scriptPubKey, BtcECKey sigKey) throws ScriptException {
@@ -981,7 +981,7 @@ public class BtcTransaction extends ChildMessage {
 
     /**
      * Calculates a signature that is valid for being inserted into the input at the given position. This is simply
-     * a wrapper around calling {@link BtcTransaction#hashForSignature(int, byte[], BtcTransaction.SigHash, boolean)}
+     * a wrapper around calling {@link UldTransaction#hashForSignature(int, byte[], UldTransaction.SigHash, boolean)}
      * followed by {@link BtcECKey#sign(Sha256Hash)} and then returning a new {@link TransactionSignature}. The key
      * must be usable for signing as-is: if the key is encrypted it must be decrypted first external to this method.
      *
@@ -1001,7 +1001,7 @@ public class BtcTransaction extends ChildMessage {
 
     /**
      * Calculates a signature that is valid for being inserted into the input at the given position. This is simply
-     * a wrapper around calling {@link BtcTransaction#hashForSignature(int, byte[], BtcTransaction.SigHash, boolean)}
+     * a wrapper around calling {@link UldTransaction#hashForSignature(int, byte[], UldTransaction.SigHash, boolean)}
      * followed by {@link BtcECKey#sign(Sha256Hash)} and then returning a new {@link TransactionSignature}.
      *
      * @param inputIndex Which input to calculate the signature for, as an index.
@@ -1071,7 +1071,7 @@ public class BtcTransaction extends ChildMessage {
         try {
             // Create a copy of this transaction to operate upon because we need make changes to the inputs and outputs.
             // It would not be thread-safe to change the attributes of the transaction object itself.
-            BtcTransaction tx = this.params.getDefaultSerializer().makeTransaction(this.bitcoinSerialize());
+            UldTransaction tx = this.params.getDefaultSerializer().makeTransaction(this.bitcoinSerialize());
 
             // Clear input scripts in preparation for signing. If we're signing a fresh
             // transaction that step isn't very helpful, but it doesn't add much cost relative to the actual
@@ -1269,7 +1269,7 @@ public class BtcTransaction extends ChildMessage {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        return getHash().equals(((BtcTransaction)o).getHash());
+        return getHash().equals(((UldTransaction)o).getHash());
     }
 
     @Override
@@ -1295,7 +1295,7 @@ public class BtcTransaction extends ChildMessage {
      */
     public void checkCoinBaseHeight(final int height)
             throws VerificationException {
-        checkArgument(height >= BtcBlock.BLOCK_HEIGHT_GENESIS);
+        checkArgument(height >= UldBlock.BLOCK_HEIGHT_GENESIS);
         checkState(isCoinBase());
 
         // Check block height is in coinbase input script
@@ -1333,7 +1333,7 @@ public class BtcTransaction extends ChildMessage {
     public void verify() throws VerificationException {
         if (inputs.size() == 0 || outputs.size() == 0)
             throw new VerificationException.EmptyInputsOrOutputs();
-        if (this.getMessageSize() > BtcBlock.MAX_BLOCK_SIZE)
+        if (this.getMessageSize() > UldBlock.MAX_BLOCK_SIZE)
             throw new VerificationException.LargerThanMaxBlockSize();
 
         Coin valueOut = Coin.ZERO;
@@ -1370,7 +1370,7 @@ public class BtcTransaction extends ChildMessage {
     /**
      * <p>A transaction is time locked if at least one of its inputs is non-final and it has a lock time</p>
      *
-     * <p>To check if this transaction is final at a given height and time, see {@link BtcTransaction#isFinal(int, long)}
+     * <p>To check if this transaction is final at a given height and time, see {@link UldTransaction#isFinal(int, long)}
      * </p>
      */
     public boolean isTimeLocked() {
@@ -1411,7 +1411,7 @@ public class BtcTransaction extends ChildMessage {
      * Returns either the lock time as a date, if it was specified in seconds, or an estimate based on the time in
      * the current head block if it was specified as a block time.
      */
-    public Date estimateLockTime(BtcAbstractBlockChain chain) {
+    public Date estimateLockTime(UldAbstractBlockChain chain) {
         if (lockTime < LOCKTIME_THRESHOLD)
             return chain.estimateBlockTime((int)getLockTime());
         else

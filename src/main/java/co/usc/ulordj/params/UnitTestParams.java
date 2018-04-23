@@ -22,7 +22,7 @@ import java.math.BigInteger;
 
 /**
  * Network parameters used by the ulordj unit tests (and potentially your own). This lets you solve a block using
- * {@link BtcBlock#solve()} by setting difficulty to the easiest possible.
+ * {@link UldBlock#solve()} by setting difficulty to the easiest possible.
  */
 public class UnitTestParams extends AbstractUlordNetParams {
     public static final int UNITNET_MAJORITY_WINDOW = 8;
@@ -38,7 +38,7 @@ public class UnitTestParams extends AbstractUlordNetParams {
         acceptableAddressCodes = new int[] { addressHeader, p2shHeader };
         maxTarget = new BigInteger("00ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", 16);
         genesisBlock.setTime(System.currentTimeMillis() / 1000);
-        genesisBlock.setDifficultyTarget(BtcBlock.EASIEST_DIFFICULTY_TARGET);
+        genesisBlock.setDifficultyTarget(UldBlock.EASIEST_DIFFICULTY_TARGET);
         genesisBlock.solve();
         port = 18333;
         interval = 10;

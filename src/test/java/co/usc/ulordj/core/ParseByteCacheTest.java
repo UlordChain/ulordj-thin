@@ -88,21 +88,21 @@ public class ParseByteCacheTest {
 
         resetBlockStore();
         
-        BtcTransaction tx1 = createFakeTx(PARAMS,
+        UldTransaction tx1 = createFakeTx(PARAMS,
                 valueOf(2, 0),
                 new BtcECKey().toAddress(PARAMS));
         
         // add a second input so can test granularity of byte cache.
-        BtcTransaction prevTx = new BtcTransaction(PARAMS);
+        UldTransaction prevTx = new UldTransaction(PARAMS);
         TransactionOutput prevOut = new TransactionOutput(PARAMS, prevTx, COIN, new BtcECKey().toAddress(PARAMS));
         prevTx.addOutput(prevOut);
         // Connect it.
         tx1.addInput(prevOut);
         
-        BtcTransaction tx2 = createFakeTx(PARAMS, COIN,
+        UldTransaction tx2 = createFakeTx(PARAMS, COIN,
                 new BtcECKey().toAddress(PARAMS));
 
-        BtcBlock b1 = createFakeBlock(blockStore, BLOCK_HEIGHT_GENESIS, tx1, tx2).block;
+        UldBlock b1 = createFakeBlock(blockStore, BLOCK_HEIGHT_GENESIS, tx1, tx2).block;
 
         MessageSerializer bs = PARAMS.getDefaultSerializer();
         
@@ -163,10 +163,10 @@ public class ParseByteCacheTest {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         
         BitcoinSerializer bs = PARAMS.getSerializer(retain);
-        BtcBlock b1;
-        BtcBlock bRef;
-        b1 = (BtcBlock) bs.deserialize(ByteBuffer.wrap(blockBytes));
-        bRef = (BtcBlock) bsRef.deserialize(ByteBuffer.wrap(blockBytes));
+        UldBlock b1;
+        UldBlock bRef;
+        b1 = (UldBlock) bs.deserialize(ByteBuffer.wrap(blockBytes));
+        bRef = (UldBlock) bsRef.deserialize(ByteBuffer.wrap(blockBytes));
         
         // verify our reference BitcoinSerializer produces matching byte array.
         bos.reset();
@@ -190,7 +190,7 @@ public class ParseByteCacheTest {
         // retrieve a value from a child
         b1.getTransactions();
         if (b1.getTransactions().size() > 0) {
-            BtcTransaction tx1 = b1.getTransactions().get(0);
+            UldTransaction tx1 = b1.getTransactions().get(0);
             
             // this will always be true for all children of a block once they are retrieved.
             // the tx child inputs/outputs may not be parsed however.
@@ -202,8 +202,8 @@ public class ParseByteCacheTest {
         }
         
         // refresh block
-        b1 = (BtcBlock) bs.deserialize(ByteBuffer.wrap(blockBytes));
-        bRef = (BtcBlock) bsRef.deserialize(ByteBuffer.wrap(blockBytes));
+        b1 = (UldBlock) bs.deserialize(ByteBuffer.wrap(blockBytes));
+        bRef = (UldBlock) bsRef.deserialize(ByteBuffer.wrap(blockBytes));
         
         // retrieve a value from header
         b1.getDifficultyTarget();
@@ -212,15 +212,15 @@ public class ParseByteCacheTest {
         serDeser(bs, b1, bos.toByteArray(), null, null);
         
         // refresh block
-        b1 = (BtcBlock) bs.deserialize(ByteBuffer.wrap(blockBytes));
-        bRef = (BtcBlock) bsRef.deserialize(ByteBuffer.wrap(blockBytes));
+        b1 = (UldBlock) bs.deserialize(ByteBuffer.wrap(blockBytes));
+        bRef = (UldBlock) bsRef.deserialize(ByteBuffer.wrap(blockBytes));
         
         // retrieve a value from a child and header
         b1.getDifficultyTarget();
 
         b1.getTransactions();
         if (b1.getTransactions().size() > 0) {
-            BtcTransaction tx1 = b1.getTransactions().get(0);
+            UldTransaction tx1 = b1.getTransactions().get(0);
             
             assertEquals(retain, tx1.isCached());
         }
@@ -228,8 +228,8 @@ public class ParseByteCacheTest {
         serDeser(bs, b1, bos.toByteArray(), null, null);
         
         // refresh block
-        b1 = (BtcBlock) bs.deserialize(ByteBuffer.wrap(blockBytes));
-        bRef = (BtcBlock) bsRef.deserialize(ByteBuffer.wrap(blockBytes));
+        b1 = (UldBlock) bs.deserialize(ByteBuffer.wrap(blockBytes));
+        bRef = (UldBlock) bsRef.deserialize(ByteBuffer.wrap(blockBytes));
 
         // change a value in header
         b1.setNonce(new BigInteger("23"));
@@ -242,13 +242,13 @@ public class ParseByteCacheTest {
         serDeser(bs, b1, bos.toByteArray(), null, null);
         
         // refresh block
-        b1 = (BtcBlock) bs.deserialize(ByteBuffer.wrap(blockBytes));
-        bRef = (BtcBlock) bsRef.deserialize(ByteBuffer.wrap(blockBytes));
+        b1 = (UldBlock) bs.deserialize(ByteBuffer.wrap(blockBytes));
+        bRef = (UldBlock) bsRef.deserialize(ByteBuffer.wrap(blockBytes));
         
         // retrieve a value from a child of a child
         b1.getTransactions();
         if (b1.getTransactions().size() > 0) {
-            BtcTransaction tx1 = b1.getTransactions().get(0);
+            UldTransaction tx1 = b1.getTransactions().get(0);
             
             TransactionInput tin = tx1.getInputs().get(0);
             
@@ -261,13 +261,13 @@ public class ParseByteCacheTest {
         }
         
         // refresh block
-        b1 = (BtcBlock) bs.deserialize(ByteBuffer.wrap(blockBytes));
-        bRef = (BtcBlock) bsRef.deserialize(ByteBuffer.wrap(blockBytes));
+        b1 = (UldBlock) bs.deserialize(ByteBuffer.wrap(blockBytes));
+        bRef = (UldBlock) bsRef.deserialize(ByteBuffer.wrap(blockBytes));
         
         // add an input
         b1.getTransactions();
         if (b1.getTransactions().size() > 0) {
-            BtcTransaction tx1 = b1.getTransactions().get(0);
+            UldTransaction tx1 = b1.getTransactions().get(0);
             
             if (tx1.getInputs().size() > 0) {
                 tx1.addInput(tx1.getInputs().get(0));
@@ -301,16 +301,16 @@ public class ParseByteCacheTest {
         }
         
         // refresh block
-        b1 = (BtcBlock) bs.deserialize(ByteBuffer.wrap(blockBytes));
-        BtcBlock b2 = (BtcBlock) bs.deserialize(ByteBuffer.wrap(blockBytes));
-        bRef = (BtcBlock) bsRef.deserialize(ByteBuffer.wrap(blockBytes));
-        BtcBlock bRef2 = (BtcBlock) bsRef.deserialize(ByteBuffer.wrap(blockBytes));
+        b1 = (UldBlock) bs.deserialize(ByteBuffer.wrap(blockBytes));
+        UldBlock b2 = (UldBlock) bs.deserialize(ByteBuffer.wrap(blockBytes));
+        bRef = (UldBlock) bsRef.deserialize(ByteBuffer.wrap(blockBytes));
+        UldBlock bRef2 = (UldBlock) bsRef.deserialize(ByteBuffer.wrap(blockBytes));
         
         // reparent an input
         b1.getTransactions();
         if (b1.getTransactions().size() > 0) {
-            BtcTransaction tx1 = b1.getTransactions().get(0);
-            BtcTransaction tx2 = b2.getTransactions().get(0);
+            UldTransaction tx1 = b1.getTransactions().get(0);
+            UldTransaction tx2 = b2.getTransactions().get(0);
             
             if (tx1.getInputs().size() > 0) {
                 TransactionInput fromTx1 = tx1.getInputs().get(0);
@@ -341,7 +341,7 @@ public class ParseByteCacheTest {
             serDeser(bs, b1, bos.toByteArray(), null, null);
 
             // how about if we refresh it?
-            bRef = (BtcBlock) bsRef.deserialize(ByteBuffer.wrap(blockBytes));
+            bRef = (UldBlock) bsRef.deserialize(ByteBuffer.wrap(blockBytes));
             bos.reset();
             bsRef.serialize(bRef, bos);
             serDeser(bs, b1, bos.toByteArray(), null, null);
@@ -356,10 +356,10 @@ public class ParseByteCacheTest {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
         BitcoinSerializer bs = params.getSerializer(retain);
-        BtcTransaction t1;
-        BtcTransaction tRef;
-        t1 = (BtcTransaction) bs.deserialize(ByteBuffer.wrap(txBytes));
-        tRef = (BtcTransaction) bsRef.deserialize(ByteBuffer.wrap(txBytes));
+        UldTransaction t1;
+        UldTransaction tRef;
+        t1 = (UldTransaction) bs.deserialize(ByteBuffer.wrap(txBytes));
+        tRef = (UldTransaction) bsRef.deserialize(ByteBuffer.wrap(txBytes));
 
         // verify our reference BitcoinSerializer produces matching byte array.
         bos.reset();
@@ -389,8 +389,8 @@ public class ParseByteCacheTest {
         }
         
         // refresh tx
-        t1 = (BtcTransaction) bs.deserialize(ByteBuffer.wrap(txBytes));
-        tRef = (BtcTransaction) bsRef.deserialize(ByteBuffer.wrap(txBytes));
+        t1 = (UldTransaction) bs.deserialize(ByteBuffer.wrap(txBytes));
+        tRef = (UldTransaction) bsRef.deserialize(ByteBuffer.wrap(txBytes));
         
         // add an input
         if (t1.getInputs().size() > 0) {

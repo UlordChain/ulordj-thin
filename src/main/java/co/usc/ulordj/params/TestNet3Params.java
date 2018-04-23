@@ -20,7 +20,7 @@ package co.usc.ulordj.params;
 import java.math.BigInteger;
 import java.util.Date;
 
-import co.usc.ulordj.core.BtcBlock;
+import co.usc.ulordj.core.UldBlock;
 import co.usc.ulordj.core.NetworkParameters;
 import co.usc.ulordj.core.StoredBlock;
 import co.usc.ulordj.core.Utils;
@@ -42,22 +42,24 @@ public class TestNet3Params extends AbstractUlordNetParams {
         packetMagic = 0xC2E6CEF3;
         interval = INTERVAL;
         targetTimespan = TARGET_TIMESPAN;
-        maxTarget = Utils.decodeCompactBits(521142271L);
+        maxTarget = Utils.decodeCompactBits(503951731L);
         port = 19888;           // Ulord Testnet port
         addressHeader = 130;    // Ulord Testnet addresses start with 'u'
         p2shHeader = 125;       // Ulord Testnet script address start with 's'
         acceptableAddressCodes = new int[] { addressHeader, p2shHeader };
         dumpedPrivateKeyHeader = 239;   // Ulord Testnet private keys start with either '9' or 'c' (same as bitcoin)
-        genesisBlock.setTime(1520308246L);
-        genesisBlock.setDifficultyTarget(521142271L);
-        genesisBlock.setNonce(new BigInteger("000020f00dd1af082323e02e1f5b1d866d777abbcf63ba720d35dcf585840073", 16));
-        //genesisBlock.setMerkleRoot(Sha256Hash.wrap("a12949fc4a1735c8cbd6444bf9b4aea61300bc7aee9fec741af5a8c2fe386216"));
+        //genesisBlock.setTime(1520308246L);
+        genesisBlock.setTime(1524057440L);
+        genesisBlock.setDifficultyTarget(503951731L);
+        genesisBlock.setNonce(new BigInteger("000020f00dd1af082323e02e1f5b1d866d777abbcf63ba720d35dcf585840073", 16)); //"a12949fc4a1735c8cbd6444bf9b4aea61300bc7aee9fec741af5a8c2fe386216"
+
         spendableCoinbaseDepth = 100;
         subsidyDecreaseBlockCount = 840960;
+
+
         String genesisHash = genesisBlock.getHashAsString();
 
         checkState(genesisHash.equals("000f378be841f44e75346eebd931b13041f0dee561af6a80cfea6669c1bfec03"));
-
 
         dnsSeeds = new String[] {
                 "testnet-seed1.ulord.one",
@@ -91,10 +93,10 @@ public class TestNet3Params extends AbstractUlordNetParams {
     private static final Date testnetDiffDate = new Date(1329264000000L);
 
     @Override
-    public void checkDifficultyTransitions(final StoredBlock storedPrev, final BtcBlock nextBlock,
+    public void checkDifficultyTransitions(final StoredBlock storedPrev, final UldBlock nextBlock,
         final BtcBlockStore blockStore) throws VerificationException, BlockStoreException {
         if (!isDifficultyTransitionPoint(storedPrev) && nextBlock.getTime().after(testnetDiffDate)) {
-            BtcBlock prev = storedPrev.getHeader();
+            UldBlock prev = storedPrev.getHeader();
 
             // After 15th February 2012 the rules on the testnet change to avoid people running up the difficulty
             // and then leaving, making it too hard to mine a block. On non-difficulty transition points, easy

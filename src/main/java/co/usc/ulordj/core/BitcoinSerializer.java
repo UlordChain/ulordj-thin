@@ -51,8 +51,8 @@ public class BitcoinSerializer extends MessageSerializer {
     private static final Map<Class<? extends Message>, String> names = new HashMap<Class<? extends Message>, String>();
 
     static {
-        names.put(BtcBlock.class, "block");
-        names.put(BtcTransaction.class, "tx");
+        names.put(UldBlock.class, "block");
+        names.put(UldTransaction.class, "tx");
         names.put(FilteredBlock.class, "merkleblock");
     }
 
@@ -199,8 +199,8 @@ public class BitcoinSerializer extends MessageSerializer {
      * serialization format support.
      */
     @Override
-    public BtcBlock makeBlock(final byte[] payloadBytes, final int offset, final int length) throws ProtocolException {
-        return new BtcBlock(params, payloadBytes, offset, this, length);
+    public UldBlock makeBlock(final byte[] payloadBytes, final int offset, final int length) throws ProtocolException {
+        return new UldBlock(params, payloadBytes, offset, this, length);
     }
 
     /**
@@ -217,9 +217,9 @@ public class BitcoinSerializer extends MessageSerializer {
      * serialization format support.
      */
     @Override
-    public BtcTransaction makeTransaction(byte[] payloadBytes, int offset,
+    public UldTransaction makeTransaction(byte[] payloadBytes, int offset,
                                           int length, byte[] hash) throws ProtocolException {
-        BtcTransaction tx = new BtcTransaction(params, payloadBytes, offset, null, this, length);
+        UldTransaction tx = new UldTransaction(params, payloadBytes, offset, null, this, length);
         if (hash != null)
             tx.setHash(Sha256Hash.wrapReversed(hash));
         return tx;

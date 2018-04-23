@@ -54,7 +54,7 @@ class DummySerializer extends MessageSerializer {
     }
 
     @Override
-    public BtcBlock makeBlock(byte[] payloadBytes, int offset, int length) throws UnsupportedOperationException {
+    public UldBlock makeBlock(byte[] payloadBytes, int offset, int length) throws UnsupportedOperationException {
         throw new UnsupportedOperationException(DEFAULT_EXCEPTION_MESSAGE);
     }
 
@@ -64,7 +64,7 @@ class DummySerializer extends MessageSerializer {
     }
 
     @Override
-    public BtcTransaction makeTransaction(byte[] payloadBytes, int offset, int length, byte[] hash) throws UnsupportedOperationException {
+    public UldTransaction makeTransaction(byte[] payloadBytes, int offset, int length, byte[] hash) throws UnsupportedOperationException {
         throw new UnsupportedOperationException(DEFAULT_EXCEPTION_MESSAGE);
     }
 

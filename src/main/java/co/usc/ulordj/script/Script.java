@@ -62,7 +62,7 @@ public class Script {
         P2SH
     }
 
-    /** Flags to pass to {@link Script#correctlySpends(BtcTransaction, long, Script, Set)}.
+    /** Flags to pass to {@link Script#correctlySpends(UldTransaction, long, Script, Set)}.
      * Note currently only P2SH, DERSIG and NULLDUMMY are actually supported.
      */
     public enum VerifyFlag {
@@ -835,15 +835,15 @@ public class Script {
     /**
      * Exposes the script interpreter. Normally you should not use this directly, instead use
      * {@link co.usc.ulordj.core.TransactionInput#verify(co.usc.ulordj.core.TransactionOutput)} or
-     * {@link co.usc.ulordj.script.Script#correctlySpends(BtcTransaction, long, Script)}. This method
+     * {@link co.usc.ulordj.script.Script#correctlySpends(UldTransaction, long, Script)}. This method
      * is useful if you need more precise control or access to the final state of the stack. This interface is very
      * likely to change in future.
      *
-     * @deprecated Use {@link #executeScript(BtcTransaction, long, co.usc.ulordj.script.Script, java.util.LinkedList, java.util.Set)}
+     * @deprecated Use {@link #executeScript(UldTransaction, long, co.usc.ulordj.script.Script, java.util.LinkedList, java.util.Set)}
      * instead.
      */
     @Deprecated
-    public static void executeScript(@Nullable BtcTransaction txContainingThis, long index,
+    public static void executeScript(@Nullable UldTransaction txContainingThis, long index,
                                      Script script, LinkedList<byte[]> stack, boolean enforceNullDummy) throws ScriptException {
         final EnumSet<VerifyFlag> flags = enforceNullDummy
             ? EnumSet.of(VerifyFlag.NULLDUMMY)
@@ -855,11 +855,11 @@ public class Script {
     /**
      * Exposes the script interpreter. Normally you should not use this directly, instead use
      * {@link co.usc.ulordj.core.TransactionInput#verify(co.usc.ulordj.core.TransactionOutput)} or
-     * {@link co.usc.ulordj.script.Script#correctlySpends(BtcTransaction, long, Script)}. This method
+     * {@link co.usc.ulordj.script.Script#correctlySpends(UldTransaction, long, Script)}. This method
      * is useful if you need more precise control or access to the final state of the stack. This interface is very
      * likely to change in future.
      */
-    public static void executeScript(@Nullable BtcTransaction txContainingThis, long index,
+    public static void executeScript(@Nullable UldTransaction txContainingThis, long index,
                                      Script script, LinkedList<byte[]> stack, Set<VerifyFlag> verifyFlags) throws ScriptException {
         int opCount = 0;
         int lastCodeSepLocation = 0;
@@ -1383,7 +1383,7 @@ public class Script {
     }
 
     // This is more or less a direct translation of the code in Bitcoin Core
-    private static void executeCheckLockTimeVerify(BtcTransaction txContainingThis, int index, Script script, LinkedList<byte[]> stack,
+    private static void executeCheckLockTimeVerify(UldTransaction txContainingThis, int index, Script script, LinkedList<byte[]> stack,
                                                    int lastCodeSepLocation, int opcode,
                                                    Set<VerifyFlag> verifyFlags) throws ScriptException {
         if (stack.size() < 1)
@@ -1398,8 +1398,8 @@ public class Script {
 
         // There are two kinds of nLockTime, need to ensure we're comparing apples-to-apples
         if (!(
-            ((txContainingThis.getLockTime() <  BtcTransaction.LOCKTIME_THRESHOLD) && (nLockTime.compareTo(BtcTransaction.LOCKTIME_THRESHOLD_BIG)) < 0) ||
-            ((txContainingThis.getLockTime() >= BtcTransaction.LOCKTIME_THRESHOLD) && (nLockTime.compareTo(BtcTransaction.LOCKTIME_THRESHOLD_BIG)) >= 0))
+            ((txContainingThis.getLockTime() <  UldTransaction.LOCKTIME_THRESHOLD) && (nLockTime.compareTo(UldTransaction.LOCKTIME_THRESHOLD_BIG)) < 0) ||
+            ((txContainingThis.getLockTime() >= UldTransaction.LOCKTIME_THRESHOLD) && (nLockTime.compareTo(UldTransaction.LOCKTIME_THRESHOLD_BIG)) >= 0))
         )
             throw new ScriptException("Locktime requirement type mismatch");
 
@@ -1422,7 +1422,7 @@ public class Script {
             throw new ScriptException("Transaction contains a final transaction input for a CHECKLOCKTIMEVERIFY script.");
     }
 
-    private static void executeCheckSig(BtcTransaction txContainingThis, int index, Script script, LinkedList<byte[]> stack,
+    private static void executeCheckSig(UldTransaction txContainingThis, int index, Script script, LinkedList<byte[]> stack,
                                         int lastCodeSepLocation, int opcode,
                                         Set<VerifyFlag> verifyFlags) throws ScriptException {
         final boolean requireCanonical = verifyFlags.contains(VerifyFlag.STRICTENC)
@@ -1470,7 +1470,7 @@ public class Script {
                 throw new ScriptException("Script failed OP_CHECKSIGVERIFY");
     }
 
-    private static int executeMultiSig(BtcTransaction txContainingThis, int index, Script script, LinkedList<byte[]> stack,
+    private static int executeMultiSig(UldTransaction txContainingThis, int index, Script script, LinkedList<byte[]> stack,
                                        int opCount, int lastCodeSepLocation, int opcode,
                                        Set<VerifyFlag> verifyFlags) throws ScriptException {
         final boolean requireCanonical = verifyFlags.contains(VerifyFlag.STRICTENC)
@@ -1560,12 +1560,12 @@ public class Script {
      *                         Accessing txContainingThis from another thread while this method runs results in undefined behavior.
      * @param scriptSigIndex The index in txContainingThis of the scriptSig (note: NOT the index of the scriptPubKey).
      * @param scriptPubKey The connected scriptPubKey containing the conditions needed to claim the value.
-     * @deprecated Use {@link #correctlySpends(BtcTransaction, long, co.usc.ulordj.script.Script, java.util.Set)}
+     * @deprecated Use {@link #correctlySpends(UldTransaction, long, co.usc.ulordj.script.Script, java.util.Set)}
      * instead so that verification flags do not change as new verification options
      * are added.
      */
     @Deprecated
-    public void correctlySpends(BtcTransaction txContainingThis, long scriptSigIndex, Script scriptPubKey)
+    public void correctlySpends(UldTransaction txContainingThis, long scriptSigIndex, Script scriptPubKey)
             throws ScriptException {
         correctlySpends(txContainingThis, scriptSigIndex, scriptPubKey, ALL_VERIFY_FLAGS);
     }
@@ -1576,10 +1576,10 @@ public class Script {
      *                         Accessing txContainingThis from another thread while this method runs results in undefined behavior.
      * @param scriptSigIndex The index in txContainingThis of the scriptSig (note: NOT the index of the scriptPubKey).
      * @param scriptPubKey The connected scriptPubKey containing the conditions needed to claim the value.
-     * @param verifyFlags Each flag enables one validation rule. If in doubt, use {@link #correctlySpends(BtcTransaction, long, Script)}
+     * @param verifyFlags Each flag enables one validation rule. If in doubt, use {@link #correctlySpends(UldTransaction, long, Script)}
      *                    which sets all flags.
      */
-    public void correctlySpends(BtcTransaction txContainingThis, long scriptSigIndex, Script scriptPubKey,
+    public void correctlySpends(UldTransaction txContainingThis, long scriptSigIndex, Script scriptPubKey,
                                 Set<VerifyFlag> verifyFlags) throws ScriptException {
         // Clone the transaction because executing the script involves editing it, and if we die, we'll leave
         // the tx half broken (also it's not so thread safe to work on it directly.

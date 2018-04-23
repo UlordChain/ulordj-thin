@@ -31,14 +31,14 @@ public class TransactionOutputTest {
         String P2SHAddressString = "35b9vsyH1KoFT5a5KtrKusaCcPLkiSo1tU";
         Address P2SHAddress = Address.fromBase58(MainNetParams.get(), P2SHAddressString);
         Script script = ScriptBuilder.createOutputScript(P2SHAddress);
-        BtcTransaction tx = new BtcTransaction(MainNetParams.get());
+        UldTransaction tx = new UldTransaction(MainNetParams.get());
         tx.addOutput(Coin.COIN, script);
         assertEquals(P2SHAddressString, tx.getOutput(0).getAddressFromP2SH(MainNetParams.get()).toString());
     }
 
     @Test
     public void getAddressTests() throws Exception {
-        BtcTransaction tx = new BtcTransaction(MainNetParams.get());
+        UldTransaction tx = new UldTransaction(MainNetParams.get());
         tx.addOutput(Coin.CENT, ScriptBuilder.createOpReturnScript("hello world!".getBytes()));
         assertNull(tx.getOutput(0).getAddressFromP2SH(PARAMS));
         assertNull(tx.getOutput(0).getAddressFromP2PKHScript(PARAMS));
@@ -47,6 +47,6 @@ public class TransactionOutputTest {
     @Test
     public void getMinNonDustValue() throws Exception {
         TransactionOutput payToAddressOutput = new TransactionOutput(PARAMS, null, Coin.COIN, new BtcECKey().toAddress(PARAMS));
-        assertEquals(BtcTransaction.MIN_NONDUST_OUTPUT, payToAddressOutput.getMinNonDustValue());
+        assertEquals(UldTransaction.MIN_NONDUST_OUTPUT, payToAddressOutput.getMinNonDustValue());
     }
 }

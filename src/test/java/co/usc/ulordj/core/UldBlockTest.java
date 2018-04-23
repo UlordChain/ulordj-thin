@@ -34,7 +34,7 @@ import java.util.EnumSet;
 import static co.usc.ulordj.core.Utils.HEX;
 import static org.junit.Assert.*;
 
-public class BtcBlockTest {
+public class UldBlockTest {
     private static final NetworkParameters PARAMS = TestNet2Params.get();
 
     public static final byte[] blockBytes;
@@ -61,15 +61,15 @@ public class BtcBlockTest {
 
     @Test
     public void testBlockVerification() throws Exception {
-        BtcBlock block = PARAMS.getDefaultSerializer().makeBlock(blockBytes);
-        block.verify(BtcBlock.BLOCK_HEIGHT_GENESIS, EnumSet.noneOf(BtcBlock.VerifyFlag.class));
+        UldBlock block = PARAMS.getDefaultSerializer().makeBlock(blockBytes);
+        block.verify(UldBlock.BLOCK_HEIGHT_GENESIS, EnumSet.noneOf(UldBlock.VerifyFlag.class));
         assertEquals("00000000a6e5eb79dcec11897af55e90cd571a4335383a3ccfbc12ec81085935", block.getHashAsString());
     }
     
     @SuppressWarnings("deprecation")
     @Test
     public void testDate() throws Exception {
-        BtcBlock block = PARAMS.getDefaultSerializer().makeBlock(blockBytes);
+        UldBlock block = PARAMS.getDefaultSerializer().makeBlock(blockBytes);
         assertEquals("4 Nov 2010 16:06:04 GMT", block.getTime().toGMTString());
     }
 
@@ -77,43 +77,43 @@ public class BtcBlockTest {
     public void testProofOfWork() throws Exception {
         // This params accepts any difficulty target.
         NetworkParameters params = UnitTestParams.get();
-        BtcBlock block = params.getDefaultSerializer().makeBlock(blockBytes);
+        UldBlock block = params.getDefaultSerializer().makeBlock(blockBytes);
         block.setNonce(new BigInteger("12346"));
         try {
-            block.verify(BtcBlock.BLOCK_HEIGHT_GENESIS, EnumSet.noneOf(BtcBlock.VerifyFlag.class));
+            block.verify(UldBlock.BLOCK_HEIGHT_GENESIS, EnumSet.noneOf(UldBlock.VerifyFlag.class));
             fail();
         } catch (VerificationException e) {
             // Expected.
         }
         // Blocks contain their own difficulty target. The BlockChain verification mechanism is what stops real blocks
         // from containing artificially weak difficulties.
-        block.setDifficultyTarget(BtcBlock.EASIEST_DIFFICULTY_TARGET);
+        block.setDifficultyTarget(UldBlock.EASIEST_DIFFICULTY_TARGET);
         // Now it should pass.
-        block.verify(BtcBlock.BLOCK_HEIGHT_GENESIS, EnumSet.noneOf(BtcBlock.VerifyFlag.class));
+        block.verify(UldBlock.BLOCK_HEIGHT_GENESIS, EnumSet.noneOf(UldBlock.VerifyFlag.class));
         // Break the nonce again at the lower difficulty level so we can try solving for it.
         block.setNonce(new BigInteger("1"));
         try {
-            block.verify(BtcBlock.BLOCK_HEIGHT_GENESIS, EnumSet.noneOf(BtcBlock.VerifyFlag.class));
+            block.verify(UldBlock.BLOCK_HEIGHT_GENESIS, EnumSet.noneOf(UldBlock.VerifyFlag.class));
             fail();
         } catch (VerificationException e) {
             // Expected to fail as the nonce is no longer correct.
         }
         // Should find an acceptable nonce.
         block.solve();
-        block.verify(BtcBlock.BLOCK_HEIGHT_GENESIS, EnumSet.noneOf(BtcBlock.VerifyFlag.class));
+        block.verify(UldBlock.BLOCK_HEIGHT_GENESIS, EnumSet.noneOf(UldBlock.VerifyFlag.class));
         assertEquals(block.getNonce(), 2);
     }
 
     @Test
     public void testBadTransactions() throws Exception {
-        BtcBlock block = PARAMS.getDefaultSerializer().makeBlock(blockBytes);
+        UldBlock block = PARAMS.getDefaultSerializer().makeBlock(blockBytes);
         // Re-arrange so the coinbase transaction is not first.
-        BtcTransaction tx1 = block.transactions.get(0);
-        BtcTransaction tx2 = block.transactions.get(1);
+        UldTransaction tx1 = block.transactions.get(0);
+        UldTransaction tx2 = block.transactions.get(1);
         block.transactions.set(0, tx2);
         block.transactions.set(1, tx1);
         try {
-            block.verify(BtcBlock.BLOCK_HEIGHT_GENESIS, EnumSet.noneOf(BtcBlock.VerifyFlag.class));
+            block.verify(UldBlock.BLOCK_HEIGHT_GENESIS, EnumSet.noneOf(UldBlock.VerifyFlag.class));
             fail();
         } catch (VerificationException e) {
             // We should get here.
@@ -122,9 +122,9 @@ public class BtcBlockTest {
 
     @Test
     public void testHeaderParse() throws Exception {
-        BtcBlock block = PARAMS.getDefaultSerializer().makeBlock(blockBytes);
-        BtcBlock header = block.cloneAsHeader();
-        BtcBlock reparsed = PARAMS.getDefaultSerializer().makeBlock(header.bitcoinSerialize());
+        UldBlock block = PARAMS.getDefaultSerializer().makeBlock(blockBytes);
+        UldBlock header = block.cloneAsHeader();
+        UldBlock reparsed = PARAMS.getDefaultSerializer().makeBlock(header.bitcoinSerialize());
         assertEquals(reparsed, header);
     }
 
@@ -134,17 +134,17 @@ public class BtcBlockTest {
         // proves that transaction serialization works, along with all its subobjects like scripts and in/outpoints.
         //
         // NB: This tests the bitcoin serialization protocol.
-        BtcBlock block = PARAMS.getDefaultSerializer().makeBlock(blockBytes);
+        UldBlock block = PARAMS.getDefaultSerializer().makeBlock(blockBytes);
         assertTrue(Arrays.equals(blockBytes, block.bitcoinSerialize()));
     }
     
     @Test
     public void testUpdateLength() {
         NetworkParameters params = UnitTestParams.get();
-        BtcBlock block = params.getGenesisBlock().createNextBlockWithCoinbase(BtcBlock.BLOCK_VERSION_GENESIS, new BtcECKey().getPubKey(), BtcBlock.BLOCK_HEIGHT_GENESIS);
+        UldBlock block = params.getGenesisBlock().createNextBlockWithCoinbase(UldBlock.BLOCK_VERSION_GENESIS, new BtcECKey().getPubKey(), UldBlock.BLOCK_HEIGHT_GENESIS);
         assertEquals(block.bitcoinSerialize().length, block.length);
         final int origBlockLen = block.length;
-        BtcTransaction tx = new BtcTransaction(params);
+        UldTransaction tx = new UldTransaction(params);
         // this is broken until the transaction has > 1 input + output (which is required anyway...)
         //assertTrue(tx.length == tx.bitcoinSerialize().length && tx.length == 8);
         byte[] outputScript = new byte[10];
@@ -177,12 +177,12 @@ public class BtcBlockTest {
         // contains a coinbase transaction whose height is two bytes, which is
         // shorter than we see in most other cases.
 
-        BtcBlock block = TestNet3Params.get().getDefaultSerializer().makeBlock(
+        UldBlock block = TestNet3Params.get().getDefaultSerializer().makeBlock(
             ByteStreams.toByteArray(getClass().getResourceAsStream("block_testnet21066.dat")));
 
         // Check block.
         assertEquals("0000000004053156021d8e42459d284220a7f6e087bf78f30179c3703ca4eefa", block.getHashAsString());
-        block.verify(21066, EnumSet.of(BtcBlock.VerifyFlag.HEIGHT_IN_COINBASE));
+        block.verify(21066, EnumSet.of(UldBlock.VerifyFlag.HEIGHT_IN_COINBASE));
 
         // Testnet block 32768 (hash 000000007590ba495b58338a5806c2b6f10af921a70dbd814e0da3c6957c0c03)
         // contains a coinbase transaction whose height is three bytes, but could
@@ -194,48 +194,48 @@ public class BtcBlockTest {
 
         // Check block.
         assertEquals("000000007590ba495b58338a5806c2b6f10af921a70dbd814e0da3c6957c0c03", block.getHashAsString());
-        block.verify(32768, EnumSet.of(BtcBlock.VerifyFlag.HEIGHT_IN_COINBASE));
+        block.verify(32768, EnumSet.of(UldBlock.VerifyFlag.HEIGHT_IN_COINBASE));
     }
 
 
     @Test
     public void isBIPs() throws Exception {
         final MainNetParams mainnet = MainNetParams.get();
-        final BtcBlock genesis = mainnet.getGenesisBlock();
+        final UldBlock genesis = mainnet.getGenesisBlock();
         assertFalse(genesis.isBIP34());
         assertFalse(genesis.isBIP66());
         assertFalse(genesis.isBIP65());
 
         // 227835/00000000000001aa077d7aa84c532a4d69bdbff519609d1da0835261b7a74eb6: last version 1 block
-        final BtcBlock block227835 = mainnet.getDefaultSerializer()
+        final UldBlock block227835 = mainnet.getDefaultSerializer()
                 .makeBlock(ByteStreams.toByteArray(getClass().getResourceAsStream("block227835.dat")));
         assertFalse(block227835.isBIP34());
         assertFalse(block227835.isBIP66());
         assertFalse(block227835.isBIP65());
 
         // 227836/00000000000000d0dfd4c9d588d325dce4f32c1b31b7c0064cba7025a9b9adcc: version 2 block
-        final BtcBlock block227836 = mainnet.getDefaultSerializer()
+        final UldBlock block227836 = mainnet.getDefaultSerializer()
                 .makeBlock(ByteStreams.toByteArray(getClass().getResourceAsStream("block227836.dat")));
         assertTrue(block227836.isBIP34());
         assertFalse(block227836.isBIP66());
         assertFalse(block227836.isBIP65());
 
         // 363703/0000000000000000011b2a4cb91b63886ffe0d2263fd17ac5a9b902a219e0a14: version 3 block
-        final BtcBlock block363703 = mainnet.getDefaultSerializer()
+        final UldBlock block363703 = mainnet.getDefaultSerializer()
                 .makeBlock(ByteStreams.toByteArray(getClass().getResourceAsStream("block363703.dat")));
         assertTrue(block363703.isBIP34());
         assertTrue(block363703.isBIP66());
         assertFalse(block363703.isBIP65());
 
         // 383616/00000000000000000aab6a2b34e979b09ca185584bd1aecf204f24d150ff55e9: version 4 block
-        final BtcBlock block383616 = mainnet.getDefaultSerializer()
+        final UldBlock block383616 = mainnet.getDefaultSerializer()
                 .makeBlock(ByteStreams.toByteArray(getClass().getResourceAsStream("block383616.dat")));
         assertTrue(block383616.isBIP34());
         assertTrue(block383616.isBIP66());
         assertTrue(block383616.isBIP65());
 
         // 370661/00000000000000001416a613602d73bbe5c79170fd8f39d509896b829cf9021e: voted for BIP101
-        final BtcBlock block370661 = mainnet.getDefaultSerializer()
+        final UldBlock block370661 = mainnet.getDefaultSerializer()
                 .makeBlock(ByteStreams.toByteArray(getClass().getResourceAsStream("block370661.dat")));
         assertTrue(block370661.isBIP34());
         assertTrue(block370661.isBIP66());

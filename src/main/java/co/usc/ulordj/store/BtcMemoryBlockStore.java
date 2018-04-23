@@ -37,7 +37,7 @@ public class BtcMemoryBlockStore implements BtcBlockStore {
     public BtcMemoryBlockStore(NetworkParameters params) {
         // Insert the genesis block.
         try {
-            BtcBlock genesisHeader = params.getGenesisBlock().cloneAsHeader();
+            UldBlock genesisHeader = params.getGenesisBlock().cloneAsHeader();
             StoredBlock storedGenesis = new StoredBlock(genesisHeader, genesisHeader.getWork(), 0);
             put(storedGenesis);
             setChainHead(storedGenesis);

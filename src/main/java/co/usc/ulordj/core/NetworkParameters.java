@@ -60,7 +60,7 @@ public abstract class NetworkParameters {
 
     // TODO: Seed nodes should be here as well.
 
-    protected BtcBlock genesisBlock;
+    protected UldBlock genesisBlock;
     protected BigInteger maxTarget;
     protected int port;
     protected long packetMagic;  // Indicates message origin network and is used to seek to the next message when stream state is unknown.
@@ -100,15 +100,16 @@ public abstract class NetworkParameters {
         genesisBlock = createGenesis(this);
     }
 
-    private static BtcBlock createGenesis(NetworkParameters n) {
-        BtcBlock genesisBlock = new BtcBlock(n, BtcBlock.BLOCK_VERSION_GENESIS);
-        BtcTransaction t = new BtcTransaction(n);
+    private static UldBlock createGenesis(NetworkParameters n) {
+        UldBlock genesisBlock = new UldBlock(n, UldBlock.BLOCK_VERSION_GENESIS);
+        UldTransaction t = new UldTransaction(n);
         try {
             // A script containing the difficulty bits and the following message:
             //
-            //  "ulord hold value testnet." "The Times 03/Jan/2009 Chancellor on brink of second bailout for banks"
+            // "ulord hold value testnet."
             byte[] bytes = Utils.HEX.decode
-                    ("04ffff001d01044c5957697265642030392f4a616e2f3230313420546865204772616e64204578706572696d656e7420476f6573204c6976653a204f76657273746f636b2e636f6d204973204e6f7720416363657074696e6720426974636f696e73");
+                    ("04ffff001d010419756c6f726420686f6c642076616c756520746573746e65742e");
+
             t.addInput(new TransactionInput(n, t, bytes));
             ByteArrayOutputStream scriptPubKeyBytes = new ByteArrayOutputStream();
             Script.writeBytes(scriptPubKeyBytes, Utils.HEX.decode
@@ -243,7 +244,7 @@ public abstract class NetworkParameters {
      *
      * @throws VerificationException if the block's difficulty is not correct.
      */
-    public abstract void checkDifficultyTransitions(StoredBlock storedPrev, BtcBlock next, final BtcBlockStore blockStore) throws VerificationException, BlockStoreException;
+    public abstract void checkDifficultyTransitions(StoredBlock storedPrev, UldBlock next, final BtcBlockStore blockStore) throws VerificationException, BlockStoreException;
 
     /**
      * Returns true if the block height is either not a checkpoint, or is a checkpoint and the hash matches.
@@ -286,7 +287,7 @@ public abstract class NetworkParameters {
      * and a message in the coinbase transaction. It says, <i>"The Times 03/Jan/2009 Chancellor on brink of second
      * bailout for banks"</i>.</p>
      */
-    public BtcBlock getGenesisBlock() {
+    public UldBlock getGenesisBlock() {
         return genesisBlock;
     }
 

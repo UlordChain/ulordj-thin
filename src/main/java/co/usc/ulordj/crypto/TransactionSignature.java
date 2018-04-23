@@ -17,9 +17,9 @@
 package co.usc.ulordj.crypto;
 
 import co.usc.ulordj.core.BtcECKey;
-import co.usc.ulordj.core.BtcTransaction;
+import co.usc.ulordj.core.UldTransaction;
 import co.usc.ulordj.core.VerificationException;
-import co.usc.ulordj.core.BtcTransaction.SigHash;
+import co.usc.ulordj.core.UldTransaction.SigHash;
 import com.google.common.base.Preconditions;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -40,7 +40,7 @@ public class TransactionSignature extends BtcECKey.ECDSASignature {
 
     /** Constructs a signature with the given components and SIGHASH_ALL. */
     public TransactionSignature(BigInteger r, BigInteger s) {
-        this(r, s, BtcTransaction.SigHash.ALL.value);
+        this(r, s, UldTransaction.SigHash.ALL.value);
     }
 
     /** Constructs a signature with the given components and raw sighash flag bytes (needed for rule compatibility). */
@@ -50,7 +50,7 @@ public class TransactionSignature extends BtcECKey.ECDSASignature {
     }
 
     /** Constructs a transaction signature based on the ECDSA signature. */
-    public TransactionSignature(BtcECKey.ECDSASignature signature, BtcTransaction.SigHash mode, boolean anyoneCanPay) {
+    public TransactionSignature(BtcECKey.ECDSASignature signature, UldTransaction.SigHash mode, boolean anyoneCanPay) {
         super(signature.r, signature.s);
         sighashFlags = calcSigHashValue(mode, anyoneCanPay);
     }
@@ -67,11 +67,11 @@ public class TransactionSignature extends BtcECKey.ECDSASignature {
     }
 
     /** Calculates the byte used in the protocol to represent the combination of mode and anyoneCanPay. */
-    public static int calcSigHashValue(BtcTransaction.SigHash mode, boolean anyoneCanPay) {
+    public static int calcSigHashValue(UldTransaction.SigHash mode, boolean anyoneCanPay) {
         Preconditions.checkArgument(SigHash.ALL == mode || SigHash.NONE == mode || SigHash.SINGLE == mode); // enforce compatibility since this code was made before the SigHash enum was updated
         int sighashFlags = mode.value;
         if (anyoneCanPay)
-            sighashFlags |= BtcTransaction.SigHash.ANYONECANPAY.value;
+            sighashFlags |= UldTransaction.SigHash.ANYONECANPAY.value;
         return sighashFlags;
     }
 
@@ -92,8 +92,8 @@ public class TransactionSignature extends BtcECKey.ECDSASignature {
         if (signature.length < 9 || signature.length > 73)
             return false;
 
-        int hashType = (signature[signature.length-1] & 0xff) & ~BtcTransaction.SigHash.ANYONECANPAY.value; // mask the byte to prevent sign-extension hurting us
-        if (hashType < BtcTransaction.SigHash.ALL.value || hashType > BtcTransaction.SigHash.SINGLE.value)
+        int hashType = (signature[signature.length-1] & 0xff) & ~UldTransaction.SigHash.ANYONECANPAY.value; // mask the byte to prevent sign-extension hurting us
+        if (hashType < UldTransaction.SigHash.ALL.value || hashType > UldTransaction.SigHash.SINGLE.value)
             return false;
 
         //                   "wrong type"                  "wrong length marker"
@@ -123,17 +123,17 @@ public class TransactionSignature extends BtcECKey.ECDSASignature {
     }
 
     public boolean anyoneCanPay() {
-        return (sighashFlags & BtcTransaction.SigHash.ANYONECANPAY.value) != 0;
+        return (sighashFlags & UldTransaction.SigHash.ANYONECANPAY.value) != 0;
     }
 
-    public BtcTransaction.SigHash sigHashMode() {
+    public UldTransaction.SigHash sigHashMode() {
         final int mode = sighashFlags & 0x1f;
-        if (mode == BtcTransaction.SigHash.NONE.value)
-            return BtcTransaction.SigHash.NONE;
-        else if (mode == BtcTransaction.SigHash.SINGLE.value)
-            return BtcTransaction.SigHash.SINGLE;
+        if (mode == UldTransaction.SigHash.NONE.value)
+            return UldTransaction.SigHash.NONE;
+        else if (mode == UldTransaction.SigHash.SINGLE.value)
+            return UldTransaction.SigHash.SINGLE;
         else
-            return BtcTransaction.SigHash.ALL;
+            return UldTransaction.SigHash.ALL;
     }
 
     /**

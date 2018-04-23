@@ -19,9 +19,9 @@ package co.usc.ulordj.wallet;
 
 import com.google.common.collect.*;
 import net.jcip.annotations.*;
-import co.usc.ulordj.core.BtcAbstractBlockChain;
+import co.usc.ulordj.core.UldAbstractBlockChain;
 import co.usc.ulordj.core.Address;
-import co.usc.ulordj.core.BtcBlockChain;
+import co.usc.ulordj.core.UldBlockChain;
 import co.usc.ulordj.core.Coin;
 import co.usc.ulordj.core.Context;
 import co.usc.ulordj.core.BtcECKey;
@@ -29,7 +29,7 @@ import co.usc.ulordj.core.InsufficientMoneyException;
 import co.usc.ulordj.core.NetworkParameters;
 import co.usc.ulordj.core.ScriptException;
 import co.usc.ulordj.core.Sha256Hash;
-import co.usc.ulordj.core.BtcTransaction;
+import co.usc.ulordj.core.UldTransaction;
 import co.usc.ulordj.core.TransactionBag;
 import co.usc.ulordj.core.TransactionInput;
 import co.usc.ulordj.core.TransactionOutput;
@@ -73,7 +73,7 @@ import static com.google.common.base.Preconditions.*;
  * <p>To learn more about this class, read <b><a href="https://bitcoinj.github.io/working-with-the-wallet">
  *     working with the wallet.</a></b></p>
  *
- * <p>To fill up a Wallet with transactions, you need to use it in combination with a {@link BtcBlockChain} and various
+ * <p>To fill up a Wallet with transactions, you need to use it in combination with a {@link UldBlockChain} and various
  * other objects, see the <a href="https://bitcoinj.github.io/getting-started">Getting started</a> tutorial
  * on the website to learn more about how to set everything up.</p>
  *
@@ -392,7 +392,7 @@ public class Wallet
      * @param chain If set, will be used to estimate lock times for block timelocked transactions.
      */
     public String toString(boolean includePrivateKeys, boolean includeTransactions, boolean includeExtensions,
-                           @Nullable BtcAbstractBlockChain chain) {
+                           @Nullable UldAbstractBlockChain chain) {
         try {
             StringBuilder builder = new StringBuilder();
             Coin estimatedBalance = getBalance(BalanceType.ESTIMATED);
@@ -658,13 +658,13 @@ public class Wallet
 
             // Check size.
             final int size = req.tx.unsafeBitcoinSerialize().length;
-            if (size > BtcTransaction.MAX_STANDARD_TX_SIZE)
+            if (size > UldTransaction.MAX_STANDARD_TX_SIZE)
                 throw new ExceededMaxTransactionSize();
 
             // Label the transaction as being a user requested payment. This can be used to render GUI wallet
             // transaction lists more appropriately, especially when the wallet starts to generate transactions itself
             // for internal purposes.
-            req.tx.setPurpose(BtcTransaction.Purpose.USER_PAYMENT);
+            req.tx.setPurpose(UldTransaction.Purpose.USER_PAYMENT);
             // Record the exchange rate that was valid when the transaction was completed.
             req.tx.setMemo(req.memo);
             req.completed = true;
@@ -681,7 +681,7 @@ public class Wallet
      */
     public void signTransaction(SendRequest req) {
         try {
-            BtcTransaction tx = req.tx;
+            UldTransaction tx = req.tx;
             List<TransactionInput> inputs = tx.getInputs();
             List<TransactionOutput> outputs = tx.getOutputs();
             checkState(inputs.size() > 0);
@@ -722,12 +722,12 @@ public class Wallet
     }
 
     /** Reduce the value of the first output of a transaction to pay the given feePerKb as appropriate for its size. */
-    private boolean adjustOutputDownwardsForFee(BtcTransaction tx, CoinSelection coinSelection, Coin feePerKb,
+    private boolean adjustOutputDownwardsForFee(UldTransaction tx, CoinSelection coinSelection, Coin feePerKb,
                                                 boolean ensureMinRequiredFee) {
         final int size = tx.unsafeBitcoinSerialize().length + estimateBytesForSigning(coinSelection);
         Coin fee = feePerKb.multiply(size).divide(1000);
-        if (ensureMinRequiredFee && fee.compareTo(BtcTransaction.REFERENCE_DEFAULT_MIN_TX_FEE) < 0)
-            fee = BtcTransaction.REFERENCE_DEFAULT_MIN_TX_FEE;
+        if (ensureMinRequiredFee && fee.compareTo(UldTransaction.REFERENCE_DEFAULT_MIN_TX_FEE) < 0)
+            fee = UldTransaction.REFERENCE_DEFAULT_MIN_TX_FEE;
         TransactionOutput output = tx.getOutput(0);
         output.setValue(output.getValue().subtract(fee));
         return !output.isDust();
@@ -919,7 +919,7 @@ public class Wallet
         Coin fee = Coin.ZERO;
         while (true) {
             result = new FeeCalculation();
-            BtcTransaction tx = new BtcTransaction(params);
+            UldTransaction tx = new UldTransaction(params);
             addSuppliedInputs(tx, req.tx.getInputs());
 
             Coin valueNeeded = value;
@@ -1000,8 +1000,8 @@ public class Wallet
             size += estimateBytesForSigning(selection);
 
             Coin feePerKb = req.feePerKb;
-            if (needAtLeastReferenceFee && feePerKb.compareTo(BtcTransaction.REFERENCE_DEFAULT_MIN_TX_FEE) < 0) {
-                feePerKb = BtcTransaction.REFERENCE_DEFAULT_MIN_TX_FEE;
+            if (needAtLeastReferenceFee && feePerKb.compareTo(UldTransaction.REFERENCE_DEFAULT_MIN_TX_FEE) < 0) {
+                feePerKb = UldTransaction.REFERENCE_DEFAULT_MIN_TX_FEE;
             }
             Coin feeNeeded = feePerKb.multiply(size).divide(1000);
 
@@ -1017,7 +1017,7 @@ public class Wallet
 
     }
 
-    private void addSuppliedInputs(BtcTransaction tx, List<TransactionInput> originalInputs) {
+    private void addSuppliedInputs(UldTransaction tx, List<TransactionInput> originalInputs) {
         for (TransactionInput input : originalInputs)
             tx.addInput(new TransactionInput(params, tx, input.bitcoinSerialize()));
     }

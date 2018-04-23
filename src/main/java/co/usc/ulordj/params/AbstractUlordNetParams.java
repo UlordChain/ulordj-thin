@@ -20,11 +20,11 @@ package co.usc.ulordj.params;
 import java.math.BigInteger;
 import java.util.concurrent.TimeUnit;
 
-import co.usc.ulordj.core.BtcBlock;
+import co.usc.ulordj.core.UldBlock;
 import co.usc.ulordj.core.Coin;
 import co.usc.ulordj.core.NetworkParameters;
 import co.usc.ulordj.core.StoredBlock;
-import co.usc.ulordj.core.BtcTransaction;
+import co.usc.ulordj.core.UldTransaction;
 import co.usc.ulordj.core.Utils;
 import co.usc.ulordj.utils.MonetaryFormat;
 import co.usc.ulordj.core.VerificationException;
@@ -62,9 +62,9 @@ public abstract class AbstractUlordNetParams extends NetworkParameters {
     }
 
     @Override
-    public void checkDifficultyTransitions(final StoredBlock storedPrev, final BtcBlock nextBlock,
+    public void checkDifficultyTransitions(final StoredBlock storedPrev, final UldBlock nextBlock,
     	final BtcBlockStore blockStore) throws VerificationException, BlockStoreException {
-        BtcBlock prev = storedPrev.getHeader();
+        UldBlock prev = storedPrev.getHeader();
 
         // Is this supposed to be a difficulty transition point?
         if (!isDifficultyTransitionPoint(storedPrev)) {
@@ -93,7 +93,7 @@ public abstract class AbstractUlordNetParams extends NetworkParameters {
         if (watch.elapsed(TimeUnit.MILLISECONDS) > 50)
             log.info("Difficulty transition traversal took {}", watch);
 
-        BtcBlock blockIntervalAgo = cursor.getHeader();
+        UldBlock blockIntervalAgo = cursor.getHeader();
         int timespan = (int) (prev.getTimeSeconds() - blockIntervalAgo.getTimeSeconds());
         // Limit the adjustment step.
         final int targetTimespan = this.getTargetTimespan();
@@ -131,7 +131,7 @@ public abstract class AbstractUlordNetParams extends NetworkParameters {
 
     @Override
     public Coin getMinNonDustOutput() {
-        return BtcTransaction.MIN_NONDUST_OUTPUT;
+        return UldTransaction.MIN_NONDUST_OUTPUT;
     }
 
     @Override

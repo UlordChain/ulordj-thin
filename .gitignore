@@ -7,3 +7,8 @@ target
 *.iml
 *.chain
 *.spvchain
+*.o
+*.d
+*.d.*
+libCryptoHello.so
+PoW

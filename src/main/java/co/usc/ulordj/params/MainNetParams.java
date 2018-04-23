@@ -57,7 +57,7 @@ public class MainNetParams extends AbstractUlordNetParams {
         id = ID_MAINNET;
         subsidyDecreaseBlockCount = 840960;
         spendableCoinbaseDepth = 100;
-        //String genesisHash = "000000e32e974118821c865e0f79cd851edd96ccdf161de997ee85c438d0e7e3";
+
         String genesisHash = genesisBlock.getHashAsString();
         checkState(genesisHash.equals("0000083331b8aa57aaae020d79aabe4136ebea6ce29be3a50fcaa2a55777e79c"),
                 genesisHash);
