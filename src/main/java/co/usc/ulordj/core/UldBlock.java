@@ -97,7 +97,7 @@ public class UldBlock extends Message {
     private long time;             // "nTime"
     private long difficultyTarget; // "nBits"
     private BigInteger nonce;
-    private BigInteger hashClaimTrie; // for claim operation
+    private BigInteger hashClaimTrie = new BigInteger("0", 16); // for claim operation
 
     // TODO: Get rid of all the direct accesses to this field. It's a long-since unnecessary holdover from the Dalvik days.
     /** If null, it means this object holds only the headers. */
@@ -122,7 +122,7 @@ public class UldBlock extends Message {
         difficultyTarget = 0x1d07fff8L;
         time = System.currentTimeMillis() / 1000;
         prevBlockHash = Sha256Hash.ZERO_HASH;
-        hashClaimTrie = new BigInteger()
+        hashClaimTrie = new BigInteger("1", 16);
         length = HEADER_SIZE;
     }
 
@@ -285,6 +285,7 @@ public class UldBlock extends Message {
         Utils.uint32ToByteStreamLE(version, stream);
         stream.write(prevBlockHash.getReversedBytes());
         stream.write(getMerkleRoot().getReversedBytes());
+        Utils.uint256ToByteStreamLE(hashClaimTrie, stream);
         Utils.uint32ToByteStreamLE(time, stream);
         Utils.uint32ToByteStreamLE(difficultyTarget, stream);
         Utils.uint256ToByteStreamLE(nonce, stream);
@@ -405,9 +406,7 @@ public class UldBlock extends Message {
     private Sha256Hash calculateHash() {
         try {
             ByteArrayOutputStream bos = new UnsafeByteArrayOutputStream(HEADER_SIZE);
-            //ByteArrayOutputStream bos = new UnsafeByteArrayOutputStream(140);
             writeHeader(bos);
-
             Sha256Hash hash = Sha256Hash.wrapReversed(Sha256Hash.cryptoHelloHash(bos.toByteArray()));
             System.out.println("Output hash: " + hash);
             return hash;
@@ -755,6 +754,14 @@ public class UldBlock extends Message {
         unCacheHeader();
         merkleRoot = value;
         hash = null;
+    }
+
+    public BigInteger getHashClaimTrie() {
+        if(hashClaimTrie == null) {
+            unCacheHeader();
+            hashClaimTrie = new BigInteger("1", 16);
+        }
+        return hashClaimTrie;
     }
 
     /** Adds a transaction to this block. The nonce and merkle root are invalid after this. */
