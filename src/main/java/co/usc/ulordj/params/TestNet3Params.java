@@ -44,13 +44,12 @@ public class TestNet3Params extends AbstractUlordNetParams {
         targetTimespan = TARGET_TIMESPAN;
         maxTarget = Utils.decodeCompactBits(503951731L);
         port = 19888;           // Ulord Testnet port
-        addressHeader = 130;    // Ulord Testnet addresses start with 'u'
-        p2shHeader = 125;       // Ulord Testnet script address start with 's'
+        addressHeader = 125;    // Ulord Testnet script address start with 's'
+        p2shHeader = 130;       // Ulord Testnet addresses start with 'u'
         acceptableAddressCodes = new int[] { addressHeader, p2shHeader };
         dumpedPrivateKeyHeader = 239;   // Ulord Testnet private keys start with either '9' or 'c' (same as bitcoin)
         //genesisBlock.setTime(1520308246L);
         genesisBlock.setTime(1524057440L);
-        //genesisBlock.setDifficultyTarget(503951731L);
         genesisBlock.setDifficultyTarget(521142271L);
         genesisBlock.setNonce(new BigInteger("000020f00dd1af082323e02e1f5b1d866d777abbcf63ba720d35dcf585840073", 16)); //"a12949fc4a1735c8cbd6444bf9b4aea61300bc7aee9fec741af5a8c2fe386216"
 

@@ -101,28 +101,35 @@ public abstract class NetworkParameters {
     }
 
     private static UldBlock createGenesis(NetworkParameters n) {
-        UldBlock genesisBlock = new UldBlock(n, UldBlock.BLOCK_VERSION_GENESIS);
-        UldTransaction t = new UldTransaction(n);
         try {
-            // A script containing the difficulty bits and the following message:
-            //
-            // "ulord hold value testnet."
-            byte[] bytes = Utils.HEX.decode
-                    ("04ffff001d010419756c6f726420686f6c642076616c756520746573746e65742e");
-
-            t.addInput(new TransactionInput(n, t, bytes));
+            UldBlock genesisBlock = new UldBlock(n, UldBlock.BLOCK_VERSION_GENESIS);
+            UldTransaction t = new UldTransaction(n);
             ByteArrayOutputStream scriptPubKeyBytes = new ByteArrayOutputStream();
-            Script.writeBytes(scriptPubKeyBytes, Utils.HEX.decode
-                    ("034c73d75f59061a08032b68369e5034390abc5215b3df79be01fb4319173a88f8"));
-
+//            if(n.id == ID_MAINNET || n.id == ID_REGTEST) {
+//                // A script containing the difficulty bits and the following message: "abracadabra."
+//                byte[] bytes = Utils.HEX.decode
+//                        ("04ffff001d01040b6162726163616461627261");
+//                t.addInput(new TransactionInput(n, t, bytes));
+//                Script.writeBytes(scriptPubKeyBytes, Utils.HEX.decode
+//                        ("041c508f27e982c369486c0f1a42779208b3f5dc96c21a2af6004cb18d1529f42182425db1e1632dc6e73ff687592e148569022cee52b4b4eb10e8bb11bd927ec0"));
+//            }
+//            else
+//            {
+                // A script containing the difficulty bits and the following message: "ulord hold value testnet."
+                byte[] bytes = Utils.HEX.decode
+                        ("04ffff001d010419756c6f726420686f6c642076616c756520746573746e65742e");
+                t.addInput(new TransactionInput(n, t, bytes));
+                Script.writeBytes(scriptPubKeyBytes, Utils.HEX.decode
+                        ("034c73d75f59061a08032b68369e5034390abc5215b3df79be01fb4319173a88f8"));
+//            }
             scriptPubKeyBytes.write(ScriptOpCodes.OP_CHECKSIG);
             t.addOutput(new TransactionOutput(n, t, ONE_COIN, scriptPubKeyBytes.toByteArray()));
+            genesisBlock.addTransaction(t);
+            return genesisBlock;
         } catch (Exception e) {
             // Cannot happen.
             throw new RuntimeException(e);
         }
-        genesisBlock.addTransaction(t);
-        return genesisBlock;
     }
 
     public static final int TARGET_TIMESPAN = 24 * 60 * 60;  // 1 day per difficulty cycle, on average.

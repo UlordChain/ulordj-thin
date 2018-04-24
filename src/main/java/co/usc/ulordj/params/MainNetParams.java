@@ -35,10 +35,10 @@ public class MainNetParams extends AbstractUlordNetParams {
         super();
         interval = INTERVAL;
         targetTimespan = TARGET_TIMESPAN;
-        maxTarget = Utils.decodeCompactBits(0x1d00ffffL);
+        maxTarget = Utils.decodeCompactBits(0x1e1d1459L);
         dumpedPrivateKeyHeader = 128;   // Ulord private keys start with '5' or 'K' or 'L'(as in Bitcoin)
-        addressHeader = 68; // Ulord addresses start with 'U'
-        p2shHeader = 63;    // Ulord script addresses start with 'S'
+        addressHeader = 63;     // Ulord script addresses start with 'S'
+        p2shHeader = 68;        // Ulord addresses start with 'U'
         acceptableAddressCodes = new int[] { addressHeader, p2shHeader };
         port = 9888;
         packetMagic = 0xb3016fb1;
@@ -51,7 +51,7 @@ public class MainNetParams extends AbstractUlordNetParams {
         majorityWindow = MAINNET_MAJORITY_WINDOW;
 
         genesisBlock.setDifficultyTarget(0x1e1d1459L);
-        genesisBlock.setTime(1519894519L);
+        genesisBlock.setTime(1524045652L);
         genesisBlock.setNonce(new BigInteger("0000be7245a98c700f01293501a062837cb465afd70da22ee812b69a0c131f8c", 16));
 
         id = ID_MAINNET;
