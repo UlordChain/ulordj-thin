@@ -19,7 +19,7 @@ package co.usc.ulordj.utils;
 import java.util.Stack;
 import co.usc.ulordj.core.NetworkParameters;
 import co.usc.ulordj.core.StoredBlock;
-import co.usc.ulordj.store.BtcBlockStore;
+import co.usc.ulordj.store.UldBlockStore;
 import co.usc.ulordj.store.BlockStoreException;
 
 /**
@@ -96,7 +96,7 @@ public class VersionTally {
      * @param blockStore block store to load blocks from.
      * @param chainHead current chain tip.
      */
-    public void initialize(final BtcBlockStore blockStore, final StoredBlock chainHead)
+    public void initialize(final UldBlockStore blockStore, final StoredBlock chainHead)
         throws BlockStoreException {
         StoredBlock versionBlock = chainHead;
         final Stack<Long> versions = new Stack<Long>();

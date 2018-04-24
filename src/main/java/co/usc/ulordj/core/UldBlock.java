@@ -289,6 +289,7 @@ public class UldBlock extends Message {
         Utils.uint32ToByteStreamLE(time, stream);
         Utils.uint32ToByteStreamLE(difficultyTarget, stream);
         Utils.uint256ToByteStreamLE(nonce, stream);
+
     }
 
     private void writeTransactions(OutputStream stream) throws IOException {
@@ -407,6 +408,8 @@ public class UldBlock extends Message {
         try {
             ByteArrayOutputStream bos = new UnsafeByteArrayOutputStream(HEADER_SIZE);
             writeHeader(bos);
+            System.out.println("Bytes to Hex:" + Sha256Hash.bytesToHex(bos.toByteArray()));
+
             Sha256Hash hash = Sha256Hash.wrapReversed(Sha256Hash.cryptoHelloHash(bos.toByteArray()));
             System.out.println("Output hash: " + hash);
             return hash;

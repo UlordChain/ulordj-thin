@@ -19,7 +19,7 @@ package co.usc.ulordj.core;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-import co.usc.ulordj.store.BtcBlockStore;
+import co.usc.ulordj.store.UldBlockStore;
 import co.usc.ulordj.store.BlockStoreException;
 
 // TODO: Rename this class to SPVBlockChain at some point.
@@ -31,14 +31,14 @@ import co.usc.ulordj.store.BlockStoreException;
  */
 public class UldBlockChain extends UldAbstractBlockChain {
     /** Keeps a map of block hashes to StoredBlocks. */
-    protected final BtcBlockStore blockStore;
+    protected final UldBlockStore blockStore;
 
 
     /**
      * Constructs a BlockChain that has no wallet at all. This is helpful when you don't actually care about sending
      * and receiving coins but rather, just want to explore the network data structures.
      */
-    public UldBlockChain(Context context, BtcBlockStore blockStore) throws BlockStoreException {
+    public UldBlockChain(Context context, UldBlockStore blockStore) throws BlockStoreException {
         super(context, blockStore);
         this.blockStore = blockStore;
     }

@@ -31,7 +31,7 @@ import co.usc.ulordj.core.StoredBlock;
  *
  * BlockStores are thread safe.
  */
-public interface BtcBlockStore {
+public interface UldBlockStore {
     /**
      * Saves the given block header+extra data. The key isn't specified explicitly as it can be calculated from the
      * StoredBlock directly. Can throw if there is a problem with the underlying storage layer such as running out of

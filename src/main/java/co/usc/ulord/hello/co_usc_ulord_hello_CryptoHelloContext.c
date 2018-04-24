@@ -13,12 +13,12 @@ JNIEXPORT void JNICALL Java_co_usc_ulord_hello_CryptoHelloContext_helloHash
     jbyte* const jmess_carray = (*jenv)->GetByteArrayElements(jenv, jmess, 0);
     unsigned char* mess = (unsigned char*)jmess_carray;
     view_data_u8("Input Data: ", mess, 140);
-    printf("Input Data of %d size: ", jmess_size);
-    for(i = 0; i < jmess_size; i++){
-        printf("%d ", *mess);
-        mess++;
-    }
-    printf("\n");
+//    printf("Input Data of %d size: ", jmess_size);
+//    for(i = 0; i < jmess_size; i++){
+//        printf("%d ", *mess);
+//        mess++;
+//    }
+//    printf("\n");
 
     unsigned char coutput[OUTPUT_LEN];
     for( i = 0; i < OUTPUT_LEN - 1; ++i)

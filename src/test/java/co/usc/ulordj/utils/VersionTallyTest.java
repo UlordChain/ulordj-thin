@@ -21,9 +21,9 @@ import co.usc.ulordj.core.Context;
 import co.usc.ulordj.core.NetworkParameters;
 import co.usc.ulordj.core.StoredBlock;
 import co.usc.ulordj.params.UnitTestParams;
-import co.usc.ulordj.store.BtcBlockStore;
+import co.usc.ulordj.store.UldBlockStore;
 import co.usc.ulordj.store.BlockStoreException;
-import co.usc.ulordj.store.BtcMemoryBlockStore;
+import co.usc.ulordj.store.UldMemoryBlockStore;
 import co.usc.ulordj.testing.FakeTxBuilder;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -93,7 +93,7 @@ public class VersionTallyTest {
 
     @Test
     public void testInitialize() throws BlockStoreException {
-        final BtcBlockStore blockStore = new BtcMemoryBlockStore(PARAMS);
+        final UldBlockStore blockStore = new UldMemoryBlockStore(PARAMS);
         final UldBlockChain chain = new UldBlockChain(new Context(PARAMS), blockStore);
 
         // Build a historical chain of version 2 blocks

@@ -24,7 +24,7 @@ import java.util.Map;
 /**
  * Keeps {@link org.bitcoinj.core.StoredBlock}s in memory. Used primarily for unit testing.
  */
-public class BtcMemoryBlockStore implements BtcBlockStore {
+public class UldMemoryBlockStore implements UldBlockStore {
     private LinkedHashMap<Sha256Hash, StoredBlock> blockMap = new LinkedHashMap<Sha256Hash, StoredBlock>() {
         @Override
         protected boolean removeEldestEntry(Map.Entry<Sha256Hash, StoredBlock> eldest) {
@@ -34,7 +34,7 @@ public class BtcMemoryBlockStore implements BtcBlockStore {
     private StoredBlock chainHead;
     private NetworkParameters params;
 
-    public BtcMemoryBlockStore(NetworkParameters params) {
+    public UldMemoryBlockStore(NetworkParameters params) {
         // Insert the genesis block.
         try {
             UldBlock genesisHeader = params.getGenesisBlock().cloneAsHeader();

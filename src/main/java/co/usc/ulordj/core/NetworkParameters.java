@@ -20,7 +20,7 @@ package co.usc.ulordj.core;
 import com.google.common.base.Objects;
 import co.usc.ulordj.params.*;
 import co.usc.ulordj.script.*;
-import co.usc.ulordj.store.BtcBlockStore;
+import co.usc.ulordj.store.UldBlockStore;
 import co.usc.ulordj.store.BlockStoreException;
 
 import co.usc.ulordj.utils.MonetaryFormat;
@@ -244,7 +244,7 @@ public abstract class NetworkParameters {
      *
      * @throws VerificationException if the block's difficulty is not correct.
      */
-    public abstract void checkDifficultyTransitions(StoredBlock storedPrev, UldBlock next, final BtcBlockStore blockStore) throws VerificationException, BlockStoreException;
+    public abstract void checkDifficultyTransitions(StoredBlock storedPrev, UldBlock next, final UldBlockStore blockStore) throws VerificationException, BlockStoreException;
 
     /**
      * Returns true if the block height is either not a checkpoint, or is a checkpoint and the hash matches.

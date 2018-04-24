@@ -19,8 +19,8 @@ package co.usc.ulordj.core;
 
 import co.usc.ulordj.params.MainNetParams;
 import co.usc.ulordj.params.UnitTestParams;
-import co.usc.ulordj.store.BtcBlockStore;
-import co.usc.ulordj.store.BtcMemoryBlockStore;
+import co.usc.ulordj.store.UldBlockStore;
+import co.usc.ulordj.store.UldMemoryBlockStore;
 import co.usc.ulordj.wallet.Wallet;
 import org.junit.Before;
 import org.junit.Test;
@@ -65,7 +65,7 @@ public class ParseByteCacheTest {
             "00 8b 48 30 45 02 21 00  f3 58 1e 19 72 ae 8a c7" +
             "c7 36 7a 7a 25 3b c1 13  52 23 ad b9 a4 68 bb 3a");
 
-    private BtcBlockStore blockStore;
+    private UldBlockStore blockStore;
     private static final NetworkParameters PARAMS = UnitTestParams.get();
     
     private byte[] b1Bytes;
@@ -78,7 +78,7 @@ public class ParseByteCacheTest {
     private byte[] tx2BytesWithHeader;
 
     private void resetBlockStore() {
-        blockStore = new BtcMemoryBlockStore(PARAMS);
+        blockStore = new UldMemoryBlockStore(PARAMS);
     }
     
     @Before

@@ -28,7 +28,7 @@ import co.usc.ulordj.core.UldTransaction;
 import co.usc.ulordj.core.Utils;
 import co.usc.ulordj.utils.MonetaryFormat;
 import co.usc.ulordj.core.VerificationException;
-import co.usc.ulordj.store.BtcBlockStore;
+import co.usc.ulordj.store.UldBlockStore;
 import co.usc.ulordj.store.BlockStoreException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,7 +63,7 @@ public abstract class AbstractUlordNetParams extends NetworkParameters {
 
     @Override
     public void checkDifficultyTransitions(final StoredBlock storedPrev, final UldBlock nextBlock,
-    	final BtcBlockStore blockStore) throws VerificationException, BlockStoreException {
+    	final UldBlockStore blockStore) throws VerificationException, BlockStoreException {
         UldBlock prev = storedPrev.getHeader();
 
         // Is this supposed to be a difficulty transition point?

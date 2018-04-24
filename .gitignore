@@ -10,5 +10,4 @@ target
 *.o
 *.d
 *.d.*
-libCryptoHello.so
 PoW

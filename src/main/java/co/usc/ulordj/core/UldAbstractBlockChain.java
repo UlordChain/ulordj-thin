@@ -35,7 +35,7 @@ import static com.google.common.base.Preconditions.*;
  * <p>It can be connected to a {@link Wallet}, and also {@link TransactionReceivedInBlockListener}s that can receive transactions and
  * notifications of re-organizations.</p>
  *
- * <p>An AbstractBlockChain implementation must be connected to a {@link BtcBlockStore} implementation. The chain object
+ * <p>An AbstractBlockChain implementation must be connected to a {@link UldBlockStore} implementation. The chain object
  * by itself doesn't store any data, that's delegated to the store. Which store you use is a decision best made by
  * reading the getting started guide, but briefly, fully validating block chains need fully validating stores. In
  * the lightweight SPV mode, a {@link co.usc.ulordj.store.SPVBlockStore} is the right choice.</p>
@@ -75,7 +75,7 @@ public abstract class UldAbstractBlockChain {
     private static final Logger log = LoggerFactory.getLogger(UldAbstractBlockChain.class);
 
     /** Keeps a map of block hashes to StoredBlocks. */
-    private final BtcBlockStore blockStore;
+    private final UldBlockStore blockStore;
 
     /**
      * Tracks the top of the best known chain.<p>
@@ -130,9 +130,9 @@ public abstract class UldAbstractBlockChain {
 
     private final VersionTally versionTally;
 
-    /** See {@link #UldAbstractBlockChain(Context, BtcBlockStore)} */
+    /** See {@link #UldAbstractBlockChain(Context, UldBlockStore)} */
     public UldAbstractBlockChain(NetworkParameters params,
-                                 BtcBlockStore blockStore) throws BlockStoreException {
+                                 UldBlockStore blockStore) throws BlockStoreException {
         this(Context.getOrCreate(params), blockStore);
     }
 
@@ -140,7 +140,7 @@ public abstract class UldAbstractBlockChain {
      * Constructs a BlockChain connected to the given list of listeners (eg, wallets) and a store.
      */
     public UldAbstractBlockChain(Context context,
-                                 BtcBlockStore blockStore) throws BlockStoreException {
+                                 UldBlockStore blockStore) throws BlockStoreException {
         this.blockStore = blockStore;
         chainHead = blockStore.getChainHead();
         log.info("chain head is at height {}:\n{}", chainHead.getHeight(), chainHead.getHeader());
@@ -151,9 +151,9 @@ public abstract class UldAbstractBlockChain {
     }
 
     /**
-     * Returns the {@link BtcBlockStore} the chain was constructed with. You can use this to iterate over the chain.
+     * Returns the {@link UldBlockStore} the chain was constructed with. You can use this to iterate over the chain.
      */
-    public BtcBlockStore getBlockStore() {
+    public UldBlockStore getBlockStore() {
         return blockStore;
     }
     
@@ -443,7 +443,7 @@ public abstract class UldAbstractBlockChain {
      * Gets the median timestamp of the last 11 blocks
      */
     private static long getMedianTimestampOfRecentBlocks(StoredBlock storedBlock,
-                                                         BtcBlockStore store) throws BlockStoreException {
+                                                         UldBlockStore store) throws BlockStoreException {
         long[] timestamps = new long[11];
         int unused = 9;
         timestamps[10] = storedBlock.getHeader().getTimeSeconds();
@@ -489,7 +489,7 @@ public abstract class UldAbstractBlockChain {
     /**
      * Returns the set of contiguous blocks between 'higher' and 'lower'. Higher is included, lower is not.
      */
-    private static LinkedList<StoredBlock> getPartialChain(StoredBlock higher, StoredBlock lower, BtcBlockStore store) throws BlockStoreException {
+    private static LinkedList<StoredBlock> getPartialChain(StoredBlock higher, StoredBlock lower, UldBlockStore store) throws BlockStoreException {
         checkArgument(higher.getHeight() > lower.getHeight(), "higher and lower are reversed");
         LinkedList<StoredBlock> results = new LinkedList<StoredBlock>();
         StoredBlock cursor = higher;
@@ -507,7 +507,7 @@ public abstract class UldAbstractBlockChain {
      * but are part of the same chain.
      */
     private static StoredBlock findSplit(StoredBlock newChainHead, StoredBlock oldChainHead,
-                                         BtcBlockStore store) throws BlockStoreException {
+                                         UldBlockStore store) throws BlockStoreException {
         StoredBlock currentChainCursor = oldChainHead;
         StoredBlock newChainCursor = newChainHead;
         // Loop until we find the block both chains have in common. Example:

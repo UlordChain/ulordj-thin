@@ -25,7 +25,7 @@ import co.usc.ulordj.core.NetworkParameters;
 import co.usc.ulordj.core.StoredBlock;
 import co.usc.ulordj.core.Utils;
 import co.usc.ulordj.core.VerificationException;
-import co.usc.ulordj.store.BtcBlockStore;
+import co.usc.ulordj.store.UldBlockStore;
 import co.usc.ulordj.store.BlockStoreException;
 import co.usc.ulordj.core.Sha256Hash;
 import static com.google.common.base.Preconditions.checkState;
@@ -94,7 +94,7 @@ public class TestNet3Params extends AbstractUlordNetParams {
 
     @Override
     public void checkDifficultyTransitions(final StoredBlock storedPrev, final UldBlock nextBlock,
-        final BtcBlockStore blockStore) throws VerificationException, BlockStoreException {
+        final UldBlockStore blockStore) throws VerificationException, BlockStoreException {
         if (!isDifficultyTransitionPoint(storedPrev) && nextBlock.getTime().after(testnetDiffDate)) {
             UldBlock prev = storedPrev.getHeader();
 

@@ -20,7 +20,7 @@ package co.usc.ulordj.testing;
 import co.usc.ulordj.core.*;
 import co.usc.ulordj.crypto.TransactionSignature;
 import co.usc.ulordj.script.ScriptBuilder;
-import co.usc.ulordj.store.BtcBlockStore;
+import co.usc.ulordj.store.UldBlockStore;
 import co.usc.ulordj.store.BlockStoreException;
 
 import java.io.ByteArrayOutputStream;
@@ -234,13 +234,13 @@ public class FakeTxBuilder {
     }
 
     /** Emulates receiving a valid block that builds on top of the chain. */
-    public static BlockPair createFakeBlock(BtcBlockStore blockStore, long version,
+    public static BlockPair createFakeBlock(UldBlockStore blockStore, long version,
                                             long timeSeconds, UldTransaction... transactions) {
         return createFakeBlock(blockStore, version, timeSeconds, 0, transactions);
     }
 
     /** Emulates receiving a valid block */
-    public static BlockPair createFakeBlock(BtcBlockStore blockStore, StoredBlock previousStoredBlock, long version,
+    public static BlockPair createFakeBlock(UldBlockStore blockStore, StoredBlock previousStoredBlock, long version,
                                             long timeSeconds, int height,
                                             UldTransaction... transactions) {
         try {
@@ -265,12 +265,12 @@ public class FakeTxBuilder {
         }
     }
 
-    public static BlockPair createFakeBlock(BtcBlockStore blockStore, StoredBlock previousStoredBlock, int height, UldTransaction... transactions) {
+    public static BlockPair createFakeBlock(UldBlockStore blockStore, StoredBlock previousStoredBlock, int height, UldTransaction... transactions) {
         return createFakeBlock(blockStore, previousStoredBlock, UldBlock.BLOCK_VERSION_BIP66, Utils.currentTimeSeconds(), height, transactions);
     }
 
     /** Emulates receiving a valid block that builds on top of the chain. */
-    public static BlockPair createFakeBlock(BtcBlockStore blockStore, long version, long timeSeconds, int height, UldTransaction... transactions) {
+    public static BlockPair createFakeBlock(UldBlockStore blockStore, long version, long timeSeconds, int height, UldTransaction... transactions) {
         try {
             return createFakeBlock(blockStore, blockStore.getChainHead(), version, timeSeconds, height, transactions);
         } catch (BlockStoreException e) {
@@ -279,17 +279,17 @@ public class FakeTxBuilder {
     }
 
     /** Emulates receiving a valid block that builds on top of the chain. */
-    public static BlockPair createFakeBlock(BtcBlockStore blockStore, int height,
+    public static BlockPair createFakeBlock(UldBlockStore blockStore, int height,
                                             UldTransaction... transactions) {
         return createFakeBlock(blockStore, UldBlock.BLOCK_VERSION_GENESIS, Utils.currentTimeSeconds(), height, transactions);
     }
 
     /** Emulates receiving a valid block that builds on top of the chain. */
-    public static BlockPair createFakeBlock(BtcBlockStore blockStore, UldTransaction... transactions) {
+    public static BlockPair createFakeBlock(UldBlockStore blockStore, UldTransaction... transactions) {
         return createFakeBlock(blockStore, UldBlock.BLOCK_VERSION_GENESIS, Utils.currentTimeSeconds(), 0, transactions);
     }
 
-    public static UldBlock makeSolvedTestBlock(BtcBlockStore blockStore, Address coinsTo) throws BlockStoreException {
+    public static UldBlock makeSolvedTestBlock(UldBlockStore blockStore, Address coinsTo) throws BlockStoreException {
         UldBlock b = blockStore.getChainHead().getHeader().createNextBlock(coinsTo);
         b.solve();
         return b;

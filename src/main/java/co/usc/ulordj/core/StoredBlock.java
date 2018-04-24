@@ -16,7 +16,7 @@
 
 package co.usc.ulordj.core;
 
-import co.usc.ulordj.store.BtcBlockStore;
+import co.usc.ulordj.store.UldBlockStore;
 import co.usc.ulordj.store.BlockStoreException;
 import com.google.common.base.Objects;
 
@@ -33,7 +33,7 @@ import static com.google.common.base.Preconditions.checkState;
  * block in the chain back to the genesis block, which involves lots of seeking/loading etc. So we just keep a
  * running total: it's a disk space vs cpu/io tradeoff.<p>
  *
- * StoredBlocks are put inside a {@link BtcBlockStore} which saves them to memory or disk.
+ * StoredBlocks are put inside a {@link UldBlockStore} which saves them to memory or disk.
  */
 public class StoredBlock {
 
@@ -111,7 +111,7 @@ public class StoredBlock {
      *
      * @return the previous block in the chain or null if it was not found in the store.
      */
-    public StoredBlock getPrev(BtcBlockStore store) throws BlockStoreException {
+    public StoredBlock getPrev(UldBlockStore store) throws BlockStoreException {
         return store.get(getHeader().getPrevBlockHash());
     }
 

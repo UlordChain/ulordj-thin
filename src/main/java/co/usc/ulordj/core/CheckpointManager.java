@@ -16,7 +16,7 @@
 
 package co.usc.ulordj.core;
 
-import co.usc.ulordj.store.BtcBlockStore;
+import co.usc.ulordj.store.UldBlockStore;
 import co.usc.ulordj.store.BlockStoreException;
 import com.google.common.base.Charsets;
 import com.google.common.hash.HashCode;
@@ -218,7 +218,7 @@ public class CheckpointManager {
      *
      * <p>Note that time is adjusted backwards by a week to account for possible clock drift in the block headers.</p>
      */
-    public static void checkpoint(NetworkParameters params, InputStream checkpoints, BtcBlockStore store, long time)
+    public static void checkpoint(NetworkParameters params, InputStream checkpoints, UldBlockStore store, long time)
             throws IOException, BlockStoreException {
         checkNotNull(params);
         checkNotNull(store);
