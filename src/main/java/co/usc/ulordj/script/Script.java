@@ -363,7 +363,7 @@ public class Script {
         else if (isPayToScriptHash())
             return Address.fromP2SHScript(params, this);
         else if (forcePayToPubKey && isSentToRawPubKey())
-            return BtcECKey.fromPublicOnly(getPubKey()).toAddress(params);
+            return UldECKey.fromPublicOnly(getPubKey()).toAddress(params);
         else
             throw new ScriptException("Cannot cast this script to a pay-to-address type");
     }
@@ -393,7 +393,7 @@ public class Script {
     }
 
     /** Creates a program that requires at least N of the given keys to sign, using OP_CHECKMULTISIG. */
-    public static byte[] createMultiSigOutputScript(int threshold, List<BtcECKey> pubkeys) {
+    public static byte[] createMultiSigOutputScript(int threshold, List<UldECKey> pubkeys) {
         checkArgument(threshold > 0);
         checkArgument(threshold <= pubkeys.size());
         checkArgument(pubkeys.size() <= 16);  // That's the max we can represent with a single opcode.
@@ -403,7 +403,7 @@ public class Script {
         try {
             ByteArrayOutputStream bits = new ByteArrayOutputStream();
             bits.write(encodeToOpN(threshold));
-            for (BtcECKey key : pubkeys) {
+            for (UldECKey key : pubkeys) {
                 writeBytes(bits, key.getPubKey());
             }
             bits.write(encodeToOpN(pubkeys.size()));
@@ -443,7 +443,7 @@ public class Script {
      * Having incomplete input script allows to pass around partially signed tx.
      * It is expected that this program later on will be updated with proper signatures.
      */
-    public Script createEmptyInputScript(@Nullable BtcECKey key, @Nullable Script redeemScript) {
+    public Script createEmptyInputScript(@Nullable UldECKey key, @Nullable Script redeemScript) {
         if (isSentToAddress()) {
             checkArgument(key != null, "Key required to create pay-to-address input script");
             return ScriptBuilder.createInputScript(null, key);
@@ -479,7 +479,7 @@ public class Script {
      * Returns the index where a signature by the key should be inserted.  Only applicable to
      * a P2SH scriptSig.
      */
-    public int getSigInsertionIndex(Sha256Hash hash, BtcECKey signingKey) {
+    public int getSigInsertionIndex(Sha256Hash hash, UldECKey signingKey) {
         // Iterate over existing signatures, skipping the initial OP_0, the final redeem script
         // and any placeholder OP_0 sigs.
         List<ScriptChunk> existingChunks = chunks.subList(1, chunks.size() - 1);
@@ -502,7 +502,7 @@ public class Script {
         return sigCount;
     }
 
-    private int findKeyInRedeem(BtcECKey key) {
+    private int findKeyInRedeem(UldECKey key) {
         checkArgument(chunks.get(0).isOpCode()); // P2SH scriptSig
         int numKeys = Script.decodeFromOpN(chunks.get(chunks.size() - 2).opcode);
         for (int i = 0 ; i < numKeys ; i++) {
@@ -519,14 +519,14 @@ public class Script {
      *
      * @throws ScriptException if the script type is not understood or is pay to address or is P2SH (run this method on the "Redeem script" instead).
      */
-    public List<BtcECKey> getPubKeys() {
+    public List<UldECKey> getPubKeys() {
         if (!isSentToMultiSig())
             throw new ScriptException("Only usable for multisig scripts.");
 
-        ArrayList<BtcECKey> result = Lists.newArrayList();
+        ArrayList<UldECKey> result = Lists.newArrayList();
         int numKeys = Script.decodeFromOpN(chunks.get(chunks.size() - 2).opcode);
         for (int i = 0 ; i < numKeys ; i++)
-            result.add(BtcECKey.fromPublicOnly(chunks.get(1 + i).data));
+            result.add(UldECKey.fromPublicOnly(chunks.get(1 + i).data));
         return result;
     }
 
@@ -535,7 +535,7 @@ public class Script {
         int numKeys = Script.decodeFromOpN(chunks.get(chunks.size() - 2).opcode);
         TransactionSignature signature = TransactionSignature.decodeFromBitcoin(signatureBytes, true);
         for (int i = 0 ; i < numKeys ; i++) {
-            if (BtcECKey.fromPublicOnly(chunks.get(i + 1).data).verify(hash, signature)) {
+            if (UldECKey.fromPublicOnly(chunks.get(i + 1).data).verify(hash, signature)) {
                 return i;
             }
         }
@@ -644,10 +644,10 @@ public class Script {
     }
 
     /**
-     * Returns number of bytes required to spend this script. It accepts optional ECKey and redeemScript that may
+     * Returns number of bytes required to spend this script. It accepts optional UldECKey and redeemScript that may
      * be required for certain types of script to estimate target size.
      */
-    public int getNumberOfBytesRequiredToSpend(@Nullable BtcECKey pubKey, @Nullable Script redeemScript) {
+    public int getNumberOfBytesRequiredToSpend(@Nullable UldECKey pubKey, @Nullable Script redeemScript) {
         if (isPayToScriptHash()) {
             // scriptSig: <sig> [sig] [sig...] <redeemscript>
             checkArgument(redeemScript != null, "P2SH script requires redeemScript to be spent");
@@ -1452,7 +1452,7 @@ public class Script {
 
             // TODO: Should check hash type is known
             Sha256Hash hash = txContainingThis.hashForSignature(index, connectedScript, (byte) sig.sighashFlags);
-            sigValid = BtcECKey.verify(hash.getBytes(), sig, pubKey);
+            sigValid = UldECKey.verify(hash.getBytes(), sig, pubKey);
         } catch (Exception e1) {
             // There is (at least) one exception that could be hit here (EOFException, if the sig is too short)
             // Because I can't verify there aren't more, we use a very generic Exception catch
@@ -1526,7 +1526,7 @@ public class Script {
             try {
                 TransactionSignature sig = TransactionSignature.decodeFromBitcoin(sigs.getFirst(), requireCanonical);
                 Sha256Hash hash = txContainingThis.hashForSignature(index, connectedScript, (byte) sig.sighashFlags);
-                if (BtcECKey.verify(hash.getBytes(), sig, pubKey))
+                if (UldECKey.verify(hash.getBytes(), sig, pubKey))
                     sigs.pollFirst();
             } catch (Exception e) {
                 // There is (at least) one exception that could be hit here (EOFException, if the sig is too short)

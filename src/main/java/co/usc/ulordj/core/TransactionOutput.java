@@ -92,9 +92,9 @@ public class TransactionOutput extends ChildMessage {
     /**
      * Creates an output that sends 'value' to the given public key using a simple CHECKSIG script (no addresses). The
      * amount should be created with something like {@link Coin#valueOf(int, int)}. Typically you would use
-     * {@link UldTransaction#addOutput(Coin, BtcECKey)} instead of creating an output directly.
+     * {@link UldTransaction#addOutput(Coin, UldECKey)} instead of creating an output directly.
      */
-    public TransactionOutput(NetworkParameters params, @Nullable UldTransaction parent, Coin value, BtcECKey to) {
+    public TransactionOutput(NetworkParameters params, @Nullable UldTransaction parent, Coin value, UldECKey to) {
         this(params, parent, value, ScriptBuilder.createOutputScript(to).getProgram());
     }
 

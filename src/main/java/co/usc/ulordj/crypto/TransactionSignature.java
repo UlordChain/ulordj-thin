@@ -16,7 +16,9 @@
 
 package co.usc.ulordj.crypto;
 
-import co.usc.ulordj.core.BtcECKey;
+import co.usc.ulordj.core.UldECKey;
+import co.usc.ulordj.core.UldECKey;
+import co.usc.ulordj.core.UldECKey;
 import co.usc.ulordj.core.UldTransaction;
 import co.usc.ulordj.core.VerificationException;
 import co.usc.ulordj.core.UldTransaction.SigHash;
@@ -26,10 +28,10 @@ import java.io.IOException;
 import java.math.BigInteger;
 
 /**
- * A TransactionSignature wraps an {@link BtcECKey.ECDSASignature} and adds methods for handling
+ * A TransactionSignature wraps an {@link UldECKey.ECDSASignature} and adds methods for handling
  * the additional SIGHASH mode byte that is used.
  */
-public class TransactionSignature extends BtcECKey.ECDSASignature {
+public class TransactionSignature extends UldECKey.ECDSASignature {
     /**
      * A byte that controls which parts of a transaction are signed. This is exposed because signatures
      * parsed off the wire may have sighash flags that aren't "normal" serializations of the enum values.
@@ -50,7 +52,7 @@ public class TransactionSignature extends BtcECKey.ECDSASignature {
     }
 
     /** Constructs a transaction signature based on the ECDSA signature. */
-    public TransactionSignature(BtcECKey.ECDSASignature signature, UldTransaction.SigHash mode, boolean anyoneCanPay) {
+    public TransactionSignature(UldECKey.ECDSASignature signature, UldTransaction.SigHash mode, boolean anyoneCanPay) {
         super(signature.r, signature.s);
         sighashFlags = calcSigHashValue(mode, anyoneCanPay);
     }
@@ -62,7 +64,7 @@ public class TransactionSignature extends BtcECKey.ECDSASignature {
      * real signature later.
      */
     public static TransactionSignature dummy() {
-        BigInteger val = BtcECKey.HALF_CURVE_ORDER;
+        BigInteger val = UldECKey.HALF_CURVE_ORDER;
         return new TransactionSignature(val, val);
     }
 
@@ -152,7 +154,7 @@ public class TransactionSignature extends BtcECKey.ECDSASignature {
     }
 
     @Override
-    public BtcECKey.ECDSASignature toCanonicalised() {
+    public UldECKey.ECDSASignature toCanonicalised() {
         return new TransactionSignature(super.toCanonicalised(), sigHashMode(), anyoneCanPay());
     }
 
@@ -185,9 +187,9 @@ public class TransactionSignature extends BtcECKey.ECDSASignature {
         // Bitcoin encoding is DER signature + sighash byte.
         if (requireCanonicalEncoding && !isEncodingCanonical(bytes))
             throw new VerificationException("Signature encoding is not canonical.");
-        BtcECKey.ECDSASignature sig;
+        UldECKey.ECDSASignature sig;
         try {
-            sig = BtcECKey.ECDSASignature.decodeFromDER(bytes);
+            sig = UldECKey.ECDSASignature.decodeFromDER(bytes);
         } catch (IllegalArgumentException e) {
             throw new VerificationException("Could not decode DER", e);
         }

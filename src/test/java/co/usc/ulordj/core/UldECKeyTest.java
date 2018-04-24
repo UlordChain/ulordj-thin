@@ -17,7 +17,7 @@
 
 package co.usc.ulordj.core;
 
-import co.usc.ulordj.core.BtcECKey.ECDSASignature;
+import co.usc.ulordj.core.UldECKey.ECDSASignature;
 import co.usc.ulordj.crypto.TransactionSignature;
 import co.usc.ulordj.params.MainNetParams;
 import com.google.common.collect.Lists;
@@ -43,8 +43,8 @@ import static co.usc.ulordj.core.Utils.reverseBytes;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.junit.Assert.*;
 
-public class BtcECKeyTest {
-    private static final Logger log = LoggerFactory.getLogger(BtcECKeyTest.class);
+public class UldECKeyTest {
+    private static final Logger log = LoggerFactory.getLogger(UldECKeyTest.class);
 
     private static CharSequence PASSWORD1 = "my hovercraft has eels";
     private static CharSequence WRONG_PASSWORD = "it is a snowy day today";
@@ -55,36 +55,36 @@ public class BtcECKeyTest {
         // issue that can allow someone to change a transaction [hash] without invalidating the signature.
         final int ITERATIONS = 10;
         ListeningExecutorService executor = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(ITERATIONS));
-        List<ListenableFuture<BtcECKey.ECDSASignature>> sigFutures = Lists.newArrayList();
-        final BtcECKey key = new BtcECKey();
+        List<ListenableFuture<UldECKey.ECDSASignature>> sigFutures = Lists.newArrayList();
+        final UldECKey key = new UldECKey();
         for (byte i = 0; i < ITERATIONS; i++) {
             final Sha256Hash hash = Sha256Hash.of(new byte[]{i});
-            sigFutures.add(executor.submit(new Callable<BtcECKey.ECDSASignature>() {
+            sigFutures.add(executor.submit(new Callable<UldECKey.ECDSASignature>() {
                 @Override
-                public BtcECKey.ECDSASignature call() throws Exception {
+                public UldECKey.ECDSASignature call() throws Exception {
                     return key.sign(hash);
                 }
             }));
         }
-        List<BtcECKey.ECDSASignature> sigs = Futures.allAsList(sigFutures).get();
-        for (BtcECKey.ECDSASignature signature : sigs) {
+        List<UldECKey.ECDSASignature> sigs = Futures.allAsList(sigFutures).get();
+        for (UldECKey.ECDSASignature signature : sigs) {
             assertTrue(signature.isCanonical());
         }
         final ECDSASignature first = sigs.get(0);
-        final BtcECKey.ECDSASignature duplicate = new BtcECKey.ECDSASignature(first.r, first.s);
+        final UldECKey.ECDSASignature duplicate = new UldECKey.ECDSASignature(first.r, first.s);
         assertEquals(first, duplicate);
         assertEquals(first.hashCode(), duplicate.hashCode());
 
-        final BtcECKey.ECDSASignature highS = new BtcECKey.ECDSASignature(first.r, BtcECKey.CURVE.getN().subtract(first.s));
+        final UldECKey.ECDSASignature highS = new UldECKey.ECDSASignature(first.r, UldECKey.CURVE.getN().subtract(first.s));
         assertFalse(highS.isCanonical());
     }
 
     @Test
     public void testSignatures() throws Exception {
-        // Test that we can construct an ECKey from a private key (deriving the public from the private), then signing
+        // Test that we can construct an UldECKey from a private key (deriving the public from the private), then signing
         // a message with it.
         BigInteger privkey = new BigInteger(1, HEX.decode("180cb41c7c600be951b5d3d0a7334acc7506173875834f7a6c4c786a28fcbb19"));
-        BtcECKey key = BtcECKey.fromPrivate(privkey);
+        UldECKey key = UldECKey.fromPrivate(privkey);
         byte[] output = key.sign(Sha256Hash.ZERO_HASH).encodeToDER();
         assertTrue(key.verify(Sha256Hash.ZERO_HASH.getBytes(), output));
 
@@ -98,15 +98,15 @@ public class BtcECKeyTest {
     public void testASN1Roundtrip() throws Exception {
         byte[] privkeyASN1 = HEX.decode(
                 "3082011302010104205c0b98e524ad188ddef35dc6abba13c34a351a05409e5d285403718b93336a4aa081a53081a2020101302c06072a8648ce3d0101022100fffffffffffffffffffffffffffffffffffffffffffffffffffffffefffffc2f300604010004010704410479be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798483ada7726a3c4655da4fbfc0e1108a8fd17b448a68554199c47d08ffb10d4b8022100fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141020101a144034200042af7a2aafe8dafd7dc7f9cfb58ce09bda7dce28653ab229b98d1d3d759660c672dd0db18c8c2d76aa470448e876fc2089ab1354c01a6e72cefc50915f4a963ee");
-        BtcECKey decodedKey = BtcECKey.fromASN1(privkeyASN1);
+        UldECKey decodedKey = UldECKey.fromASN1(privkeyASN1);
 
         // Now re-encode and decode the ASN.1 to see if it is equivalent (it does not produce the exact same byte
         // sequence, some integers are padded now).
-        BtcECKey roundtripKey = BtcECKey.fromASN1(decodedKey.toASN1());
+        UldECKey roundtripKey = UldECKey.fromASN1(decodedKey.toASN1());
 
         assertArrayEquals(decodedKey.getPrivKeyBytes(), roundtripKey.getPrivKeyBytes());
 
-        for (BtcECKey key : new BtcECKey[] {decodedKey, roundtripKey}) {
+        for (UldECKey key : new UldECKey[] {decodedKey, roundtripKey}) {
             byte[] message = reverseBytes(HEX.decode(
                     "11da3761e86431e4a54c176789e41f1651b324d240d599a7067bee23d328ec2a"));
             byte[] output = key.sign(Sha256Hash.wrap(message)).encodeToDER();
@@ -128,14 +128,14 @@ public class BtcECKeyTest {
     public void testKeyPairRoundtrip() throws Exception {
         byte[] privkeyASN1 = HEX.decode(
                 "3082011302010104205c0b98e524ad188ddef35dc6abba13c34a351a05409e5d285403718b93336a4aa081a53081a2020101302c06072a8648ce3d0101022100fffffffffffffffffffffffffffffffffffffffffffffffffffffffefffffc2f300604010004010704410479be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798483ada7726a3c4655da4fbfc0e1108a8fd17b448a68554199c47d08ffb10d4b8022100fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141020101a144034200042af7a2aafe8dafd7dc7f9cfb58ce09bda7dce28653ab229b98d1d3d759660c672dd0db18c8c2d76aa470448e876fc2089ab1354c01a6e72cefc50915f4a963ee");
-        BtcECKey decodedKey = BtcECKey.fromASN1(privkeyASN1);
+        UldECKey decodedKey = UldECKey.fromASN1(privkeyASN1);
 
         // Now re-encode and decode the ASN.1 to see if it is equivalent (it does not produce the exact same byte
         // sequence, some integers are padded now).
-        BtcECKey roundtripKey =
-            BtcECKey.fromPrivateAndPrecalculatedPublic(decodedKey.getPrivKey(), decodedKey.getPubKeyPoint());
+        UldECKey roundtripKey =
+            UldECKey.fromPrivateAndPrecalculatedPublic(decodedKey.getPrivKey(), decodedKey.getPubKeyPoint());
 
-        for (BtcECKey key : new BtcECKey[] {decodedKey, roundtripKey}) {
+        for (UldECKey key : new UldECKey[] {decodedKey, roundtripKey}) {
             byte[] message = reverseBytes(HEX.decode(
                     "11da3761e86431e4a54c176789e41f1651b324d240d599a7067bee23d328ec2a"));
             byte[] output = key.sign(Sha256Hash.wrap(message)).encodeToDER();
@@ -153,14 +153,14 @@ public class BtcECKeyTest {
         assertTrue(decodedKey.verify(message, roundtripKey.sign(Sha256Hash.wrap(message)).encodeToDER()));
 
         // Verify bytewise equivalence of public keys (i.e. compression state is preserved)
-        BtcECKey key = new BtcECKey();
-        BtcECKey key2 = BtcECKey.fromASN1(key.toASN1());
+        UldECKey key = new UldECKey();
+        UldECKey key2 = UldECKey.fromASN1(key.toASN1());
         assertArrayEquals(key.getPubKey(), key2.getPubKey());
     }
 
     @Test
     public void signTextMessage() throws Exception {
-        BtcECKey key = new BtcECKey();
+        UldECKey key = new UldECKey();
         String message = "聡中本";
         String signatureBase64 = key.signMessage(message);
         log.info("Message signed with " + key.toAddress(MainNetParams.get()) + ": " + signatureBase64);
@@ -180,21 +180,21 @@ public class BtcECKeyTest {
         String message = "hello";
         String sigBase64 = "HxNZdo6ggZ41hd3mM3gfJRqOQPZYcO8z8qdX2BwmpbF11CaOQV+QiZGGQxaYOncKoNW61oRuSMMF8udfK54XqI8=";
         Address expectedAddress = Address.fromBase58(MainNetParams.get(), "14YPSNPi6NSXnUxtPAsyJSuw3pv7AU3Cag");
-        BtcECKey key = BtcECKey.signedMessageToKey(message, sigBase64);
+        UldECKey key = UldECKey.signedMessageToKey(message, sigBase64);
         Address gotAddress = key.toAddress(MainNetParams.get());
         assertEquals(expectedAddress, gotAddress);
     }
 
     @Test
     public void keyRecovery() throws Exception {
-        BtcECKey key = new BtcECKey();
+        UldECKey key = new UldECKey();
         String message = "Hello World!";
         Sha256Hash hash = Sha256Hash.of(message.getBytes());
-        BtcECKey.ECDSASignature sig = key.sign(hash);
-        key = BtcECKey.fromPublicOnly(key.getPubKeyPoint());
+        UldECKey.ECDSASignature sig = key.sign(hash);
+        key = UldECKey.fromPublicOnly(key.getPubKeyPoint());
         boolean found = false;
         for (int i = 0; i < 4; i++) {
-            BtcECKey key2 = BtcECKey.recoverFromSignature(i, sig, hash, true);
+            UldECKey key2 = UldECKey.recoverFromSignature(i, sig, hash, true);
             checkNotNull(key2);
             if (key.equals(key2)) {
                 found = true;
@@ -207,21 +207,21 @@ public class BtcECKeyTest {
 
     @Test
     public void testToString() throws Exception {
-        BtcECKey key = BtcECKey.fromPrivate(BigInteger.TEN).decompress(); // An example private key.
+        UldECKey key = UldECKey.fromPrivate(BigInteger.TEN).decompress(); // An example private key.
         NetworkParameters params = MainNetParams.get();
-        assertEquals("BtcECKey{pub HEX=04a0434d9e47f3c86235477c7b1ae6ae5d3442d49b1943c2b752a68e2a47e247c7893aba425419bc27a3b6c7e693a24c696f794c2ed877a1593cbee53b037368d7, isPubKeyOnly=false}", key.toString());
-        assertEquals("BtcECKey{pub HEX=04a0434d9e47f3c86235477c7b1ae6ae5d3442d49b1943c2b752a68e2a47e247c7893aba425419bc27a3b6c7e693a24c696f794c2ed877a1593cbee53b037368d7, priv HEX=000000000000000000000000000000000000000000000000000000000000000a, isPubKeyOnly=false}", key.toStringWithPrivate(params));
+        assertEquals("UldECKey{pub HEX=04a0434d9e47f3c86235477c7b1ae6ae5d3442d49b1943c2b752a68e2a47e247c7893aba425419bc27a3b6c7e693a24c696f794c2ed877a1593cbee53b037368d7, isPubKeyOnly=false}", key.toString());
+        assertEquals("UldECKey{pub HEX=04a0434d9e47f3c86235477c7b1ae6ae5d3442d49b1943c2b752a68e2a47e247c7893aba425419bc27a3b6c7e693a24c696f794c2ed877a1593cbee53b037368d7, priv HEX=000000000000000000000000000000000000000000000000000000000000000a, isPubKeyOnly=false}", key.toStringWithPrivate(params));
     }
 
     @Test
     public void testGetPrivateKeyAsHex() throws Exception {
-        BtcECKey key = BtcECKey.fromPrivate(BigInteger.TEN).decompress(); // An example private key.
+        UldECKey key = UldECKey.fromPrivate(BigInteger.TEN).decompress(); // An example private key.
         assertEquals("000000000000000000000000000000000000000000000000000000000000000a", key.getPrivateKeyAsHex());
     }
 
     @Test
     public void testGetPublicKeyAsHex() throws Exception {
-        BtcECKey key = BtcECKey.fromPrivate(BigInteger.TEN).decompress(); // An example private key.
+        UldECKey key = UldECKey.fromPrivate(BigInteger.TEN).decompress(); // An example private key.
         assertEquals("04a0434d9e47f3c86235477c7b1ae6ae5d3442d49b1943c2b752a68e2a47e247c7893aba425419bc27a3b6c7e693a24c696f794c2ed877a1593cbee53b037368d7", key.getPublicKeyAsHex());
     }
 
@@ -276,8 +276,8 @@ public class BtcECKeyTest {
     public void testCreatedSigAndPubkeyAreCanonical() throws Exception {
         // Tests that we will not generate non-canonical pubkeys or signatures
         // We dump failed data to error log because this test is not expected to be deterministic
-        BtcECKey key = new BtcECKey();
-        if (!BtcECKey.isPubKeyCanonical(key.getPubKey())) {
+        UldECKey key = new UldECKey();
+        if (!UldECKey.isPubKeyCanonical(key.getPubKey())) {
             log.error(Utils.HEX.encode(key.getPubKey()));
             fail();
         }

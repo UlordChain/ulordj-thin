@@ -39,7 +39,7 @@ import static org.junit.Assert.*;
  */
 public class UldTransactionTest {
     private static final NetworkParameters PARAMS = UnitTestParams.get();
-    private static final Address ADDRESS = new BtcECKey().toAddress(PARAMS);
+    private static final Address ADDRESS = new UldECKey().toAddress(PARAMS);
 
     private UldTransaction tx;
 
@@ -153,7 +153,7 @@ public class UldTransactionTest {
     public void testCLTVPaymentChannelTransactionSpending() {
         BigInteger time = BigInteger.valueOf(20);
 
-        BtcECKey from = new BtcECKey(), to = new BtcECKey(), incorrect = new BtcECKey();
+        UldECKey from = new UldECKey(), to = new UldECKey(), incorrect = new UldECKey();
         Script outputScript = ScriptBuilder.createCLTVPaymentChannelOutput(time, from, to);
 
         UldTransaction tx = new UldTransaction(PARAMS);
@@ -200,7 +200,7 @@ public class UldTransactionTest {
     public void testCLTVPaymentChannelTransactionRefund() {
         BigInteger time = BigInteger.valueOf(20);
 
-        BtcECKey from = new BtcECKey(), to = new BtcECKey(), incorrect = new BtcECKey();
+        UldECKey from = new UldECKey(), to = new UldECKey(), incorrect = new UldECKey();
         Script outputScript = ScriptBuilder.createCLTVPaymentChannelOutput(time, from, to);
 
         UldTransaction tx = new UldTransaction(PARAMS);
@@ -275,7 +275,7 @@ public class UldTransactionTest {
 
     @Test(expected = ScriptException.class)
     public void testAddSignedInputThrowsExceptionWhenScriptIsNotToRawPubKeyAndIsNotToAddress() {
-        BtcECKey key = new BtcECKey();
+        UldECKey key = new UldECKey();
         Address addr = key.toAddress(PARAMS);
         UldTransaction fakeTx = FakeTxBuilder.createFakeTx(PARAMS, Coin.COIN, addr);
 
@@ -344,7 +344,7 @@ public class UldTransactionTest {
     @Test
     public void testHashForSignatureThreadSafety() {
         UldBlock genesis = UnitTestParams.get().getGenesisBlock();
-        UldBlock block1 = genesis.createNextBlock(new BtcECKey().toAddress(UnitTestParams.get()),
+        UldBlock block1 = genesis.createNextBlock(new UldECKey().toAddress(UnitTestParams.get()),
                     genesis.getTransactions().get(0).getOutput(0).getOutPointFor());
 
         final UldTransaction tx = block1.getTransactions().get(1);

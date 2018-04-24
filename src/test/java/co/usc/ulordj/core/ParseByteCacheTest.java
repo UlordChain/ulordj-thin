@@ -90,17 +90,17 @@ public class ParseByteCacheTest {
         
         UldTransaction tx1 = createFakeTx(PARAMS,
                 valueOf(2, 0),
-                new BtcECKey().toAddress(PARAMS));
+                new UldECKey().toAddress(PARAMS));
         
         // add a second input so can test granularity of byte cache.
         UldTransaction prevTx = new UldTransaction(PARAMS);
-        TransactionOutput prevOut = new TransactionOutput(PARAMS, prevTx, COIN, new BtcECKey().toAddress(PARAMS));
+        TransactionOutput prevOut = new TransactionOutput(PARAMS, prevTx, COIN, new UldECKey().toAddress(PARAMS));
         prevTx.addOutput(prevOut);
         // Connect it.
         tx1.addInput(prevOut);
         
         UldTransaction tx2 = createFakeTx(PARAMS, COIN,
-                new BtcECKey().toAddress(PARAMS));
+                new UldECKey().toAddress(PARAMS));
 
         UldBlock b1 = createFakeBlock(blockStore, BLOCK_HEIGHT_GENESIS, tx1, tx2).block;
 

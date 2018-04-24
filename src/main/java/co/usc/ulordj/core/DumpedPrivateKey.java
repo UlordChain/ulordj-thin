@@ -47,7 +47,7 @@ public class DumpedPrivateKey extends VersionedChecksummedBytes {
         return new DumpedPrivateKey(params, base58);
     }
 
-    // Used by ECKey.getPrivateKeyEncoded()
+    // Used by UldECKey.getPrivateKeyEncoded()
     DumpedPrivateKey(NetworkParameters params, byte[] keyBytes, boolean compressed) {
         super(params.getDumpedPrivateKeyHeader(), encode(keyBytes, compressed));
         this.compressed = compressed;
@@ -83,10 +83,10 @@ public class DumpedPrivateKey extends VersionedChecksummedBytes {
     }
 
     /**
-     * Returns an ECKey created from this encoded private key.
+     * Returns an UldECKey created from this encoded private key.
      */
-    public BtcECKey getKey() {
-        final BtcECKey key = BtcECKey.fromPrivate(bytes);
+    public UldECKey getKey() {
+        final UldECKey key = UldECKey.fromPrivate(bytes);
         return compressed ? key : key.decompress();
     }
 

@@ -17,26 +17,10 @@
 
 package co.usc.ulordj.wallet;
 
+import co.usc.ulordj.core.*;
 import com.google.common.collect.*;
 import net.jcip.annotations.*;
-import co.usc.ulordj.core.UldAbstractBlockChain;
-import co.usc.ulordj.core.Address;
-import co.usc.ulordj.core.UldBlockChain;
-import co.usc.ulordj.core.Coin;
-import co.usc.ulordj.core.Context;
-import co.usc.ulordj.core.BtcECKey;
-import co.usc.ulordj.core.InsufficientMoneyException;
-import co.usc.ulordj.core.NetworkParameters;
-import co.usc.ulordj.core.ScriptException;
-import co.usc.ulordj.core.Sha256Hash;
-import co.usc.ulordj.core.UldTransaction;
-import co.usc.ulordj.core.TransactionBag;
-import co.usc.ulordj.core.TransactionInput;
-import co.usc.ulordj.core.TransactionOutput;
-import co.usc.ulordj.core.UTXO;
-import co.usc.ulordj.core.UTXOProvider;
-import co.usc.ulordj.core.UTXOProviderException;
-import co.usc.ulordj.core.Utils;
+import co.usc.ulordj.core.UldECKey;
 import co.usc.ulordj.script.*;
 import co.usc.ulordj.signers.*;
 import org.slf4j.*;
@@ -292,11 +276,11 @@ public class Wallet
      * Locates a keypair from the basicKeyChain given the hash of the public key. This is needed when finding out which
      * key we need to use to redeem a transaction output.
      *
-     * @return ECKey object or null if no such key was found.
+     * @return UldECKey object or null if no such key was found.
      */
     @Override
     @Nullable
-    public BtcECKey findKeyFromPubHash(byte[] pubkeyHash) {
+    public UldECKey findKeyFromPubHash(byte[] pubkeyHash) {
         return null;
     }
 
@@ -317,11 +301,11 @@ public class Wallet
 
     /**
      * Locates a keypair from the basicKeyChain given the raw public key bytes.
-     * @return ECKey or null if no such key was found.
+     * @return UldECKey or null if no such key was found.
      */
     @Override
     @Nullable
-    public BtcECKey findKeyFromPubKey(byte[] pubkey) {
+    public UldECKey findKeyFromPubKey(byte[] pubkey) {
         return null;
     }
 
@@ -526,7 +510,7 @@ public class Wallet
         USE_DUMMY_SIG,
         /**
          * If signature is missing, {@link co.usc.ulordj.signers.TransactionSigner.MissingSignatureException}
-         * will be thrown for P2SH and {@link BtcECKey.MissingPrivateKeyException} for other tx types.
+         * will be thrown for P2SH and {@link UldECKey.MissingPrivateKeyException} for other tx types.
          */
         THROW
     }
@@ -1027,7 +1011,7 @@ public class Wallet
         for (TransactionOutput output : selection.gathered) {
             try {
                 Script script = output.getScriptPubKey();
-                BtcECKey key = null;
+                UldECKey key = null;
                 Script redeemScript = null;
                 if (script.isSentToAddress()) {
                     key = findKeyFromPubHash(script.getPubKeyHash());

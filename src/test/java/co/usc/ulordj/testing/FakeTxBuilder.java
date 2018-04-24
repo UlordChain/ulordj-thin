@@ -34,12 +34,12 @@ import static com.google.common.base.Preconditions.checkState;
 public class FakeTxBuilder {
     /** Create a fake transaction, without change. */
     public static UldTransaction createFakeTx(final NetworkParameters params) {
-        return createFakeTxWithoutChangeAddress(params, Coin.COIN, new BtcECKey().toAddress(params));
+        return createFakeTxWithoutChangeAddress(params, Coin.COIN, new UldECKey().toAddress(params));
     }
 
     /** Create a fake transaction, without change. */
     public static UldTransaction createFakeTxWithoutChange(final NetworkParameters params, final TransactionOutput output) {
-        UldTransaction prevTx = FakeTxBuilder.createFakeTx(params, Coin.COIN, new BtcECKey().toAddress(params));
+        UldTransaction prevTx = FakeTxBuilder.createFakeTx(params, Coin.COIN, new UldECKey().toAddress(params));
         UldTransaction tx = new UldTransaction(params);
         tx.addOutput(output);
         tx.addInput(prevTx.getOutput(0));
@@ -53,7 +53,7 @@ public class FakeTxBuilder {
         UldTransaction tx = new UldTransaction(params);
         tx.addInput(input);
         TransactionOutput outputToMe = new TransactionOutput(params, tx, Coin.FIFTY_COINS,
-                new BtcECKey().toAddress(params));
+                new UldECKey().toAddress(params));
         tx.addOutput(outputToMe);
 
         checkState(tx.isCoinBase());
@@ -123,18 +123,18 @@ public class FakeTxBuilder {
      * else to simulate change. There is one random input.
      */
     public static UldTransaction createFakeTx(NetworkParameters params, Coin value, Address to) {
-        return createFakeTxWithChangeAddress(params, value, to, new BtcECKey().toAddress(params));
+        return createFakeTxWithChangeAddress(params, value, to, new UldECKey().toAddress(params));
     }
 
     /**
      * Create a fake TX of sufficient realism to exercise the unit tests. Two outputs, one to us, one to somewhere
      * else to simulate change. There is one random input.
      */
-    public static UldTransaction createFakeTx(NetworkParameters params, Coin value, BtcECKey to) {
+    public static UldTransaction createFakeTx(NetworkParameters params, Coin value, UldECKey to) {
         UldTransaction t = new UldTransaction(params);
         TransactionOutput outputToMe = new TransactionOutput(params, t, value, to);
         t.addOutput(outputToMe);
-        TransactionOutput change = new TransactionOutput(params, t, valueOf(1, 11), new BtcECKey());
+        TransactionOutput change = new TransactionOutput(params, t, valueOf(1, 11), new UldECKey());
         t.addOutput(change);
         // Make a previous tx simply to send us sufficient coins. This prev tx is not really valid but it doesn't
         // matter for our purposes.
@@ -157,7 +157,7 @@ public class FakeTxBuilder {
         UldTransaction t = new UldTransaction(params);
         TransactionOutput outputToMe = new TransactionOutput(params, t, value, to);
         t.addOutput(outputToMe);
-        TransactionOutput change = new TransactionOutput(params, t, valueOf(1, 11), new BtcECKey().toAddress(params));
+        TransactionOutput change = new TransactionOutput(params, t, valueOf(1, 11), new UldECKey().toAddress(params));
         t.addOutput(change);
         // Make a feeder tx that sends to the from address specified. This feeder tx is not really valid but it doesn't
         // matter for our purposes.
@@ -203,7 +203,7 @@ public class FakeTxBuilder {
     public static DoubleSpends createFakeDoubleSpendTxns(NetworkParameters params, Address to) {
         DoubleSpends doubleSpends = new DoubleSpends();
         Coin value = COIN;
-        Address someBadGuy = new BtcECKey().toAddress(params);
+        Address someBadGuy = new UldECKey().toAddress(params);
 
         doubleSpends.prevTx = new UldTransaction(params);
         TransactionOutput prevOut = new TransactionOutput(params, doubleSpends.prevTx, value, someBadGuy);
@@ -245,7 +245,7 @@ public class FakeTxBuilder {
                                             UldTransaction... transactions) {
         try {
             UldBlock previousBlock = previousStoredBlock.getHeader();
-            Address to = new BtcECKey().toAddress(previousBlock.getParams());
+            Address to = new UldECKey().toAddress(previousBlock.getParams());
             UldBlock b = previousBlock.createNextBlock(to, version, timeSeconds, height);
             // Coinbase tx was already added.
             for (UldTransaction tx : transactions) {
@@ -296,7 +296,7 @@ public class FakeTxBuilder {
     }
 
     public static UldBlock makeSolvedTestBlock(UldBlock prev, UldTransaction... transactions) throws BlockStoreException {
-        Address to = new BtcECKey().toAddress(prev.getParams());
+        Address to = new UldECKey().toAddress(prev.getParams());
         UldBlock b = prev.createNextBlock(to);
         // Coinbase tx already exists.
         for (UldTransaction tx : transactions) {

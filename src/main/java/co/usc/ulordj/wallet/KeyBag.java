@@ -16,12 +16,13 @@
 
 package co.usc.ulordj.wallet;
 
-import co.usc.ulordj.core.BtcECKey;
+import co.usc.ulordj.core.UldECKey;
+import co.usc.ulordj.core.UldECKey;
 
 import javax.annotation.Nullable;
 
 /**
- * A KeyBag is simply an object that can map public keys, their 160-bit hashes and script hashes to ECKey
+ * A KeyBag is simply an object that can map public keys, their 160-bit hashes and script hashes to UldECKey
  * and {@link RedeemData} objects.
  */
 public interface KeyBag {
@@ -29,18 +30,18 @@ public interface KeyBag {
      * Locates a keypair from the keychain given the hash of the public key. This is needed when finding out which
      * key we need to use to redeem a transaction output.
      *
-     * @return ECKey object or null if no such key was found.
+     * @return UldECKey object or null if no such key was found.
      */
     @Nullable
-    BtcECKey findKeyFromPubHash(byte[] pubkeyHash);
+    UldECKey findKeyFromPubHash(byte[] pubkeyHash);
 
     /**
      * Locates a keypair from the keychain given the raw public key bytes.
      *
-     * @return ECKey or null if no such key was found.
+     * @return UldECKey or null if no such key was found.
      */
     @Nullable
-    BtcECKey findKeyFromPubKey(byte[] pubkey);
+    UldECKey findKeyFromPubKey(byte[] pubkey);
 
     /**
      * Locates a redeem data (redeem script and keys) from the keychain given the hash of the script.

@@ -46,7 +46,7 @@ public class TransactionOutputTest {
 
     @Test
     public void getMinNonDustValue() throws Exception {
-        TransactionOutput payToAddressOutput = new TransactionOutput(PARAMS, null, Coin.COIN, new BtcECKey().toAddress(PARAMS));
+        TransactionOutput payToAddressOutput = new TransactionOutput(PARAMS, null, Coin.COIN, new UldECKey().toAddress(PARAMS));
         assertEquals(UldTransaction.MIN_NONDUST_OUTPUT, payToAddressOutput.getMinNonDustValue());
     }
 }

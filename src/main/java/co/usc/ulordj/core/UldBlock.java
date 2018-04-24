@@ -122,7 +122,7 @@ public class UldBlock extends Message {
         difficultyTarget = 0x1d07fff8L;
         time = System.currentTimeMillis() / 1000;
         prevBlockHash = Sha256Hash.ZERO_HASH;
-
+        hashClaimTrie = new BigInteger()
         length = HEADER_SIZE;
     }
 
@@ -889,7 +889,7 @@ public class UldBlock extends Message {
         coinbase.addInput(new TransactionInput(params, coinbase,
                 inputBuilder.build().getProgram()));
         coinbase.addOutput(new TransactionOutput(params, coinbase, value,
-                ScriptBuilder.createOutputScript(BtcECKey.fromPublicOnly(pubKeyTo)).getProgram()));
+                ScriptBuilder.createOutputScript(UldECKey.fromPublicOnly(pubKeyTo)).getProgram()));
         transactions.add(coinbase);
         coinbase.setParent(this);
         coinbase.length = coinbase.unsafeBitcoinSerialize().length;
@@ -899,7 +899,7 @@ public class UldBlock extends Message {
     static final byte[] EMPTY_BYTES = new byte[32];
 
     // It's pretty weak to have this around at runtime: fix later.
-    private static final byte[] pubkeyForTesting = new BtcECKey().getPubKey();
+    private static final byte[] pubkeyForTesting = new UldECKey().getPubKey();
 
     /**
      * Returns a solved block that builds on top of this one. This exists for unit tests.

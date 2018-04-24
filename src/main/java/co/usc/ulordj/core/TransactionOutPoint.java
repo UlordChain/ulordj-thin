@@ -129,15 +129,15 @@ public class TransactionOutPoint extends ChildMessage {
     }
 
     /**
-     * Returns the ECKey identified in the connected output, for either pay-to-address scripts or pay-to-key scripts.
+     * Returns the UldECKey identified in the connected output, for either pay-to-address scripts or pay-to-key scripts.
      * For P2SH scripts you can use {@link #getConnectedRedeemData(co.usc.ulordj.wallet.KeyBag)} and then get the
      * key from RedeemData.
      * If the script form cannot be understood, throws ScriptException.
      *
-     * @return an ECKey or null if the connected key cannot be found in the wallet.
+     * @return an UldECKey or null if the connected key cannot be found in the wallet.
      */
     @Nullable
-    public BtcECKey getConnectedKey(KeyBag keyBag) throws ScriptException {
+    public UldECKey getConnectedKey(KeyBag keyBag) throws ScriptException {
         TransactionOutput connectedOutput = getConnectedOutput();
         checkNotNull(connectedOutput, "Input is not connected so cannot retrieve key");
         Script connectedScript = connectedOutput.getScriptPubKey();

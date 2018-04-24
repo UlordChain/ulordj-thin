@@ -141,7 +141,7 @@ public class UldBlockTest {
     @Test
     public void testUpdateLength() {
         NetworkParameters params = UnitTestParams.get();
-        UldBlock block = params.getGenesisBlock().createNextBlockWithCoinbase(UldBlock.BLOCK_VERSION_GENESIS, new BtcECKey().getPubKey(), UldBlock.BLOCK_HEIGHT_GENESIS);
+        UldBlock block = params.getGenesisBlock().createNextBlockWithCoinbase(UldBlock.BLOCK_VERSION_GENESIS, new UldECKey().getPubKey(), UldBlock.BLOCK_HEIGHT_GENESIS);
         assertEquals(block.bitcoinSerialize().length, block.length);
         final int origBlockLen = block.length;
         UldTransaction tx = new UldTransaction(params);

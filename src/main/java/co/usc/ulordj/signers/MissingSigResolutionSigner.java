@@ -16,8 +16,9 @@
 
 package co.usc.ulordj.signers;
 
-import co.usc.ulordj.core.BtcECKey;
+import co.usc.ulordj.core.UldECKey;
 import co.usc.ulordj.core.TransactionInput;
+import co.usc.ulordj.core.UldECKey;
 import co.usc.ulordj.crypto.TransactionSignature;
 import co.usc.ulordj.script.Script;
 import co.usc.ulordj.script.ScriptChunk;
@@ -82,7 +83,7 @@ public class MissingSigResolutionSigner extends StatelessTransactionSigner {
             } else {
                 if (inputScript.getChunks().get(0).equalsOpCode(0)) {
                     if (missingSigsMode == Wallet.MissingSigsMode.THROW) {
-                        throw new BtcECKey.MissingPrivateKeyException();
+                        throw new UldECKey.MissingPrivateKeyException();
                     } else if (missingSigsMode == Wallet.MissingSigsMode.USE_DUMMY_SIG) {
                         txIn.setScriptSig(scriptPubKey.getScriptSigWithSignature(inputScript, dummySig, 0));
                     }

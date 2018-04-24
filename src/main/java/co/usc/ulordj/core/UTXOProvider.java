@@ -26,7 +26,7 @@ import java.util.List;
  */
 public interface UTXOProvider {
 
-    // TODO currently the access to outputs is by address. Change to ECKey
+    // TODO currently the access to outputs is by address. Change to UldECKey
     /**
      * Get the list of {@link UTXO}'s for a given address.
      * @param addresses List of address.

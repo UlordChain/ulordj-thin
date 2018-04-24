@@ -23,13 +23,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.math.BigInteger;
 import java.util.Date;
 
-import co.usc.ulordj.core.Address;
-import co.usc.ulordj.core.Coin;
-import co.usc.ulordj.core.Context;
-import co.usc.ulordj.core.BtcECKey;
-import co.usc.ulordj.core.NetworkParameters;
-import co.usc.ulordj.core.UldTransaction;
-import co.usc.ulordj.core.TransactionOutput;
+import co.usc.ulordj.core.*;
+import co.usc.ulordj.core.UldECKey;
 import co.usc.ulordj.script.Script;
 import co.usc.ulordj.script.ScriptBuilder;
 import co.usc.ulordj.wallet.Wallet.MissingSigsMode;
@@ -172,7 +167,7 @@ public class SendRequest {
      * rejected by the network. Note that using {@link SendRequest#to(Address, Coin)} will result
      * in a smaller output, and thus the ability to use a smaller output value without rejection.</p>
      */
-    public static SendRequest to(NetworkParameters params, BtcECKey destination, Coin value) {
+    public static SendRequest to(NetworkParameters params, UldECKey destination, Coin value) {
         SendRequest req = new SendRequest();
         req.tx = new UldTransaction(params);
         req.tx.addOutput(value, destination);
@@ -196,18 +191,18 @@ public class SendRequest {
         return req;
     }
 
-    public static SendRequest toCLTVPaymentChannel(NetworkParameters params, Date releaseTime, BtcECKey from, BtcECKey to, Coin value) {
+    public static SendRequest toCLTVPaymentChannel(NetworkParameters params, Date releaseTime, UldECKey from, UldECKey to, Coin value) {
         long time = releaseTime.getTime() / 1000L;
         checkArgument(time >= UldTransaction.LOCKTIME_THRESHOLD, "Release time was too small");
         return toCLTVPaymentChannel(params, BigInteger.valueOf(time), from, to, value);
     }
 
-    public static SendRequest toCLTVPaymentChannel(NetworkParameters params, int releaseBlock, BtcECKey from, BtcECKey to, Coin value) {
+    public static SendRequest toCLTVPaymentChannel(NetworkParameters params, int releaseBlock, UldECKey from, UldECKey to, Coin value) {
         checkArgument(0 <= releaseBlock && releaseBlock < UldTransaction.LOCKTIME_THRESHOLD, "Block number was too large");
         return toCLTVPaymentChannel(params, BigInteger.valueOf(releaseBlock), from, to, value);
     }
 
-    public static SendRequest toCLTVPaymentChannel(NetworkParameters params, BigInteger time, BtcECKey from, BtcECKey to, Coin value) {
+    public static SendRequest toCLTVPaymentChannel(NetworkParameters params, BigInteger time, UldECKey from, UldECKey to, Coin value) {
         SendRequest req = new SendRequest();
         Script output = ScriptBuilder.createCLTVPaymentChannelOutput(time, from, to);
         req.tx = new UldTransaction(params);

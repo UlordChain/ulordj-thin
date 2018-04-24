@@ -16,7 +16,9 @@
 
 package co.usc.ulordj.wallet;
 
-import co.usc.ulordj.core.BtcECKey;
+import co.usc.ulordj.core.UldECKey;
+import co.usc.ulordj.core.UldECKey;
+import co.usc.ulordj.core.UldECKey;
 import co.usc.ulordj.script.Script;
 
 import java.util.ArrayList;
@@ -35,16 +37,16 @@ import static com.google.common.base.Preconditions.checkArgument;
  */
 public class RedeemData {
     public final Script redeemScript;
-    public final List<BtcECKey> keys;
+    public final List<UldECKey> keys;
 
-    private RedeemData(List<BtcECKey> keys, Script redeemScript) {
+    private RedeemData(List<UldECKey> keys, Script redeemScript) {
         this.redeemScript = redeemScript;
-        List<BtcECKey> sortedKeys = new ArrayList<BtcECKey>(keys);
-        Collections.sort(sortedKeys, BtcECKey.PUBKEY_COMPARATOR);
+        List<UldECKey> sortedKeys = new ArrayList<UldECKey>(keys);
+        Collections.sort(sortedKeys, UldECKey.PUBKEY_COMPARATOR);
         this.keys = sortedKeys;
     }
 
-    public static RedeemData of(List<BtcECKey> keys, Script redeemScript) {
+    public static RedeemData of(List<UldECKey> keys, Script redeemScript) {
         return new RedeemData(keys, redeemScript);
     }
 
@@ -52,7 +54,7 @@ public class RedeemData {
      * Creates RedeemData for pay-to-address or pay-to-pubkey input. Provided key is a single private key needed
      * to spend such inputs and provided program should be a proper CHECKSIG program.
      */
-    public static RedeemData of(BtcECKey key, Script program) {
+    public static RedeemData of(UldECKey key, Script program) {
         checkArgument(program.isSentToAddress() || program.isSentToRawPubKey());
         return key != null ? new RedeemData(Collections.singletonList(key), program) : null;
     }
@@ -60,8 +62,8 @@ public class RedeemData {
     /**
      * Returns the first key that has private bytes
      */
-    public BtcECKey getFullKey() {
-        for (BtcECKey key : keys)
+    public UldECKey getFullKey() {
+        for (UldECKey key : keys)
             if (key.hasPrivKey())
                 return key;
         return null;

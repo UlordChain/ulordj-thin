@@ -16,10 +16,11 @@
 
 package co.usc.ulordj.script;
 
+import co.usc.ulordj.core.UldECKey;
 import co.usc.ulordj.core.UldTransaction;
 import com.google.common.collect.Lists;
 import co.usc.ulordj.core.Address;
-import co.usc.ulordj.core.BtcECKey;
+import co.usc.ulordj.core.UldECKey;
 import co.usc.ulordj.core.Utils;
 import co.usc.ulordj.crypto.TransactionSignature;
 
@@ -237,7 +238,7 @@ public class ScriptBuilder {
     }
 
     /** Creates a scriptPubKey that encodes payment to the given raw public key. */
-    public static Script createOutputScript(BtcECKey key) {
+    public static Script createOutputScript(UldECKey key) {
         return new ScriptBuilder().data(key.getPubKey()).op(OP_CHECKSIG).build();
     }
 
@@ -245,7 +246,7 @@ public class ScriptBuilder {
      * Creates a scriptSig that can redeem a pay-to-address output.
      * If given signature is null, incomplete scriptSig will be created with OP_0 instead of signature
      */
-    public static Script createInputScript(@Nullable TransactionSignature signature, BtcECKey pubKey) {
+    public static Script createInputScript(@Nullable TransactionSignature signature, UldECKey pubKey) {
         byte[] pubkeyBytes = pubKey.getPubKey();
         byte[] sigBytes = signature != null ? signature.encodeToBitcoin() : new byte[]{};
         return new ScriptBuilder().data(sigBytes).data(pubkeyBytes).build();
@@ -261,13 +262,13 @@ public class ScriptBuilder {
     }
 
     /** Creates a program that requires at least N of the given keys to sign, using OP_CHECKMULTISIG. */
-    public static Script createMultiSigOutputScript(int threshold, List<BtcECKey> pubkeys) {
+    public static Script createMultiSigOutputScript(int threshold, List<UldECKey> pubkeys) {
         checkArgument(threshold > 0);
         checkArgument(threshold <= pubkeys.size());
         checkArgument(pubkeys.size() <= 16);  // That's the max we can represent with a single opcode.
         ScriptBuilder builder = new ScriptBuilder();
         builder.smallNum(threshold);
-        for (BtcECKey key : pubkeys) {
+        for (UldECKey key : pubkeys) {
             builder.data(key.getPubKey());
         }
         builder.smallNum(pubkeys.size());
@@ -413,7 +414,7 @@ public class ScriptBuilder {
      * Creates a P2SH output script with given public keys and threshold. Given public keys will be placed in
      * redeem script in the lexicographical sorting order.
      */
-    public static Script createP2SHOutputScript(int threshold, List<BtcECKey> pubkeys) {
+    public static Script createP2SHOutputScript(int threshold, List<UldECKey> pubkeys) {
         Script redeemScript = createRedeemScript(threshold, pubkeys);
         return createP2SHOutputScript(redeemScript);
     }
@@ -422,9 +423,9 @@ public class ScriptBuilder {
      * Creates redeem script with given public keys and threshold. Given public keys will be placed in
      * redeem script in the lexicographical sorting order.
      */
-    public static Script createRedeemScript(int threshold, List<BtcECKey> pubkeys) {
-        pubkeys = new ArrayList<BtcECKey>(pubkeys);
-        Collections.sort(pubkeys, BtcECKey.PUBKEY_COMPARATOR);
+    public static Script createRedeemScript(int threshold, List<UldECKey> pubkeys) {
+        pubkeys = new ArrayList<UldECKey>(pubkeys);
+        Collections.sort(pubkeys, UldECKey.PUBKEY_COMPARATOR);
         return ScriptBuilder.createMultiSigOutputScript(threshold, pubkeys);
     }
 
@@ -438,7 +439,7 @@ public class ScriptBuilder {
         return new ScriptBuilder().op(OP_RETURN).data(data).build();
     }
 
-    public static Script createCLTVPaymentChannelOutput(BigInteger time, BtcECKey from, BtcECKey to) {
+    public static Script createCLTVPaymentChannelOutput(BigInteger time, UldECKey from, UldECKey to) {
         byte[] timeBytes = Utils.reverseBytes(Utils.encodeMPI(time, false));
         if (timeBytes.length > 5) {
             throw new RuntimeException("Time too large to encode as 5-byte int");

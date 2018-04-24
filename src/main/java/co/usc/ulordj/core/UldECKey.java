@@ -61,11 +61,11 @@ import static com.google.common.base.Preconditions.*;
 
 /**
  * <p>Represents an elliptic curve public and (optionally) private key, usable for digital signatures but not encryption.
- * Creating a new ECKey with the empty constructor will generate a new random keypair. Other static methods can be used
+ * Creating a new UldECKey with the empty constructor will generate a new random keypair. Other static methods can be used
  * when you already have the public or private parts. If you create a key with only the public part, you can check
  * signatures but not create them.</p>
  *
- * <p>ECKey also provides access to Bitcoin Core compatible text message signing, as accessible via the UI or JSON-RPC.
+ * <p>UldECKey also provides access to Bitcoin Core compatible text message signing, as accessible via the UI or JSON-RPC.
  * This is slightly different to signing raw bytes - if you want to sign your own data and it won't be exposed as
  * text to people, you don't want to use this. If in doubt, ask on the mailing list.</p>
  *
@@ -87,14 +87,14 @@ import static com.google.common.base.Preconditions.*;
  * this class so round-tripping preserves state. Unless you're working with old software or doing unusual things, you
  * can usually ignore the compressed/uncompressed distinction.</p>
  */
-public class BtcECKey {
-    private static final Logger log = LoggerFactory.getLogger(BtcECKey.class);
+public class UldECKey {
+    private static final Logger log = LoggerFactory.getLogger(UldECKey.class);
 
     /** Sorts oldest keys first, newest last. */
-    public static final Comparator<BtcECKey> AGE_COMPARATOR = new Comparator<BtcECKey>() {
+    public static final Comparator<UldECKey> AGE_COMPARATOR = new Comparator<UldECKey>() {
 
         @Override
-        public int compare(BtcECKey k1, BtcECKey k2) {
+        public int compare(UldECKey k1, UldECKey k2) {
             if (k1.creationTimeSeconds == k2.creationTimeSeconds)
                 return 0;
             else
@@ -103,11 +103,11 @@ public class BtcECKey {
     };
 
     /** Compares pub key bytes using {@link com.google.common.primitives.UnsignedBytes#lexicographicalComparator()} */
-    public static final Comparator<BtcECKey> PUBKEY_COMPARATOR = new Comparator<BtcECKey>() {
+    public static final Comparator<UldECKey> PUBKEY_COMPARATOR = new Comparator<UldECKey>() {
         private Comparator<byte[]> comparator = UnsignedBytes.lexicographicalComparator();
 
         @Override
-        public int compare(BtcECKey k1, BtcECKey k2) {
+        public int compare(UldECKey k1, UldECKey k2) {
             return comparator.compare(k1.getPubKey(), k2.getPubKey());
         }
     };
@@ -152,7 +152,7 @@ public class BtcECKey {
      * Generates an entirely new keypair. Point compression is used so the resulting public key will be 33 bytes
      * (32 for the co-ordinate and 1 byte to represent the y bit).
      */
-    public BtcECKey() {
+    public UldECKey() {
         this(secureRandom);
     }
 
@@ -160,7 +160,7 @@ public class BtcECKey {
      * Generates an entirely new keypair with the given {@link SecureRandom} object. Point compression is used so the
      * resulting public key will be 33 bytes (32 for the co-ordinate and 1 byte to represent the y bit).
      */
-    public BtcECKey(SecureRandom secureRandom) {
+    public UldECKey(SecureRandom secureRandom) {
         ECKeyPairGenerator generator = new ECKeyPairGenerator();
         ECKeyGenerationParameters keygenParams = new ECKeyGenerationParameters(CURVE, secureRandom);
         generator.init(keygenParams);
@@ -172,7 +172,7 @@ public class BtcECKey {
         creationTimeSeconds = Utils.currentTimeSeconds();
     }
 
-    protected BtcECKey(@Nullable BigInteger priv, ECPoint pub) {
+    protected UldECKey(@Nullable BigInteger priv, ECPoint pub) {
         if (priv != null) {
             // Try and catch buggy callers or bad key imports, etc. Zero and one are special because these are often
             // used as sentinel values and because scripting languages have a habit of auto-casting true and false to
@@ -184,14 +184,14 @@ public class BtcECKey {
         this.pub = new LazyECPoint(checkNotNull(pub));
     }
 
-    protected BtcECKey(@Nullable BigInteger priv, LazyECPoint pub) {
+    protected UldECKey(@Nullable BigInteger priv, LazyECPoint pub) {
         this.priv = priv;
         this.pub = checkNotNull(pub);
     }
 
     /**
      * Utility for compressing an elliptic curve point. Returns the same point if it's already compressed.
-     * See the ECKey class docs for a discussion of point compression.
+     * See the UldECKey class docs for a discussion of point compression.
      */
     public static ECPoint compressPoint(ECPoint point) {
         return getPointWithCompression(point, true);
@@ -203,7 +203,7 @@ public class BtcECKey {
 
     /**
      * Utility for decompressing an elliptic curve point. Returns the same point if it's already compressed.
-     * See the ECKey class docs for a discussion of point compression.
+     * See the UldECKey class docs for a discussion of point compression.
      */
     public static ECPoint decompressPoint(ECPoint point) {
         return getPointWithCompression(point, false);
@@ -223,114 +223,114 @@ public class BtcECKey {
     }
 
     /**
-     * Construct an ECKey from an ASN.1 encoded private key. These are produced by OpenSSL and stored by Bitcoin
+     * Construct an UldECKey from an ASN.1 encoded private key. These are produced by OpenSSL and stored by Bitcoin
      * Core in its wallet. Note that this is slow because it requires an EC point multiply.
      */
-    public static BtcECKey fromASN1(byte[] asn1privkey) {
+    public static UldECKey fromASN1(byte[] asn1privkey) {
         return extractKeyFromASN1(asn1privkey);
     }
 
     /**
-     * Creates an ECKey given the private key only. The public key is calculated from it (this is slow). The resulting
+     * Creates an UldECKey given the private key only. The public key is calculated from it (this is slow). The resulting
      * public key is compressed.
      */
-    public static BtcECKey fromPrivate(BigInteger privKey) {
+    public static UldECKey fromPrivate(BigInteger privKey) {
         return fromPrivate(privKey, true);
     }
 
     /**
-     * Creates an ECKey given the private key only. The public key is calculated from it (this is slow), either
+     * Creates an UldECKey given the private key only. The public key is calculated from it (this is slow), either
      * compressed or not.
      */
-    public static BtcECKey fromPrivate(BigInteger privKey, boolean compressed) {
+    public static UldECKey fromPrivate(BigInteger privKey, boolean compressed) {
         ECPoint point = publicPointFromPrivate(privKey);
-        return new BtcECKey(privKey, getPointWithCompression(point, compressed));
+        return new UldECKey(privKey, getPointWithCompression(point, compressed));
     }
 
     /**
-     * Creates an ECKey given the private key only. The public key is calculated from it (this is slow). The resulting
+     * Creates an UldECKey given the private key only. The public key is calculated from it (this is slow). The resulting
      * public key is compressed.
      */
-    public static BtcECKey fromPrivate(byte[] privKeyBytes) {
+    public static UldECKey fromPrivate(byte[] privKeyBytes) {
         return fromPrivate(new BigInteger(1, privKeyBytes));
     }
 
     /**
-     * Creates an ECKey given the private key only. The public key is calculated from it (this is slow), either
+     * Creates an UldECKey given the private key only. The public key is calculated from it (this is slow), either
      * compressed or not.
      */
-    public static BtcECKey fromPrivate(byte[] privKeyBytes, boolean compressed) {
+    public static UldECKey fromPrivate(byte[] privKeyBytes, boolean compressed) {
         return fromPrivate(new BigInteger(1, privKeyBytes), compressed);
     }
 
     /**
-     * Creates an ECKey that simply trusts the caller to ensure that point is really the result of multiplying the
+     * Creates an UldECKey that simply trusts the caller to ensure that point is really the result of multiplying the
      * generator point by the private key. This is used to speed things up when you know you have the right values
      * already. The compression state of pub will be preserved.
      */
-    public static BtcECKey fromPrivateAndPrecalculatedPublic(BigInteger priv, ECPoint pub) {
-        return new BtcECKey(priv, pub);
+    public static UldECKey fromPrivateAndPrecalculatedPublic(BigInteger priv, ECPoint pub) {
+        return new UldECKey(priv, pub);
     }
 
     /**
-     * Creates an ECKey that simply trusts the caller to ensure that point is really the result of multiplying the
+     * Creates an UldECKey that simply trusts the caller to ensure that point is really the result of multiplying the
      * generator point by the private key. This is used to speed things up when you know you have the right values
      * already. The compression state of the point will be preserved.
      */
-    public static BtcECKey fromPrivateAndPrecalculatedPublic(byte[] priv, byte[] pub) {
+    public static UldECKey fromPrivateAndPrecalculatedPublic(byte[] priv, byte[] pub) {
         checkNotNull(priv);
         checkNotNull(pub);
-        return new BtcECKey(new BigInteger(1, priv), CURVE.getCurve().decodePoint(pub));
+        return new UldECKey(new BigInteger(1, priv), CURVE.getCurve().decodePoint(pub));
     }
 
     /**
-     * Creates an ECKey that cannot be used for signing, only verifying signatures, from the given point. The
+     * Creates an UldECKey that cannot be used for signing, only verifying signatures, from the given point. The
      * compression state of pub will be preserved.
      */
-    public static BtcECKey fromPublicOnly(ECPoint pub) {
-        return new BtcECKey(null, pub);
+    public static UldECKey fromPublicOnly(ECPoint pub) {
+        return new UldECKey(null, pub);
     }
 
     /**
-     * Creates an ECKey that cannot be used for signing, only verifying signatures, from the given encoded point.
+     * Creates an UldECKey that cannot be used for signing, only verifying signatures, from the given encoded point.
      * The compression state of pub will be preserved.
      */
-    public static BtcECKey fromPublicOnly(byte[] pub) {
-        return new BtcECKey(null, CURVE.getCurve().decodePoint(pub));
+    public static UldECKey fromPublicOnly(byte[] pub) {
+        return new UldECKey(null, CURVE.getCurve().decodePoint(pub));
     }
 
     /**
      * Returns a copy of this key, but with the public point represented in uncompressed form. Normally you would
      * never need this: it's for specialised scenarios or when backwards compatibility in encoded form is necessary.
      */
-    public BtcECKey decompress() {
+    public UldECKey decompress() {
         if (!pub.isCompressed())
             return this;
         else
-            return new BtcECKey(priv, decompressPoint(pub.get()));
+            return new UldECKey(priv, decompressPoint(pub.get()));
     }
 
     /**
-     * Creates an ECKey given only the private key bytes. This is the same as using the BigInteger constructor, but
+     * Creates an UldECKey given only the private key bytes. This is the same as using the BigInteger constructor, but
      * is more convenient if you are importing a key from elsewhere. The public key will be automatically derived
      * from the private key.
      */
     @Deprecated
-    public BtcECKey(@Nullable byte[] privKeyBytes, @Nullable byte[] pubKey) {
+    public UldECKey(@Nullable byte[] privKeyBytes, @Nullable byte[] pubKey) {
         this(privKeyBytes == null ? null : new BigInteger(1, privKeyBytes), pubKey);
     }
 
     /**
-     * Creates an ECKey given either the private key only, the public key only, or both. If only the private key
+     * Creates an UldECKey given either the private key only, the public key only, or both. If only the private key
      * is supplied, the public key will be calculated from it (this is slow). If both are supplied, it's assumed
-     * the public key already correctly matches the private key. If only the public key is supplied, this ECKey cannot
+     * the public key already correctly matches the private key. If only the public key is supplied, this UldECKey cannot
      * be used for signing.
      * @param compressed If set to true and pubKey is null, the derived public key will be in compressed form.
      */
     @Deprecated
-    public BtcECKey(@Nullable BigInteger privKey, @Nullable byte[] pubKey, boolean compressed) {
+    public UldECKey(@Nullable BigInteger privKey, @Nullable byte[] pubKey, boolean compressed) {
         if (privKey == null && pubKey == null)
-            throw new IllegalArgumentException("ECKey requires at least private or public key");
+            throw new IllegalArgumentException("UldECKey requires at least private or public key");
         this.priv = privKey;
         if (pubKey == null) {
             // Derive public from private.
@@ -346,13 +346,13 @@ public class BtcECKey {
     }
 
     /**
-     * Creates an ECKey given either the private key only, the public key only, or both. If only the private key
+     * Creates an UldECKey given either the private key only, the public key only, or both. If only the private key
      * is supplied, the public key will be calculated from it (this is slow). If both are supplied, it's assumed
-     * the public key already correctly matches the public key. If only the public key is supplied, this ECKey cannot
+     * the public key already correctly matches the public key. If only the public key is supplied, this UldECKey cannot
      * be used for signing.
      */
     @Deprecated
-    private BtcECKey(@Nullable BigInteger privKey, @Nullable byte[] pubKey) {
+    private UldECKey(@Nullable BigInteger privKey, @Nullable byte[] pubKey) {
         this(privKey, pubKey, false);
     }
 
@@ -378,9 +378,9 @@ public class BtcECKey {
     }
 
     /**
-     * Output this ECKey as an ASN.1 encoded private key, as understood by OpenSSL or used by Bitcoin Core
+     * Output this UldECKey as an ASN.1 encoded private key, as understood by OpenSSL or used by Bitcoin Core
      * in its wallet storage format.
-     * @throws BtcECKey.MissingPrivateKeyException if the private key is missing or encrypted.
+     * @throws UldECKey.MissingPrivateKeyException if the private key is missing or encrypted.
      */
     public byte[] toASN1() {
         try {
@@ -469,7 +469,7 @@ public class BtcECKey {
     }
 
     /**
-     * Returns the address that corresponds to the public part of this ECKey. Note that an address is derived from
+     * Returns the address that corresponds to the public part of this UldECKey. Note that an address is derived from
      * the RIPEMD-160 hash of the public key and is not the public key itself (which is too large to be convenient).
      */
     public Address toAddress(NetworkParameters params) {
@@ -494,7 +494,7 @@ public class BtcECKey {
         }
 
         /**
-         * Returns true if the S component is "low", that means it is below {@link BtcECKey#HALF_CURVE_ORDER}. See <a
+         * Returns true if the S component is "low", that means it is below {@link UldECKey#HALF_CURVE_ORDER}. See <a
          * href="https://github.com/bitcoin/bips/blob/master/bip-0062.mediawiki#Low_S_values_in_signatures">BIP62</a>.
          */
         public boolean isCanonical() {
@@ -585,7 +585,7 @@ public class BtcECKey {
 
     /**
      * Signs the given hash and returns the R and S components as BigIntegers. In the Bitcoin protocol, they are
-     * usually encoded using ASN.1 format, so you want {@link BtcECKey.ECDSASignature#toASN1()}
+     * usually encoded using ASN.1 format, so you want {@link UldECKey.ECDSASignature#toASN1()}
      * instead. However sometimes the independent components can be useful, for instance, if you're going to do
      * further EC maths on them.
      */
@@ -659,14 +659,14 @@ public class BtcECKey {
      * @param signature ASN.1 encoded signature.
      */
     public boolean verify(byte[] hash, byte[] signature) {
-        return BtcECKey.verify(hash, signature, getPubKey());
+        return UldECKey.verify(hash, signature, getPubKey());
     }
 
     /**
      * Verifies the given R/S pair (signature) against a hash using the public key.
      */
     public boolean verify(Sha256Hash sigHash, ECDSASignature signature) {
-        return BtcECKey.verify(sigHash.getBytes(), signature, getPubKey());
+        return UldECKey.verify(sigHash.getBytes(), signature, getPubKey());
     }
 
     /**
@@ -685,7 +685,7 @@ public class BtcECKey {
      * @throws java.security.SignatureException if the signature does not match.
      */
     public void verifyOrThrow(Sha256Hash sigHash, ECDSASignature signature) throws SignatureException {
-        if (!BtcECKey.verify(sigHash.getBytes(), signature, getPubKey()))
+        if (!UldECKey.verify(sigHash.getBytes(), signature, getPubKey()))
             throw new SignatureException();
     }
 
@@ -708,7 +708,7 @@ public class BtcECKey {
         return true;
     }
 
-    private static BtcECKey extractKeyFromASN1(byte[] asn1privkey) {
+    private static UldECKey extractKeyFromASN1(byte[] asn1privkey) {
         // To understand this code, see the definition of the ASN.1 format for EC private keys in the OpenSSL source
         // code in ec_asn1.c:
         //
@@ -743,7 +743,7 @@ public class BtcECKey {
 
             // Now sanity check to ensure the pubkey bytes match the privkey.
             boolean compressed = (pubbits.length == 33);
-            BtcECKey key = new BtcECKey(privkey, null, compressed);
+            UldECKey key = new UldECKey(privkey, null, compressed);
             if (!Arrays.equals(key.getPubKey(), pubbits))
                 throw new IllegalArgumentException("Public key in ASN.1 structure does not match private key.");
             return key;
@@ -756,7 +756,7 @@ public class BtcECKey {
      * Signs a text message using the standard Bitcoin messaging signing format and returns the signature as a base64
      * encoded string.
      *
-     * @throws IllegalStateException if this ECKey does not have the private part.
+     * @throws IllegalStateException if this UldECKey does not have the private part.
      */
     public String signMessage(String message) {
         byte[] data = Utils.formatMessageForSigning(message);
@@ -765,7 +765,7 @@ public class BtcECKey {
         // Now we have to work backwards to figure out the recId needed to recover the signature.
         int recId = -1;
         for (int i = 0; i < 4; i++) {
-            BtcECKey k = BtcECKey.recoverFromSignature(i, sig, hash, isCompressed());
+            UldECKey k = UldECKey.recoverFromSignature(i, sig, hash, isCompressed());
             if (k != null && k.pub.equals(pub)) {
                 recId = i;
                 break;
@@ -782,7 +782,7 @@ public class BtcECKey {
     }
 
     /**
-     * Given an arbitrary piece of text and a Bitcoin-format message signature encoded in base64, returns an ECKey
+     * Given an arbitrary piece of text and a Bitcoin-format message signature encoded in base64, returns an UldECKey
      * containing the public key that was used to sign it. This can then be compared to the expected public key to
      * determine if the signature was correct. These sorts of signatures are compatible with the Bitcoin-Qt/bitcoind
      * format generated by signmessage/verifymessage RPCs and GUI menu options. They are intended for humans to verify
@@ -792,7 +792,7 @@ public class BtcECKey {
      * @param signatureBase64 The Bitcoin-format message signature in base64
      * @throws SignatureException If the public key could not be recovered or if there was a signature format error.
      */
-    public static BtcECKey signedMessageToKey(String message, String signatureBase64) throws SignatureException {
+    public static UldECKey signedMessageToKey(String message, String signatureBase64) throws SignatureException {
         byte[] signatureEncoded;
         try {
             signatureEncoded = Base64.decode(signatureBase64);
@@ -821,18 +821,18 @@ public class BtcECKey {
             header -= 4;
         }
         int recId = header - 27;
-        BtcECKey key = BtcECKey.recoverFromSignature(recId, sig, messageHash, compressed);
+        UldECKey key = UldECKey.recoverFromSignature(recId, sig, messageHash, compressed);
         if (key == null)
             throw new SignatureException("Could not recover public key from signature");
         return key;
     }
 
     /**
-     * Convenience wrapper around {@link BtcECKey#signedMessageToKey(String, String)}. If the key derived from the
+     * Convenience wrapper around {@link UldECKey#signedMessageToKey(String, String)}. If the key derived from the
      * signature is not the same as this one, throws a SignatureException.
      */
     public void verifyMessage(String message, String signatureBase64) throws SignatureException {
-        BtcECKey key = BtcECKey.signedMessageToKey(message, signatureBase64);
+        UldECKey key = UldECKey.signedMessageToKey(message, signatureBase64);
         if (!key.pub.equals(pub))
             throw new SignatureException("Signature did not match for message");
     }
@@ -855,10 +855,10 @@ public class BtcECKey {
      * @param sig the R and S components of the signature, wrapped.
      * @param message Hash of the data that was signed.
      * @param compressed Whether or not the original pubkey was compressed.
-     * @return An ECKey containing only the public part, or null if recovery wasn't possible.
+     * @return An UldECKey containing only the public part, or null if recovery wasn't possible.
      */
     @Nullable
-    public static BtcECKey recoverFromSignature(int recId, ECDSASignature sig, Sha256Hash message, boolean compressed) {
+    public static UldECKey recoverFromSignature(int recId, ECDSASignature sig, Sha256Hash message, boolean compressed) {
         Preconditions.checkArgument(recId >= 0, "recId must be positive");
         Preconditions.checkArgument(sig.r.signum() >= 0, "r must be positive");
         Preconditions.checkArgument(sig.s.signum() >= 0, "s must be positive");
@@ -904,7 +904,7 @@ public class BtcECKey {
         BigInteger srInv = rInv.multiply(sig.s).mod(n);
         BigInteger eInvrInv = rInv.multiply(eInv).mod(n);
         ECPoint q = ECAlgorithms.sumOfTwoMultiplies(CURVE.getG(), eInvrInv, R, srInv);
-        return BtcECKey.fromPublicOnly(q.getEncoded(compressed));
+        return UldECKey.fromPublicOnly(q.getEncoded(compressed));
     }
 
     /** Decompress a compressed public key (x co-ord and low-bit of y-coord). */
@@ -917,7 +917,7 @@ public class BtcECKey {
 
     /**
      * Returns a 32 byte array containing the private key.
-     * @throws BtcECKey.MissingPrivateKeyException if the private key bytes are missing/encrypted.
+     * @throws UldECKey.MissingPrivateKeyException if the private key bytes are missing/encrypted.
      */
     public byte[] getPrivKeyBytes() {
         return Utils.bigIntegerToBytes(getPrivKey(), 32);
@@ -962,8 +962,8 @@ public class BtcECKey {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || !(o instanceof BtcECKey)) return false;
-        BtcECKey other = (BtcECKey) o;
+        if (o == null || !(o instanceof UldECKey)) return false;
+        UldECKey other = (UldECKey) o;
         return Objects.equal(this.priv, other.priv)
                 && Objects.equal(this.pub, other.pub)
                 && Objects.equal(this.creationTimeSeconds, other.creationTimeSeconds);
@@ -983,7 +983,7 @@ public class BtcECKey {
     }
 
     /**
-     * Produce a string rendering of the ECKey INCLUDING the private key.
+     * Produce a string rendering of the UldECKey INCLUDING the private key.
      * Unless you absolutely need the private key it is better for security reasons to just use {@link #toString()}.
      */
     public String toStringWithPrivate(NetworkParameters params) {

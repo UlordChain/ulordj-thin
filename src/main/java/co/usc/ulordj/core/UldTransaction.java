@@ -888,14 +888,14 @@ public class UldTransaction extends ChildMessage {
      *
      * @throws ScriptException if the scriptPubKey is not a pay to address or pay to pubkey script.
      */
-    public TransactionInput addSignedInput(TransactionOutPoint prevOut, Script scriptPubKey, BtcECKey sigKey,
+    public TransactionInput addSignedInput(TransactionOutPoint prevOut, Script scriptPubKey, UldECKey sigKey,
                                            SigHash sigHash, boolean anyoneCanPay) throws ScriptException {
         // Verify the API user didn't try to do operations out of order.
         checkState(!outputs.isEmpty(), "Attempting to sign tx without outputs.");
         TransactionInput input = new TransactionInput(params, this, new byte[]{}, prevOut);
         addInput(input);
         Sha256Hash hash = hashForSignature(inputs.size() - 1, scriptPubKey, sigHash, anyoneCanPay);
-        BtcECKey.ECDSASignature ecSig = sigKey.sign(hash);
+        UldECKey.ECDSASignature ecSig = sigKey.sign(hash);
         TransactionSignature txSig = new TransactionSignature(ecSig, sigHash, anyoneCanPay);
         if (scriptPubKey.isSentToRawPubKey())
             input.setScriptSig(ScriptBuilder.createInputScript(txSig));
@@ -907,10 +907,10 @@ public class UldTransaction extends ChildMessage {
     }
 
     /**
-     * Same as {@link #addSignedInput(TransactionOutPoint, co.usc.ulordj.script.Script, BtcECKey, UldTransaction.SigHash, boolean)}
+     * Same as {@link #addSignedInput(TransactionOutPoint, co.usc.ulordj.script.Script, UldECKey, UldTransaction.SigHash, boolean)}
      * but defaults to {@link SigHash#ALL} and "false" for the anyoneCanPay flag. This is normally what you want.
      */
-    public TransactionInput addSignedInput(TransactionOutPoint prevOut, Script scriptPubKey, BtcECKey sigKey) throws ScriptException {
+    public TransactionInput addSignedInput(TransactionOutPoint prevOut, Script scriptPubKey, UldECKey sigKey) throws ScriptException {
         return addSignedInput(prevOut, scriptPubKey, sigKey, SigHash.ALL, false);
     }
 
@@ -918,7 +918,7 @@ public class UldTransaction extends ChildMessage {
      * Adds an input that points to the given output and contains a valid signature for it, calculated using the
      * signing key.
      */
-    public TransactionInput addSignedInput(TransactionOutput output, BtcECKey signingKey) {
+    public TransactionInput addSignedInput(TransactionOutput output, UldECKey signingKey) {
         return addSignedInput(output.getOutPointFor(), output.getScriptPubKey(), signingKey);
     }
 
@@ -926,7 +926,7 @@ public class UldTransaction extends ChildMessage {
      * Adds an input that points to the given output and contains a valid signature for it, calculated using the
      * signing key.
      */
-    public TransactionInput addSignedInput(TransactionOutput output, BtcECKey signingKey, SigHash sigHash, boolean anyoneCanPay) {
+    public TransactionInput addSignedInput(TransactionOutput output, UldECKey signingKey, SigHash sigHash, boolean anyoneCanPay) {
         return addSignedInput(output.getOutPointFor(), output.getScriptPubKey(), signingKey, sigHash, anyoneCanPay);
     }
 
@@ -966,7 +966,7 @@ public class UldTransaction extends ChildMessage {
      * Creates an output that pays to the given pubkey directly (no address) with the given value, adds it to this
      * transaction, and returns the new output.
      */
-    public TransactionOutput addOutput(Coin value, BtcECKey pubkey) {
+    public TransactionOutput addOutput(Coin value, UldECKey pubkey) {
         return addOutput(new TransactionOutput(params, this, value, pubkey));
     }
 
@@ -982,7 +982,7 @@ public class UldTransaction extends ChildMessage {
     /**
      * Calculates a signature that is valid for being inserted into the input at the given position. This is simply
      * a wrapper around calling {@link UldTransaction#hashForSignature(int, byte[], UldTransaction.SigHash, boolean)}
-     * followed by {@link BtcECKey#sign(Sha256Hash)} and then returning a new {@link TransactionSignature}. The key
+     * followed by {@link UldECKey#sign(Sha256Hash)} and then returning a new {@link TransactionSignature}. The key
      * must be usable for signing as-is: if the key is encrypted it must be decrypted first external to this method.
      *
      * @param inputIndex Which input to calculate the signature for, as an index.
@@ -992,7 +992,7 @@ public class UldTransaction extends ChildMessage {
      * @param anyoneCanPay Signing mode, see the SigHash enum for documentation.
      * @return A newly calculated signature object that wraps the r, s and sighash components.
      */
-    public TransactionSignature calculateSignature(int inputIndex, BtcECKey key,
+    public TransactionSignature calculateSignature(int inputIndex, UldECKey key,
                                                                 byte[] redeemScript,
                                                                 SigHash hashType, boolean anyoneCanPay) {
         Sha256Hash hash = hashForSignature(inputIndex, redeemScript, hashType, anyoneCanPay);
@@ -1002,7 +1002,7 @@ public class UldTransaction extends ChildMessage {
     /**
      * Calculates a signature that is valid for being inserted into the input at the given position. This is simply
      * a wrapper around calling {@link UldTransaction#hashForSignature(int, byte[], UldTransaction.SigHash, boolean)}
-     * followed by {@link BtcECKey#sign(Sha256Hash)} and then returning a new {@link TransactionSignature}.
+     * followed by {@link UldECKey#sign(Sha256Hash)} and then returning a new {@link TransactionSignature}.
      *
      * @param inputIndex Which input to calculate the signature for, as an index.
      * @param key The private key used to calculate the signature.
@@ -1011,7 +1011,7 @@ public class UldTransaction extends ChildMessage {
      * @param anyoneCanPay Signing mode, see the SigHash enum for documentation.
      * @return A newly calculated signature object that wraps the r, s and sighash components.
      */
-    public TransactionSignature calculateSignature(int inputIndex, BtcECKey key,
+    public TransactionSignature calculateSignature(int inputIndex, UldECKey key,
                                                                  Script redeemScript,
                                                                  SigHash hashType, boolean anyoneCanPay) {
         Sha256Hash hash = hashForSignature(inputIndex, redeemScript.getProgram(), hashType, anyoneCanPay);

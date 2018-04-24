@@ -86,14 +86,14 @@ public class ScriptTest {
 
     @Test
     public void testMultiSig() throws Exception {
-        List<BtcECKey> keys = Lists.newArrayList(new BtcECKey(), new BtcECKey(), new BtcECKey());
+        List<UldECKey> keys = Lists.newArrayList(new UldECKey(), new UldECKey(), new UldECKey());
         assertTrue(ScriptBuilder.createMultiSigOutputScript(2, keys).isSentToMultiSig());
         Script script = ScriptBuilder.createMultiSigOutputScript(3, keys);
         assertTrue(script.isSentToMultiSig());
-        List<BtcECKey> pubkeys = new ArrayList<BtcECKey>(3);
-        for (BtcECKey key : keys) pubkeys.add(BtcECKey.fromPublicOnly(key.getPubKeyPoint()));
+        List<UldECKey> pubkeys = new ArrayList<UldECKey>(3);
+        for (UldECKey key : keys) pubkeys.add(UldECKey.fromPublicOnly(key.getPubKeyPoint()));
         assertEquals(script.getPubKeys(), pubkeys);
-        assertFalse(ScriptBuilder.createOutputScript(new BtcECKey()).isSentToMultiSig());
+        assertFalse(ScriptBuilder.createOutputScript(new UldECKey()).isSentToMultiSig());
         try {
             // Fail if we ask for more signatures than keys.
             Script.createMultiSigOutputScript(4, keys);
@@ -126,9 +126,9 @@ public class ScriptTest {
     @Test
     public void testCreateMultiSigInputScript() {
         // Setup transaction and signatures
-        BtcECKey key1 = DumpedPrivateKey.fromBase58(PARAMS, "cVLwRLTvz3BxDAWkvS3yzT9pUcTCup7kQnfT2smRjvmmm1wAP6QT").getKey();
-        BtcECKey key2 = DumpedPrivateKey.fromBase58(PARAMS, "cTine92s8GLpVqvebi8rYce3FrUYq78ZGQffBYCS1HmDPJdSTxUo").getKey();
-        BtcECKey key3 = DumpedPrivateKey.fromBase58(PARAMS, "cVHwXSPRZmL9adctwBwmn4oTZdZMbaCsR5XF6VznqMgcvt1FDDxg").getKey();
+        UldECKey key1 = DumpedPrivateKey.fromBase58(PARAMS, "cVLwRLTvz3BxDAWkvS3yzT9pUcTCup7kQnfT2smRjvmmm1wAP6QT").getKey();
+        UldECKey key2 = DumpedPrivateKey.fromBase58(PARAMS, "cTine92s8GLpVqvebi8rYce3FrUYq78ZGQffBYCS1HmDPJdSTxUo").getKey();
+        UldECKey key3 = DumpedPrivateKey.fromBase58(PARAMS, "cVHwXSPRZmL9adctwBwmn4oTZdZMbaCsR5XF6VznqMgcvt1FDDxg").getKey();
         Script multisigScript = ScriptBuilder.createMultiSigOutputScript(2, Arrays.asList(key1, key2, key3));
         byte[] bytes = HEX.decode("01000000013df681ff83b43b6585fa32dd0e12b0b502e6481e04ee52ff0fdaf55a16a4ef61000000006b483045022100a84acca7906c13c5895a1314c165d33621cdcf8696145080895cbf301119b7cf0220730ff511106aa0e0a8570ff00ee57d7a6f24e30f592a10cae1deffac9e13b990012102b8d567bcd6328fd48a429f9cf4b315b859a58fd28c5088ef3cb1d98125fc4e8dffffffff02364f1c00000000001976a91439a02793b418de8ec748dd75382656453dc99bcb88ac40420f000000000017a9145780b80be32e117f675d6e0ada13ba799bf248e98700000000");
         UldTransaction transaction = PARAMS.getDefaultSerializer().makeTransaction(bytes);
@@ -139,8 +139,8 @@ public class ScriptTest {
         spendTx.addOutput(output.getValue(), outputScript);
         spendTx.addInput(output);
         Sha256Hash sighash = spendTx.hashForSignature(0, multisigScript, SigHash.ALL, false);
-        BtcECKey.ECDSASignature party1Signature = key1.sign(sighash);
-        BtcECKey.ECDSASignature party2Signature = key2.sign(sighash);
+        UldECKey.ECDSASignature party1Signature = key1.sign(sighash);
+        UldECKey.ECDSASignature party2Signature = key2.sign(sighash);
         TransactionSignature party1TransactionSignature = new TransactionSignature(party1Signature, SigHash.ALL, false);
         TransactionSignature party2TransactionSignature = new TransactionSignature(party2Signature, SigHash.ALL, false);
 
@@ -170,7 +170,7 @@ public class ScriptTest {
     @Test
     public void createAndUpdateEmptyInputScript() throws Exception {
         TransactionSignature dummySig = TransactionSignature.dummy();
-        BtcECKey key = new BtcECKey();
+        UldECKey key = new UldECKey();
 
         // pay-to-pubkey
         Script inputScript = ScriptBuilder.createInputScript(dummySig);
@@ -186,7 +186,7 @@ public class ScriptTest {
         assertThat(inputScript.getChunks().get(1).data, equalTo(key.getPubKey()));
 
         // pay-to-script-hash
-        BtcECKey key2 = new BtcECKey();
+        UldECKey key2 = new UldECKey();
         Script multisigScript = ScriptBuilder.createMultiSigOutputScript(2, Arrays.asList(key, key2));
         inputScript = ScriptBuilder.createP2SHMultiSigInputScript(Arrays.asList(dummySig, dummySig), multisigScript);
         assertThat(inputScript.getChunks().get(0).opcode, equalTo(OP_0));
@@ -408,14 +408,14 @@ public class ScriptTest {
 
     @Test
     public void testCLTVPaymentChannelOutput() {
-        Script script = ScriptBuilder.createCLTVPaymentChannelOutput(BigInteger.valueOf(20), new BtcECKey(), new BtcECKey());
+        Script script = ScriptBuilder.createCLTVPaymentChannelOutput(BigInteger.valueOf(20), new UldECKey(), new UldECKey());
         assertTrue("script is locktime-verify", script.isSentToCLTVPaymentChannel());
     }
 
     @Test
     public void getToAddress() throws Exception {
         // pay to pubkey
-        BtcECKey toKey = new BtcECKey();
+        UldECKey toKey = new UldECKey();
         Address toAddress = toKey.toAddress(PARAMS);
         assertEquals(toAddress, ScriptBuilder.createOutputScript(toKey).getToAddress(PARAMS, true));
         // pay to pubkey hash
@@ -428,7 +428,7 @@ public class ScriptTest {
 
     @Test(expected = ScriptException.class)
     public void getToAddressNoPubKey() throws Exception {
-        ScriptBuilder.createOutputScript(new BtcECKey()).getToAddress(PARAMS, false);
+        ScriptBuilder.createOutputScript(new UldECKey()).getToAddress(PARAMS, false);
     }
 
     /** Test encoding of zero, which should result in an opcode */

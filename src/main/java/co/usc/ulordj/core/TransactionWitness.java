@@ -32,7 +32,7 @@ public class TransactionWitness {
     /**
      * Create a witness that can redeem a pay-to-witness-pubkey-hash output.
      */
-    public static TransactionWitness createWitness(@Nullable final TransactionSignature signature, final BtcECKey pubKey) {
+    public static TransactionWitness createWitness(@Nullable final TransactionSignature signature, final UldECKey pubKey) {
         final byte[] sigBytes = signature != null ? signature.encodeToBitcoin() : new byte[]{};
         final byte[] pubKeyBytes = pubKey.getPubKey();
         final TransactionWitness witness = new TransactionWitness(2);
