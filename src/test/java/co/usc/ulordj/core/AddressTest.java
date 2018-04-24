@@ -38,14 +38,14 @@ public class AddressTest {
 
     @Test
     public void testJavaSerialization() throws Exception {
-        Address testAddress = Address.fromBase58(testParams, "n4eA2nbYqErp7H6jebchxAN59DmNpksexv");
+        Address testAddress = Address.fromBase58(testParams, "ubwJhHMSVPVCHr3PNPgieNYpWvuWG5XvcQ");
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         new ObjectOutputStream(os).writeObject(testAddress);
         VersionedChecksummedBytes testAddressCopy = (VersionedChecksummedBytes) new ObjectInputStream(
                 new ByteArrayInputStream(os.toByteArray())).readObject();
         assertEquals(testAddress, testAddressCopy);
 
-//        Address mainAddress = Address.fromBase58(mainParams, "17kzeh4N8g49GFvdDzSf8PjaPfyoD1MndL");
+//        Address mainAddress = Address.fromBase58(mainParams, "uVvfixZ1rAXx7ktFCNuRgHrU5yWoDNurEy");
 //        os = new ByteArrayOutputStream();
 //        new ObjectOutputStream(os).writeObject(mainAddress);
 //        VersionedChecksummedBytes mainAddressCopy = (VersionedChecksummedBytes) new ObjectInputStream(
@@ -56,21 +56,21 @@ public class AddressTest {
     @Test
     public void stringification() throws Exception {
         // Test a testnet address.
-        Address a = new Address(testParams, HEX.decode("fda79a24e50ff70ff42f7d89585da5bd19d9e5cc"));
-        assertEquals("n4eA2nbYqErp7H6jebchxAN59DmNpksexv", a.toString());
+        Address a = new Address(testParams, HEX.decode("ba74df8342800b07e231cc33d956aa91fde30675")); // TODO: <---Update this address
+        assertEquals("sbFHmjrzwVApCgLxFJ28DkBtNQcnoJq2ae", a.toString());
         assertFalse(a.isP2SHAddress());
 
 //        Address b = new Address(mainParams, HEX.decode("4a22c3c4cbb31e4d03b15550636762bda0baf85a"));
-//        assertEquals("17kzeh4N8g49GFvdDzSf8PjaPfyoD1MndL", b.toString());
+//        assertEquals("uVvfixZ1rAXx7ktFCNuRgHrU5yWoDNurEy", b.toString());
 //        assertFalse(b.isP2SHAddress());
     }
     
     @Test
     public void decoding() throws Exception {
-        Address a = Address.fromBase58(testParams, "n4eA2nbYqErp7H6jebchxAN59DmNpksexv");
-        assertEquals("fda79a24e50ff70ff42f7d89585da5bd19d9e5cc", Utils.HEX.encode(a.getHash160()));
+        Address a = Address.fromBase58(testParams, "ubwJhHMSVPVCHr3PNPgieNYpWvuWG5XvcQ");
+        assertEquals("ba74df8342800b07e231cc33d956aa91fde30675", Utils.HEX.encode(a.getHash160())); // TODO: <---Update this address
 
-//        Address b = Address.fromBase58(mainParams, "17kzeh4N8g49GFvdDzSf8PjaPfyoD1MndL");
+//        Address b = Address.fromBase58(mainParams, "uVvfixZ1rAXx7ktFCNuRgHrU5yWoDNurEy");
 //        assertEquals("4a22c3c4cbb31e4d03b15550636762bda0baf85a", Utils.HEX.encode(b.getHash160()));
     }
     
@@ -98,7 +98,7 @@ public class AddressTest {
 
         // Check the case of a mismatched network.
         try {
-            Address.fromBase58(testParams, "17kzeh4N8g49GFvdDzSf8PjaPfyoD1MndL");
+            Address.fromBase58(testParams, "uVvfixZ1rAXx7ktFCNuRgHrU5yWoDNurEy");
             fail();
         } catch (WrongNetworkException e) {
             // Success.
@@ -111,14 +111,15 @@ public class AddressTest {
 
     @Test
     public void getNetwork() throws Exception {
-        NetworkParameters params = Address.getParametersFromAddress("17kzeh4N8g49GFvdDzSf8PjaPfyoD1MndL");
-        assertEquals(MainNetParams.get().getId(), params.getId());
-        params = Address.getParametersFromAddress("n4eA2nbYqErp7H6jebchxAN59DmNpksexv");
+//        NetworkParameters params = Address.getParametersFromAddress("uVvfixZ1rAXx7ktFCNuRgHrU5yWoDNurEy");
+//        assertEquals(MainNetParams.get().getId(), params.getId());
+        NetworkParameters params = Address.getParametersFromAddress("ubwJhHMSVPVCHr3PNPgieNYpWvuWG5XvcQ");
         assertEquals(TestNet3Params.get().getId(), params.getId());
     }
 
     @Test
     public void getAltNetwork() throws Exception {
+        /*
         // An alternative network
         class AltNetwork extends MainNetParams {
             AltNetwork() {
@@ -136,7 +137,7 @@ public class AddressTest {
         NetworkParameters params = Address.getParametersFromAddress("LLxSnHLN2CYyzB5eWTR9K9rS9uWtbTQFb6");
         assertEquals(altNetwork.getId(), params.getId());
         // Check if main network works as before
-        params = Address.getParametersFromAddress("17kzeh4N8g49GFvdDzSf8PjaPfyoD1MndL");
+        params = Address.getParametersFromAddress("uVvfixZ1rAXx7ktFCNuRgHrU5yWoDNurEy");
         assertEquals(MainNetParams.get().getId(), params.getId());
         // Unregister network
         Networks.unregister(altNetwork);
@@ -144,6 +145,7 @@ public class AddressTest {
             Address.getParametersFromAddress("LLxSnHLN2CYyzB5eWTR9K9rS9uWtbTQFb6");
             fail();
         } catch (AddressFormatException e) { }
+        */
     }
     
     @Test
@@ -153,15 +155,15 @@ public class AddressTest {
 //        Address mainNetP2SHAddress = Address.fromBase58(MainNetParams.get(), "35b9vsyH1KoFT5a5KtrKusaCcPLkiSo1tU");
 //        assertEquals(mainNetP2SHAddress.version, MainNetParams.get().p2shHeader);
 //        assertTrue(mainNetP2SHAddress.isP2SHAddress());
-        Address testNetP2SHAddress = Address.fromBase58(TestNet3Params.get(), "uV8j9BE12osj3KcunPrPyBy71aAyeg1Dxz"); //uMuVSxtfivPKJe93EC1Tb9UhJtGhsoWEHCe
+        Address testNetP2SHAddress = Address.fromBase58(TestNet3Params.get(), "uV8j9BE12osj3KcunPrPyBy71aAyeg1Dxz");
         assertEquals(testNetP2SHAddress.version, TestNet3Params.get().p2shHeader);
         assertTrue(testNetP2SHAddress.isP2SHAddress());
 
         // Test that we can determine what network a P2SH address belongs to
 //        NetworkParameters mainNetParams = Address.getParametersFromAddress("35b9vsyH1KoFT5a5KtrKusaCcPLkiSo1tU");
 //        assertEquals(MainNetParams.get().getId(), mainNetParams.getId());
-//        NetworkParameters testNetParams = Address.getParametersFromAddress("uLTAgdw9sdSoP6Q1U3mtfBFxhr4gKp8Uyv"); // 2MuVSxtfivPKJe93EC1Tb9UhJtGhsoWEHCe
-//        assertEquals(TestNet3Params.get().getId(), testNetParams.getId());
+        NetworkParameters testNetParams = Address.getParametersFromAddress("uV8j9BE12osj3KcunPrPyBy71aAyeg1Dxz"); // NOTE: This test requires to remove MainNetParams from Networks as
+        assertEquals(TestNet3Params.get().getId(), testNetParams.getId());                                        // MainNet is not implement yet.
 
         // Test that we can convert them from hashes
 //        byte[] hex = HEX.decode("2ac4b0b501117cc8119c5797b519538d4942e90e");
@@ -184,7 +186,7 @@ public class AddressTest {
 
     @Test
     public void roundtripBase58() throws Exception {
-        String base58 = "17kzeh4N8g49GFvdDzSf8PjaPfyoD1MndL";
+        String base58 = "uVvfixZ1rAXx7ktFCNuRgHrU5yWoDNurEy";
         assertEquals(base58, Address.fromBase58(null, base58).toBase58());
     }
 

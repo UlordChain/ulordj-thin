@@ -83,7 +83,7 @@ public class Address extends VersionedChecksummedBytes {
      * @param params
      *            The expected NetworkParameters or null if you don't want validation.
      * @param base58
-     *            The textual form of the address, such as "17kzeh4N8g49GFvdDzSf8PjaPfyoD1MndL".
+     *            The textual form of the address, such as "uVvfixZ1rAXx7ktFCNuRgHrU5yWoDNurEy".
      * @throws AddressFormatException
      *             if the given base58 doesn't parse or the checksum is invalid
      * @throws WrongNetworkException
