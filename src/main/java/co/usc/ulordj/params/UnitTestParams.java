@@ -32,15 +32,15 @@ public class UnitTestParams extends AbstractUlordNetParams {
     public UnitTestParams() {
         super();
         id = ID_UNITTESTNET;
-        packetMagic = 0x0b110907;
-        addressHeader = 111;
-        p2shHeader = 196;
+        packetMagic = 0xC2E6CEF3;
+        addressHeader = 125;
+        p2shHeader = 130;
         acceptableAddressCodes = new int[] { addressHeader, p2shHeader };
         maxTarget = new BigInteger("00ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", 16);
         genesisBlock.setTime(System.currentTimeMillis() / 1000);
         genesisBlock.setDifficultyTarget(UldBlock.EASIEST_DIFFICULTY_TARGET);
         genesisBlock.solve();
-        port = 18333;
+        port = 19888;
         interval = 10;
         dumpedPrivateKeyHeader = 239;
         targetTimespan = 200000000;  // 6 years. Just a very big number.

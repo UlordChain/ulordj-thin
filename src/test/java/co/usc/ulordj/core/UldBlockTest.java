@@ -35,7 +35,8 @@ import static co.usc.ulordj.core.Utils.HEX;
 import static org.junit.Assert.*;
 
 public class UldBlockTest {
-    private static final NetworkParameters PARAMS = TestNet2Params.get();
+    //private static final NetworkParameters PARAMS = TestNet2Params.get();
+    private static final NetworkParameters PARAMS = TestNet3Params.get();
 
     public static final byte[] blockBytes;
 

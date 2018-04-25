@@ -64,6 +64,7 @@ public class TestNet3Params extends AbstractUlordNetParams {
                 "testnet-seed1.ulord.one",
                 "testnet-seed1.ulord.io",
                 "testnet-seed1.fcash.cc",
+                "node.ulord.one",
         };
         addrSeeds = null;
         bip32HeaderPub = 0x043587CF;

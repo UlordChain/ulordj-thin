@@ -110,6 +110,7 @@ public class ScriptOpCodes {
     public static final int OP_ABS = 0x90;
     public static final int OP_NOT = 0x91;
     public static final int OP_0NOTEQUAL = 0x92;
+
     public static final int OP_ADD = 0x93;
     public static final int OP_SUB = 0x94;
     public static final int OP_MUL = 0x95;
@@ -117,6 +118,7 @@ public class ScriptOpCodes {
     public static final int OP_MOD = 0x97;
     public static final int OP_LSHIFT = 0x98;
     public static final int OP_RSHIFT = 0x99;
+
     public static final int OP_BOOLAND = 0x9a;
     public static final int OP_BOOLOR = 0x9b;
     public static final int OP_NUMEQUAL = 0x9c;
@@ -128,6 +130,7 @@ public class ScriptOpCodes {
     public static final int OP_GREATERTHANOREQUAL = 0xa2;
     public static final int OP_MIN = 0xa3;
     public static final int OP_MAX = 0xa4;
+
     public static final int OP_WITHIN = 0xa5;
 
     // crypto
@@ -145,18 +148,26 @@ public class ScriptOpCodes {
     // block state
     /** Check lock time of the block. Introduced in BIP 65, replacing OP_NOP2 */
     public static final int OP_CHECKLOCKTIMEVERIFY = 0xb1;
+    public static final int OP_CHECKSEQUENCEVERIFY = 0xb2;
 
     // expansion
     public static final int OP_NOP1 = 0xb0;
     /** Deprecated by BIP 65 */
     @Deprecated
     public static final int OP_NOP2 = OP_CHECKLOCKTIMEVERIFY;
-    public static final int OP_NOP3 = 0xb2;
+    @Deprecated
+    public static final int OP_NOP3 = OP_CHECKSEQUENCEVERIFY;
     public static final int OP_NOP4 = 0xb3;
     public static final int OP_NOP5 = 0xb4;
+    @Deprecated
     public static final int OP_NOP6 = 0xb5;
+    public static final int OP_CLAIM_NAME = OP_NOP6;
+    @Deprecated
     public static final int OP_NOP7 = 0xb6;
+    public static final int OP_SUPPORT_CLAIM = OP_NOP7;
+    @Deprecated
     public static final int OP_NOP8 = 0xb7;
+    public static final int OP_UPDATE_CLAIM = OP_NOP8;
     public static final int OP_NOP9 = 0xb8;
     public static final int OP_NOP10 = 0xb9;
     public static final int OP_INVALIDOPCODE = 0xff;
@@ -266,11 +277,15 @@ public class ScriptOpCodes {
         .put(OP_NOP1, "NOP1")
         .put(OP_CHECKLOCKTIMEVERIFY, "CHECKLOCKTIMEVERIFY")
         .put(OP_NOP3, "NOP3")
+        .put(OP_CHECKSEQUENCEVERIFY, "CHECKSEQUENCEVERIFY")
         .put(OP_NOP4, "NOP4")
         .put(OP_NOP5, "NOP5")
         .put(OP_NOP6, "NOP6")
+        .put(OP_CLAIM_NAME, "CLAIM_NAME")
         .put(OP_NOP7, "NOP7")
+        .put(OP_SUPPORT_CLAIM, "SUPPORT_CLAIM")
         .put(OP_NOP8, "NOP8")
+        .put(OP_UPDATE_CLAIM, "UPDATE_CLAIM")
         .put(OP_NOP9, "NOP9")
         .put(OP_NOP10, "NOP10").build();
 
@@ -379,11 +394,15 @@ public class ScriptOpCodes {
         .put("NOP1", OP_NOP1)
         .put("CHECKLOCKTIMEVERIFY", OP_CHECKLOCKTIMEVERIFY)
         .put("NOP2", OP_NOP2)
+        .put("CHECKSEQUENCEVERIFY", OP_CHECKSEQUENCEVERIFY)
         .put("NOP3", OP_NOP3)
         .put("NOP4", OP_NOP4)
         .put("NOP5", OP_NOP5)
+        .put("CLAIM_NAME", OP_CLAIM_NAME)
         .put("NOP6", OP_NOP6)
+        .put("SUPPORT_CLAIM", OP_SUPPORT_CLAIM)
         .put("NOP7", OP_NOP7)
+        .put("UPDATE_CLAIM", OP_UPDATE_CLAIM)
         .put("NOP8", OP_NOP8)
         .put("NOP9", OP_NOP9)
         .put("NOP10", OP_NOP10).build();
