@@ -111,9 +111,9 @@ public class AddressTest {
 
     @Test
     public void getNetwork() throws Exception {
-//        NetworkParameters params = Address.getParametersFromAddress("uVvfixZ1rAXx7ktFCNuRgHrU5yWoDNurEy");
-//        assertEquals(MainNetParams.get().getId(), params.getId());
-        NetworkParameters params = Address.getParametersFromAddress("ubwJhHMSVPVCHr3PNPgieNYpWvuWG5XvcQ");
+        NetworkParameters params = Address.getParametersFromAddress("uVvfixZ1rAXx7ktFCNuRgHrU5yWoDNurEy");
+        assertEquals(MainNetParams.get().getId(), params.getId());
+        params = Address.getParametersFromAddress("ubwJhHMSVPVCHr3PNPgieNYpWvuWG5XvcQ");
         assertEquals(TestNet3Params.get().getId(), params.getId());
     }
 

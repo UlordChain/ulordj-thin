@@ -32,7 +32,8 @@ public class MainNetParams extends AbstractUlordNetParams {
     public static final int MAINNET_MAJORITY_ENFORCE_BLOCK_UPGRADE = 750;
 
     public MainNetParams() {
-        super();
+        super(ID_MAINNET);
+        //id = ID_MAINNET;
         interval = INTERVAL;
         targetTimespan = TARGET_TIMESPAN;
         maxTarget = Utils.decodeCompactBits(0x1e1d1459L);
@@ -54,7 +55,6 @@ public class MainNetParams extends AbstractUlordNetParams {
         genesisBlock.setTime(1524045652L);
         genesisBlock.setNonce(new BigInteger("0000be7245a98c700f01293501a062837cb465afd70da22ee812b69a0c131f8c", 16));
 
-        id = ID_MAINNET;
         subsidyDecreaseBlockCount = 840960;
         spendableCoinbaseDepth = 100;
 

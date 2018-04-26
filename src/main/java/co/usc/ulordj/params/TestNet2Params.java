@@ -30,8 +30,8 @@ public class TestNet2Params extends AbstractUlordNetParams {
     public static final int TESTNET_MAJORITY_ENFORCE_BLOCK_UPGRADE = 51;
 
     public TestNet2Params() {
-        super();
-        id = ID_TESTNET;
+        super(ID_TESTNET);
+        //id = ID_TESTNET;
         packetMagic = 0xfabfb5daL;
         port = 19888;
         addressHeader = 125;

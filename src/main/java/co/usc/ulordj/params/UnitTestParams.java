@@ -30,8 +30,8 @@ public class UnitTestParams extends AbstractUlordNetParams {
     public static final int TESTNET_MAJORITY_ENFORCE_BLOCK_UPGRADE = 4;
 
     public UnitTestParams() {
-        super();
-        id = ID_UNITTESTNET;
+        super(ID_UNITTESTNET);
+        //id = ID_UNITTESTNET;
         packetMagic = 0xC2E6CEF3;
         addressHeader = 125;
         p2shHeader = 130;

@@ -36,8 +36,8 @@ import static com.google.common.base.Preconditions.checkState;
  */
 public class TestNet3Params extends AbstractUlordNetParams {
     public TestNet3Params() {
-        super();
-        id = ID_TESTNET;
+        super(ID_TESTNET);
+        //id = ID_TESTNET;
         // Genesis hash is 000e0979b2a26db104fb4d8c2c8d572919a56662cecdcadc3d0583ac8d548e23
         packetMagic = 0xC2E6CEF3;
         interval = INTERVAL;

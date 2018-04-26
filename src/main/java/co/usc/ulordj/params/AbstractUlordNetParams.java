@@ -48,8 +48,8 @@ public abstract class AbstractUlordNetParams extends NetworkParameters {
 
     private static final Logger log = LoggerFactory.getLogger(AbstractUlordNetParams.class);
 
-    public AbstractUlordNetParams() {
-        super();
+    public AbstractUlordNetParams(String id) {
+        super(id);
     }
 
     /**
