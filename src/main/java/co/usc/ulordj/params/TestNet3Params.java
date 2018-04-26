@@ -28,6 +28,8 @@ import co.usc.ulordj.core.VerificationException;
 import co.usc.ulordj.store.UldBlockStore;
 import co.usc.ulordj.store.BlockStoreException;
 import co.usc.ulordj.core.Sha256Hash;
+import org.spongycastle.asn1.cryptopro.ECGOST3410ParamSetParameters;
+
 import static com.google.common.base.Preconditions.checkState;
 
 /**
@@ -37,7 +39,6 @@ import static com.google.common.base.Preconditions.checkState;
 public class TestNet3Params extends AbstractUlordNetParams {
     public TestNet3Params() {
         super(ID_TESTNET);
-        //id = ID_TESTNET;
         // Genesis hash is 000e0979b2a26db104fb4d8c2c8d572919a56662cecdcadc3d0583ac8d548e23
         packetMagic = 0xC2E6CEF3;
         interval = INTERVAL;

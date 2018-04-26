@@ -19,6 +19,7 @@ package co.usc.ulordj.core;
 
 import co.usc.ulordj.params.MainNetParams;
 import co.usc.ulordj.params.Networks;
+import co.usc.ulordj.params.RegTestParams;
 import co.usc.ulordj.params.TestNet3Params;
 import co.usc.ulordj.script.ScriptBuilder;
 import org.junit.Test;
@@ -33,6 +34,7 @@ import static co.usc.ulordj.core.Utils.HEX;
 import static org.junit.Assert.*;
 
 public class AddressTest {
+    //static final NetworkParameters regtestParams = RegTestParams.get();
     static final NetworkParameters testParams = TestNet3Params.get();
     //static final NetworkParameters mainParams = MainNetParams.get();
 
@@ -150,7 +152,6 @@ public class AddressTest {
     
     @Test
     public void p2shAddress() throws Exception {
-        System.out.println("Entered");
         // Test that we can construct P2SH addresses
 //        Address mainNetP2SHAddress = Address.fromBase58(MainNetParams.get(), "35b9vsyH1KoFT5a5KtrKusaCcPLkiSo1tU");
 //        assertEquals(mainNetP2SHAddress.version, MainNetParams.get().p2shHeader);

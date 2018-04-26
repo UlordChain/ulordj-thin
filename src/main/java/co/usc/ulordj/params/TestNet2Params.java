@@ -31,7 +31,6 @@ public class TestNet2Params extends AbstractUlordNetParams {
 
     public TestNet2Params() {
         super(ID_TESTNET);
-        //id = ID_TESTNET;
         packetMagic = 0xfabfb5daL;
         port = 19888;
         addressHeader = 125;
