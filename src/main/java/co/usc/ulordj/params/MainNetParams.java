@@ -33,16 +33,15 @@ public class MainNetParams extends AbstractUlordNetParams {
 
     public MainNetParams() {
         super(ID_MAINNET);
-        //id = ID_MAINNET;
         interval = INTERVAL;
         targetTimespan = TARGET_TIMESPAN;
-        maxTarget = Utils.decodeCompactBits(0x1e1d1459L);
+        maxTarget = new BigInteger("000009b173000000000000000000000000000000000000000000000000000000", 16);
         dumpedPrivateKeyHeader = 128;   // Ulord private keys start with '5' or 'K' or 'L'(as in Bitcoin)
         addressHeader = 63;     // Ulord script addresses start with 'S'
         p2shHeader = 68;        // Ulord addresses start with 'U'
         acceptableAddressCodes = new int[] { addressHeader, p2shHeader };
         port = 9888;
-        packetMagic = 0xb3016fb1;
+        packetMagic = 0xb3016fb1L;
         bip32HeaderPub = 0x0488B21E; //The 4 byte header that serializes in base58 to "xpub".
         bip32HeaderPriv = 0x0488ADE4; //The 4 byte header that serializes in base58 to "xprv"
         bip44HeaderCoin = 0x800000f7; // Ulord BIP44 coin type '247'
