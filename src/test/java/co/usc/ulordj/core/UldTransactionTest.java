@@ -206,7 +206,8 @@ public class UldTransactionTest {
         UldTransaction tx = new UldTransaction(PARAMS);
         tx.addInput(new TransactionInput(PARAMS, tx, new byte[] {}));
         tx.getInput(0).setSequenceNumber(0);
-        tx.setLockTime(time.add(BigInteger.ONE).longValue());
+        time = time.add(BigInteger.ONE);
+        tx.setLockTime(time.longValue());
         TransactionSignature fromSig =
                 tx.calculateSignature(0, from, outputScript, UldTransaction.SigHash.SINGLE, false);
         TransactionSignature incorrectSig =
