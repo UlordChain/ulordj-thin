@@ -47,7 +47,8 @@ public class TestNet2Params extends AbstractUlordNetParams {
         spendableCoinbaseDepth = 100;
         subsidyDecreaseBlockCount = 840960;
         String genesisHash = genesisBlock.getHashAsString();
-        checkState(genesisHash.equals("00000007199508e34a9ff81e6ec0c477a4cccff2a4767a8eee39c11db367b008"));
+        checkState(genesisHash.equals("11a853c1fbdc86145b695268ab469e2104b57629270b4aee00c7848c67e44f57"));
+        //checkState(genesisHash.equals("00000007199508e34a9ff81e6ec0c477a4cccff2a4767a8eee39c11db367b008"));
         dnsSeeds = null;
         addrSeeds = null;
         bip32HeaderPub = 0x043587CF;

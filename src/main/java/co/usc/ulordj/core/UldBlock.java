@@ -454,8 +454,7 @@ public class UldBlock extends Message {
      */
     public BigInteger getWork() throws VerificationException {
         BigInteger target = getDifficultyTargetAsInteger();
-        target = target.add(BigInteger.ONE);
-        return LARGEST_HASH.divide(target);
+        return LARGEST_HASH.divide(target.add(BigInteger.ONE));
     }
 
     /** Returns a copy of the block, but without any transactions. */
@@ -521,7 +520,6 @@ public class UldBlock extends Message {
                 if (checkProofOfWork(false))
                     return;
                 // No, so increment the nonce and try again.
-                BigInteger nonce = getNonce();
                 nonce = nonce.add(BigInteger.ONE);
                 setNonce(nonce);
             } catch (VerificationException e) {
