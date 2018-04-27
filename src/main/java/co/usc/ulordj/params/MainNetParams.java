@@ -32,6 +32,7 @@ public class MainNetParams extends AbstractUlordNetParams {
     public static final int MAINNET_MAJORITY_ENFORCE_BLOCK_UPGRADE = 750;
 
     public MainNetParams() {
+        // Genesis hash is 0000083331b8aa57aaae020d79aabe4136ebea6ce29be3a50fcaa2a55777e79c
         super(ID_MAINNET);
         interval = INTERVAL;
         targetTimespan = TARGET_TIMESPAN;

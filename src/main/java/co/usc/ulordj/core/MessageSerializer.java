@@ -38,13 +38,13 @@ public abstract class MessageSerializer {
      * Deserializes only the header in case packet meta data is needed before decoding
      * the payload. This method assumes you have already called seekPastMagicBytes()
      */
-    public abstract BitcoinSerializer.BitcoinPacketHeader deserializeHeader(ByteBuffer in) throws ProtocolException, IOException, UnsupportedOperationException;
+    public abstract UlordSerializer.UlordPacketHeader deserializeHeader(ByteBuffer in) throws ProtocolException, IOException, UnsupportedOperationException;
 
     /**
      * Deserialize payload only.  You must provide a header, typically obtained by calling
-     * {@link BitcoinSerializer#deserializeHeader}.
+     * {@link UlordSerializer#deserializeHeader}.
      */
-    public abstract Message deserializePayload(BitcoinSerializer.BitcoinPacketHeader header, ByteBuffer in) throws ProtocolException, BufferUnderflowException, UnsupportedOperationException;
+    public abstract Message deserializePayload(UlordSerializer.UlordPacketHeader header, ByteBuffer in) throws ProtocolException, BufferUnderflowException, UnsupportedOperationException;
 
     /**
      * Whether the serializer will produce cached mode Messages

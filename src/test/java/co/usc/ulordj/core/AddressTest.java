@@ -36,7 +36,7 @@ import static org.junit.Assert.*;
 public class AddressTest {
     //static final NetworkParameters regtestParams = RegTestParams.get();
     static final NetworkParameters testParams = TestNet3Params.get();
-    static final NetworkParameters mainParams = MainNetParams.get();
+    //static final NetworkParameters mainParams = MainNetParams.get();
 
     @Test
     public void testJavaSerialization() throws Exception {

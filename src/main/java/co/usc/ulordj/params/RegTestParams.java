@@ -34,6 +34,7 @@ public class RegTestParams extends AbstractUlordNetParams {
 
     public RegTestParams() {
         super(ID_REGTEST);
+        // Genesis hash is 083dfbb3e5e7c20948e7e32640090c1f4ce2791f875ccb2164888d0c70e279be
         // Difficulty adjustments are disabled for regtest.
         // By setting the block interval for difficulty adjustments to Integer.MAX_VALUE we make sure difficulty never changes.
         interval = Integer.MAX_VALUE;
@@ -53,7 +54,6 @@ public class RegTestParams extends AbstractUlordNetParams {
         spendableCoinbaseDepth = 100;
         String genesisHash = genesisBlock.getHashAsString();
         checkState(genesisHash.equals("083dfbb3e5e7c20948e7e32640090c1f4ce2791f875ccb2164888d0c70e279be"));
-        //checkState(genesisHash.equals("00000007199508e34a9ff81e6ec0c477a4cccff2a4767a8eee39c11db367b008"));
         dnsSeeds = null;
         addrSeeds = null;
         bip32HeaderPub = 0x043587CF;

@@ -40,7 +40,7 @@ import static com.google.common.base.Preconditions.*;
  */
 public class Context {
     /** The version of this library release, as a string. */
-    public static final String BITCOINJ_VERSION = "0.14.4";
+    public static final String ULORDJ_VERSION = "0.14.4";
 
     private static final Logger log = LoggerFactory.getLogger(Context.class);
 
@@ -56,7 +56,7 @@ public class Context {
      * @param params The network parameters that will be associated with this context.
      */
     public Context(NetworkParameters params) {
-        log.info("Creating ulordj {} context.", BITCOINJ_VERSION);
+        log.info("Creating ulordj {} context.", ULORDJ_VERSION);
         this.params = params;
         lastConstructed = this;
         // We may already have a context in our TLS slot. This can happen a lot during unit tests, so just ignore it.
@@ -83,7 +83,7 @@ public class Context {
     private static final ThreadLocal<Context> slot = new ThreadLocal<Context>();
 
     /**
-     * Returns the current context that is associated with the <b>calling thread</b>. BitcoinJ is an API that has thread
+     * Returns the current context that is associated with the <b>calling thread</b>. UlordJ is an API that has thread
      * affinity: much like OpenGL it expects each thread that accesses it to have been configured with a global Context
      * object. This method returns that. Note that to help you develop, this method will <i>also</i> propagate whichever
      * context was created last onto the current thread, if it's missing. However it will print an error when doing so
@@ -141,7 +141,7 @@ public class Context {
 
     /**
      * Sets the given context as the current thread context. You should use this if you create your own threads that
-     * want to create core BitcoinJ objects. Generally, if a class can accept a Context in its constructor and might
+     * want to create core UlordJ objects. Generally, if a class can accept a Context in its constructor and might
      * be used (even indirectly) by a thread, you will want to call this first. Your task may be simplified by using
      * a {@link co.usc.ulordj.utils.ContextPropagatingThreadFactory}.
      */
@@ -151,7 +151,7 @@ public class Context {
 
     /**
      * Returns the {@link co.usc.ulordj.core.NetworkParameters} specified when this context was (auto) created. The
-     * network parameters defines various hard coded constants for a specific instance of a Bitcoin network, such as
+     * network parameters defines various hard coded constants for a specific instance of a Ulord network, such as
      * main net, testnet, etc.
      */
     public NetworkParameters getParams() {

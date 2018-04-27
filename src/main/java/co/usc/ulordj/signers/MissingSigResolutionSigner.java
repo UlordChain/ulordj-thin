@@ -18,7 +18,6 @@ package co.usc.ulordj.signers;
 
 import co.usc.ulordj.core.UldECKey;
 import co.usc.ulordj.core.TransactionInput;
-import co.usc.ulordj.core.UldECKey;
 import co.usc.ulordj.crypto.TransactionSignature;
 import co.usc.ulordj.script.Script;
 import co.usc.ulordj.script.ScriptChunk;
@@ -57,7 +56,7 @@ public class MissingSigResolutionSigner extends StatelessTransactionSigner {
             return true;
 
         int numInputs = propTx.partialTx.getInputs().size();
-        byte[] dummySig = TransactionSignature.dummy().encodeToBitcoin();
+        byte[] dummySig = TransactionSignature.dummy().encodeToUlord();
         for (int i = 0; i < numInputs; i++) {
             TransactionInput txIn = propTx.partialTx.getInput(i);
             if (txIn.getConnectedOutput() == null) {

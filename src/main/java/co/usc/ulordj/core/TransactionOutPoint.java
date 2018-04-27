@@ -98,7 +98,7 @@ public class TransactionOutPoint extends ChildMessage {
     }
 
     @Override
-    protected void bitcoinSerializeToStream(OutputStream stream) throws IOException {
+    protected void ulordSerializeToStream(OutputStream stream) throws IOException {
         stream.write(hash.getReversedBytes());
         Utils.uint32ToByteStreamLE(index, stream);
     }

@@ -39,12 +39,12 @@ class DummySerializer extends MessageSerializer {
     }
 
     @Override
-    public BitcoinSerializer.BitcoinPacketHeader deserializeHeader(ByteBuffer in) throws UnsupportedOperationException {
+    public UlordSerializer.UlordPacketHeader deserializeHeader(ByteBuffer in) throws UnsupportedOperationException {
         throw new UnsupportedOperationException(DEFAULT_EXCEPTION_MESSAGE);
     }
 
     @Override
-    public Message deserializePayload(BitcoinSerializer.BitcoinPacketHeader header, ByteBuffer in) throws UnsupportedOperationException {
+    public Message deserializePayload(UlordSerializer.UlordPacketHeader header, ByteBuffer in) throws UnsupportedOperationException {
         throw new UnsupportedOperationException(DEFAULT_EXCEPTION_MESSAGE);
     }
 

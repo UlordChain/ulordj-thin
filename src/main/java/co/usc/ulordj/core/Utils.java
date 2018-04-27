@@ -45,14 +45,14 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.util.concurrent.Uninterruptibles.sleepUninterruptibly;
 
 /**
- * A collection of various utility methods that are helpful for working with the Bitcoin protocol.
- * To enable debug logging from the library, run with -Dbitcoinj.logging=true on your command line.
+ * A collection of various utility methods that are helpful for working with the Ulord protocol.
+ * To enable debug logging from the library, run with -Dulord.logging=true on your command line.
  */
 public class Utils {
 
-    /** The string that prefixes all text messages signed using Bitcoin keys. */
-    public static final String BITCOIN_SIGNED_MESSAGE_HEADER = "Bitcoin Signed Message:\n";
-    public static final byte[] BITCOIN_SIGNED_MESSAGE_HEADER_BYTES = BITCOIN_SIGNED_MESSAGE_HEADER.getBytes(Charsets.UTF_8);
+    /** The string that prefixes all text messages signed using Ulord keys. */
+    public static final String ULORD_SIGNED_MESSAGE_HEADER = "Ulord Signed Message:\n";
+    public static final byte[] ULORD_SIGNED_MESSAGE_HEADER_BYTES = ULORD_SIGNED_MESSAGE_HEADER.getBytes(Charsets.UTF_8);
 
     private static final Joiner SPACE_JOINER = Joiner.on(" ");
 
@@ -353,7 +353,7 @@ public class Utils {
      * first byte as sign. Thus 0x1234560000 is compact 0x05123456 and 0xc0de000000 is compact 0x0600c0de. Compact
      * 0x05c0de00 would be -0x40de000000.</p>
      *
-     * <p>Bitcoin only uses this "compact" format for encoding difficulty targets, which are unsigned 256bit quantities.
+     * <p>Ulord only uses this "compact" format for encoding difficulty targets, which are unsigned 256bit quantities.
      * Thus, all the complexities of the sign bit and using base 256 are probably an implementation accident.</p>
      */
     public static BigInteger decodeCompactBits(long compact) {
@@ -556,8 +556,8 @@ public class Utils {
     public static byte[] formatMessageForSigning(String message) {
         try {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            bos.write(BITCOIN_SIGNED_MESSAGE_HEADER_BYTES.length);
-            bos.write(BITCOIN_SIGNED_MESSAGE_HEADER_BYTES);
+            bos.write(ULORD_SIGNED_MESSAGE_HEADER_BYTES.length);
+            bos.write(ULORD_SIGNED_MESSAGE_HEADER_BYTES);
             byte[] messageBytes = message.getBytes(Charsets.UTF_8);
             VarInt size = new VarInt(messageBytes.length);
             bos.write(size.encode());

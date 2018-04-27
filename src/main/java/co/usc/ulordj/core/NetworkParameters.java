@@ -432,7 +432,7 @@ public abstract class NetworkParameters {
     /**
      * Construct and return a custom serializer.
      */
-    public abstract BitcoinSerializer getSerializer(boolean parseRetain);
+    public abstract UlordSerializer getSerializer(boolean parseRetain);
 
     /**
      * The number of blocks in the last {@link getMajorityWindow()} blocks
@@ -468,14 +468,14 @@ public abstract class NetworkParameters {
         BLOOM_FILTER(70000),
         CURRENT(70001);
 
-        private final int bitcoinProtocol;
+        private final int ulordProtocol;
 
-        ProtocolVersion(final int bitcoinProtocol) {
-            this.bitcoinProtocol = bitcoinProtocol;
+        ProtocolVersion(final int ulordProtocol) {
+            this.ulordProtocol = ulordProtocol;
         }
 
-        public int getBitcoinProtocolVersion() {
-            return bitcoinProtocol;
+        public int getUlordProtocolVersion() {
+            return ulordProtocol;
         }
     }
 }

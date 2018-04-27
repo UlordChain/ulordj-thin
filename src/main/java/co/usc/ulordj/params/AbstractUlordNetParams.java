@@ -20,14 +20,8 @@ package co.usc.ulordj.params;
 import java.math.BigInteger;
 import java.util.concurrent.TimeUnit;
 
-import co.usc.ulordj.core.UldBlock;
-import co.usc.ulordj.core.Coin;
-import co.usc.ulordj.core.NetworkParameters;
-import co.usc.ulordj.core.StoredBlock;
-import co.usc.ulordj.core.UldTransaction;
-import co.usc.ulordj.core.Utils;
+import co.usc.ulordj.core.*;
 import co.usc.ulordj.utils.MonetaryFormat;
-import co.usc.ulordj.core.VerificationException;
 import co.usc.ulordj.store.UldBlockStore;
 import co.usc.ulordj.store.BlockStoreException;
 import org.slf4j.Logger;
@@ -35,16 +29,16 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Stopwatch;
 
-import co.usc.ulordj.core.BitcoinSerializer;
+import co.usc.ulordj.core.UlordSerializer;
 
 /**
  * Parameters for Bitcoin-like networks.
  */
 public abstract class AbstractUlordNetParams extends NetworkParameters {
     /**
-     * Scheme part for Bitcoin URIs.
+     * Scheme part for Ulord URIs.
      */
-    public static final String BITCOIN_SCHEME = "bitcoin";
+    public static final String ULORD_SCHEME = "ulord";
 
     private static final Logger log = LoggerFactory.getLogger(AbstractUlordNetParams.class);
 
@@ -141,17 +135,17 @@ public abstract class AbstractUlordNetParams extends NetworkParameters {
 
     @Override
     public int getProtocolVersionNum(final ProtocolVersion version) {
-        return version.getBitcoinProtocolVersion();
+        return version.getUlordProtocolVersion();
     }
 
     @Override
-    public BitcoinSerializer getSerializer(boolean parseRetain) {
-        return new BitcoinSerializer(this, parseRetain);
+    public UlordSerializer getSerializer(boolean parseRetain) {
+        return new UlordSerializer(this, parseRetain);
     }
 
     @Override
     public String getUriScheme() {
-        return BITCOIN_SCHEME;
+        return ULORD_SCHEME;
     }
 
     @Override

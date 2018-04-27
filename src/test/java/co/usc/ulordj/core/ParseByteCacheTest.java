@@ -109,17 +109,17 @@ public class ParseByteCacheTest {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         bs.serialize(tx1, bos);
         tx1BytesWithHeader = bos.toByteArray();
-        tx1Bytes = tx1.bitcoinSerialize();
+        tx1Bytes = tx1.ulordSerialize();
         
         bos.reset();
         bs.serialize(tx2, bos);
         tx2BytesWithHeader = bos.toByteArray();
-        tx2Bytes = tx2.bitcoinSerialize();
+        tx2Bytes = tx2.ulordSerialize();
         
         bos.reset();
         bs.serialize(b1, bos);
         b1BytesWithHeader = bos.toByteArray();
-        b1Bytes = b1.bitcoinSerialize();
+        b1Bytes = b1.ulordSerialize();
     }
     
     @Test
@@ -162,13 +162,13 @@ public class ParseByteCacheTest {
         MessageSerializer bsRef = PARAMS.getSerializer(false);
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         
-        BitcoinSerializer bs = PARAMS.getSerializer(retain);
+        UlordSerializer bs = PARAMS.getSerializer(retain);
         UldBlock b1;
         UldBlock bRef;
         b1 = (UldBlock) bs.deserialize(ByteBuffer.wrap(blockBytes));
         bRef = (UldBlock) bsRef.deserialize(ByteBuffer.wrap(blockBytes));
         
-        // verify our reference BitcoinSerializer produces matching byte array.
+        // verify our reference UlordSerializer produces matching byte array.
         bos.reset();
         bsRef.serialize(bRef, bos);
         assertTrue(Arrays.equals(bos.toByteArray(), blockBytes));
@@ -355,13 +355,13 @@ public class ParseByteCacheTest {
         MessageSerializer bsRef = params.getSerializer(false);
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
-        BitcoinSerializer bs = params.getSerializer(retain);
+        UlordSerializer bs = params.getSerializer(retain);
         UldTransaction t1;
         UldTransaction tRef;
         t1 = (UldTransaction) bs.deserialize(ByteBuffer.wrap(txBytes));
         tRef = (UldTransaction) bsRef.deserialize(ByteBuffer.wrap(txBytes));
 
-        // verify our reference BitcoinSerializer produces matching byte array.
+        // verify our reference UlordSerializer produces matching byte array.
         bos.reset();
         bsRef.serialize(tRef, bos);
         assertTrue(Arrays.equals(bos.toByteArray(), txBytes));

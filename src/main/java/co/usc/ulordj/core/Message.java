@@ -111,7 +111,7 @@ public abstract class Message {
         //if (!(this instanceof VersionMessage)) {
             byte[] payloadBytes = new byte[cursor - offset];
             System.arraycopy(payload, offset, payloadBytes, 0, cursor - offset);
-            byte[] reserialized = bitcoinSerialize();
+            byte[] reserialized = ulordSerialize();
             if (!Arrays.equals(reserialized, payloadBytes))
                 throw new RuntimeException("Serialization is wrong: \n" +
                         Utils.HEX.encode(reserialized) + " vs \n" +
@@ -172,13 +172,13 @@ public abstract class Message {
     }
 
     /**
-     * Returns a copy of the array returned by {@link Message#unsafeBitcoinSerialize()}, which is safe to mutate.
+     * Returns a copy of the array returned by {@link Message#unsafeUlordSerialize()}, which is safe to mutate.
      * If you need extra performance and can guarantee you won't write to the array, you can use the unsafe version.
      *
      * @return a freshly allocated serialized byte array
      */
-    public byte[] bitcoinSerialize() {
-        byte[] bytes = unsafeBitcoinSerialize();
+    public byte[] ulordSerialize() {
+        byte[] bytes = unsafeUlordSerialize();
         byte[] copy = new byte[bytes.length];
         System.arraycopy(bytes, 0, copy, 0, bytes.length);
         return copy;
@@ -201,7 +201,7 @@ public abstract class Message {
      *
      * @return a byte array owned by this object, do NOT mutate it.
      */
-    public byte[] unsafeBitcoinSerialize() {
+    public byte[] unsafeUlordSerialize() {
         // 1st attempt to use a cached array.
         if (payload != null) {
             if (offset == 0 && length == payload.length) {
@@ -218,7 +218,7 @@ public abstract class Message {
         // No cached array available so serialize parts by stream.
         ByteArrayOutputStream stream = new UnsafeByteArrayOutputStream(length < 32 ? 32 : length + 32);
         try {
-            bitcoinSerializeToStream(stream);
+            ulordSerializeToStream(stream);
         } catch (IOException e) {
             // Cannot happen, we are serializing to a memory stream.
         }
@@ -230,7 +230,7 @@ public abstract class Message {
             // This give a dual benefit.  Releasing references to the larger byte array so that it
             // it is more likely to be GC'd.  And preventing double serializations.  E.g. calculating
             // merkle root calls this method.  It is will frequently happen prior to serializing the block
-            // which means another call to bitcoinSerialize is coming.  If we didn't recache then internal
+            // which means another call to ulordSerialize is coming.  If we didn't recache then internal
             // serialization would occur a 2nd time and every subsequent time the message is serialized.
             payload = stream.toByteArray();
             cursor = cursor - offset;
@@ -253,26 +253,26 @@ public abstract class Message {
      * @param stream
      * @throws IOException
      */
-    public final void bitcoinSerialize(OutputStream stream) throws IOException {
+    public final void ulordSerialize(OutputStream stream) throws IOException {
         // 1st check for cached bytes.
         if (payload != null && length != UNKNOWN_LENGTH) {
             stream.write(payload, offset, length);
             return;
         }
 
-        bitcoinSerializeToStream(stream);
+        ulordSerializeToStream(stream);
     }
 
     /**
-     * Serializes this message to the provided stream. If you just want the raw bytes use bitcoinSerialize().
+     * Serializes this message to the provided stream. If you just want the raw bytes use ulordSerialize().
      */
-    protected void bitcoinSerializeToStream(OutputStream stream) throws IOException {
-        log.error("Error: {} class has not implemented bitcoinSerializeToStream method.  Generating message with no payload", getClass());
+    protected void ulordSerializeToStream(OutputStream stream) throws IOException {
+        log.error("Error: {} class has not implemented ulordSerializeToStream method.  Generating message with no payload", getClass());
     }
 
     /**
      * This method is a NOP for all classes except Block and Transaction.  It is only declared in Message
-     * so BitcoinSerializer can avoid 2 instanceof checks + a casting.
+     * so UlordSerializer can avoid 2 instanceof checks + a casting.
      */
     public Sha256Hash getHash() {
         throw new UnsupportedOperationException();

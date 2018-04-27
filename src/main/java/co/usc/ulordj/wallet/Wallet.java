@@ -641,7 +641,7 @@ public class Wallet
                 signTransaction(req);
 
             // Check size.
-            final int size = req.tx.unsafeBitcoinSerialize().length;
+            final int size = req.tx.unsafeUlordSerialize().length;
             if (size > UldTransaction.MAX_STANDARD_TX_SIZE)
                 throw new ExceededMaxTransactionSize();
 
@@ -708,7 +708,7 @@ public class Wallet
     /** Reduce the value of the first output of a transaction to pay the given feePerKb as appropriate for its size. */
     private boolean adjustOutputDownwardsForFee(UldTransaction tx, CoinSelection coinSelection, Coin feePerKb,
                                                 boolean ensureMinRequiredFee) {
-        final int size = tx.unsafeBitcoinSerialize().length + estimateBytesForSigning(coinSelection);
+        final int size = tx.unsafeUlordSerialize().length + estimateBytesForSigning(coinSelection);
         Coin fee = feePerKb.multiply(size).divide(1000);
         if (ensureMinRequiredFee && fee.compareTo(UldTransaction.REFERENCE_DEFAULT_MIN_TX_FEE) < 0)
             fee = UldTransaction.REFERENCE_DEFAULT_MIN_TX_FEE;
@@ -915,7 +915,7 @@ public class Wallet
             }
             for (int i = 0; i < req.tx.getOutputs().size(); i++) {
                 TransactionOutput output = new TransactionOutput(params, tx,
-                        req.tx.getOutputs().get(i).bitcoinSerialize(), 0);
+                        req.tx.getOutputs().get(i).ulordSerialize(), 0);
                 if (req.recipientsPayFees) {
                     // Subtract fee equally from each selected recipient
                     output.setValue(output.getValue().subtract(fee.divide(req.tx.getOutputs().size())));
@@ -980,7 +980,7 @@ public class Wallet
                 checkState(input.getScriptBytes().length == 0);
             }
 
-            int size = tx.unsafeBitcoinSerialize().length;
+            int size = tx.unsafeUlordSerialize().length;
             size += estimateBytesForSigning(selection);
 
             Coin feePerKb = req.feePerKb;
@@ -1003,7 +1003,7 @@ public class Wallet
 
     private void addSuppliedInputs(UldTransaction tx, List<TransactionInput> originalInputs) {
         for (TransactionInput input : originalInputs)
-            tx.addInput(new TransactionInput(params, tx, input.bitcoinSerialize()));
+            tx.addInput(new TransactionInput(params, tx, input.ulordSerialize()));
     }
 
     private int estimateBytesForSigning(CoinSelection selection) {

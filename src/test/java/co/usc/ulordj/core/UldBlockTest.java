@@ -20,7 +20,6 @@ package co.usc.ulordj.core;
 import com.google.common.io.ByteStreams;
 
 import co.usc.ulordj.params.MainNetParams;
-import co.usc.ulordj.params.TestNet2Params;
 import co.usc.ulordj.params.TestNet3Params;
 import co.usc.ulordj.params.UnitTestParams;
 import co.usc.ulordj.script.ScriptOpCodes;
@@ -125,45 +124,45 @@ public class UldBlockTest {
     public void testHeaderParse() throws Exception {
         UldBlock block = PARAMS.getDefaultSerializer().makeBlock(blockBytes);
         UldBlock header = block.cloneAsHeader();
-        UldBlock reparsed = PARAMS.getDefaultSerializer().makeBlock(header.bitcoinSerialize());
+        UldBlock reparsed = PARAMS.getDefaultSerializer().makeBlock(header.ulordSerialize());
         assertEquals(reparsed, header);
     }
 
     @Test
-    public void testBitcoinSerialization() throws Exception {
+    public void testUlordSerialization() throws Exception {
         // We have to be able to reserialize everything exactly as we found it for hashing to work. This test also
         // proves that transaction serialization works, along with all its subobjects like scripts and in/outpoints.
         //
         // NB: This tests the bitcoin serialization protocol.
         UldBlock block = PARAMS.getDefaultSerializer().makeBlock(blockBytes);
-        assertTrue(Arrays.equals(blockBytes, block.bitcoinSerialize()));
+        assertTrue(Arrays.equals(blockBytes, block.ulordSerialize()));
     }
     
     @Test
     public void testUpdateLength() {
         NetworkParameters params = UnitTestParams.get();
         UldBlock block = params.getGenesisBlock().createNextBlockWithCoinbase(UldBlock.BLOCK_VERSION_GENESIS, new UldECKey().getPubKey(), UldBlock.BLOCK_HEIGHT_GENESIS);
-        assertEquals(block.bitcoinSerialize().length, block.length);
+        assertEquals(block.ulordSerialize().length, block.length);
         final int origBlockLen = block.length;
         UldTransaction tx = new UldTransaction(params);
         // this is broken until the transaction has > 1 input + output (which is required anyway...)
-        //assertTrue(tx.length == tx.bitcoinSerialize().length && tx.length == 8);
+        //assertTrue(tx.length == tx.ulordSerialize().length && tx.length == 8);
         byte[] outputScript = new byte[10];
         Arrays.fill(outputScript, (byte) ScriptOpCodes.OP_FALSE);
         tx.addOutput(new TransactionOutput(params, null, Coin.SATOSHI, outputScript));
         tx.addInput(new TransactionInput(params, null, new byte[] {(byte) ScriptOpCodes.OP_FALSE},
                 new TransactionOutPoint(params, 0, Sha256Hash.of(new byte[] { 1 }))));
         int origTxLength = 8 + 2 + 8 + 1 + 10 + 40 + 1 + 1;
-        assertEquals(tx.unsafeBitcoinSerialize().length, tx.length);
+        assertEquals(tx.unsafeUlordSerialize().length, tx.length);
         assertEquals(origTxLength, tx.length);
         block.addTransaction(tx);
-        assertEquals(block.unsafeBitcoinSerialize().length, block.length);
+        assertEquals(block.unsafeUlordSerialize().length, block.length);
         assertEquals(origBlockLen + tx.length, block.length);
         block.getTransactions().get(1).getInputs().get(0).setScriptBytes(new byte[] {(byte) ScriptOpCodes.OP_FALSE, (byte) ScriptOpCodes.OP_FALSE});
         assertEquals(block.length, origBlockLen + tx.length);
         assertEquals(tx.length, origTxLength + 1);
         block.getTransactions().get(1).getInputs().get(0).clearScriptBytes();
-        assertEquals(block.length, block.unsafeBitcoinSerialize().length);
+        assertEquals(block.length, block.unsafeUlordSerialize().length);
         assertEquals(block.length, origBlockLen + tx.length);
         assertEquals(tx.length, origTxLength - 1);
         block.getTransactions().get(1).addInput(new TransactionInput(params, null, new byte[] {(byte) ScriptOpCodes.OP_FALSE},

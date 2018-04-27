@@ -56,10 +56,10 @@ public class HeadersMessage extends Message {
     }
 
     @Override
-    public void bitcoinSerializeToStream(OutputStream stream) throws IOException {
+    public void ulordSerializeToStream(OutputStream stream) throws IOException {
         stream.write(new VarInt(blockHeaders.size()).encode());
         for (UldBlock header : blockHeaders) {
-            header.cloneAsHeader().bitcoinSerializeToStream(stream);
+            header.cloneAsHeader().ulordSerializeToStream(stream);
             stream.write(0);
         }
     }
@@ -72,7 +72,7 @@ public class HeadersMessage extends Message {
                                          MAX_HEADERS);
 
         blockHeaders = new ArrayList<UldBlock>();
-        final BitcoinSerializer serializer = this.params.getSerializer(true);
+        final UlordSerializer serializer = this.params.getSerializer(true);
 
         for (int i = 0; i < numHeaders; ++i) {
             final UldBlock newBlockHeader = serializer.makeBlock(payload, cursor, UNKNOWN_LENGTH);

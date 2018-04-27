@@ -238,7 +238,7 @@ public class UldTransaction extends ChildMessage {
     private Sha256Hash getSha256Hash(boolean segwit) {
         ByteArrayOutputStream stream = new UnsafeByteArrayOutputStream(length < 32 ? 32 : length + 32);
         try {
-            bitcoinSerializeToStream(stream, segwit);
+            ulordSerializeToStream(stream, segwit);
         } catch (IOException e) {
             // Cannot happen, we are serializing to a memory stream.
         }
@@ -248,7 +248,7 @@ public class UldTransaction extends ChildMessage {
     }
 
     /**
-     * Used by BitcoinSerializer.  The serializer has to calculate a hash for checksumming so to
+     * Used by UlordSerializer.  The serializer has to calculate a hash for checksumming so to
      * avoid wasting the considerable effort a set method is provided so the serializer can set it.
      *
      * No verification is performed on this hash.
@@ -826,7 +826,7 @@ public class UldTransaction extends ChildMessage {
         }
         final Coin fee = getFee();
         if (fee != null) {
-            final int size = unsafeBitcoinSerialize().length;
+            final int size = unsafeUlordSerialize().length;
             s.append("     fee  ").append(fee.multiply(1000).divide(size).toFriendlyString()).append("/kB, ")
                     .append(fee.toFriendlyString()).append(" for ").append(size).append(" bytes\n");
         }
@@ -846,7 +846,7 @@ public class UldTransaction extends ChildMessage {
         }
         inputs.clear();
         // You wanted to reserialize, right?
-        this.length = this.unsafeBitcoinSerialize().length;
+        this.length = this.unsafeUlordSerialize().length;
     }
 
     /**
@@ -941,7 +941,7 @@ public class UldTransaction extends ChildMessage {
         }
         outputs.clear();
         // You wanted to reserialize, right?
-        this.length = this.unsafeBitcoinSerialize().length;
+        this.length = this.unsafeUlordSerialize().length;
     }
 
     /**
@@ -1071,7 +1071,7 @@ public class UldTransaction extends ChildMessage {
         try {
             // Create a copy of this transaction to operate upon because we need make changes to the inputs and outputs.
             // It would not be thread-safe to change the attributes of the transaction object itself.
-            UldTransaction tx = this.params.getDefaultSerializer().makeTransaction(this.bitcoinSerialize());
+            UldTransaction tx = this.params.getDefaultSerializer().makeTransaction(this.ulordSerialize());
 
             // Clear input scripts in preparation for signing. If we're signing a fresh
             // transaction that step isn't very helpful, but it doesn't add much cost relative to the actual
@@ -1134,7 +1134,7 @@ public class UldTransaction extends ChildMessage {
             }
 
             ByteArrayOutputStream bos = new UnsafeByteArrayOutputStream(tx.length == UNKNOWN_LENGTH ? 256 : tx.length + 4);
-            tx.bitcoinSerialize(bos);
+            tx.ulordSerialize(bos);
             // We also have to write a hash type (sigHashType is actually an unsigned char)
             uint32ToByteStreamLE(0x000000ff & sigHashType, bos);
             // Note that this is NOT reversed to ensure it will be signed correctly. If it were to be printed out
@@ -1149,11 +1149,11 @@ public class UldTransaction extends ChildMessage {
     }
 
     @Override
-    protected void bitcoinSerializeToStream(OutputStream stream) throws IOException {
-        bitcoinSerializeToStream(stream, true);
+    protected void ulordSerializeToStream(OutputStream stream) throws IOException {
+        ulordSerializeToStream(stream, true);
     }
 
-    protected void bitcoinSerializeToStream(OutputStream stream, boolean serializeWitRequested) throws IOException {
+    protected void ulordSerializeToStream(OutputStream stream, boolean serializeWitRequested) throws IOException {
         boolean serializeWit = serializeWitRequested && hasWitness();
         uint32ToByteStreamLE(version, stream);
         if (serializeWit) {
@@ -1161,10 +1161,10 @@ public class UldTransaction extends ChildMessage {
         }
         stream.write(new VarInt(inputs.size()).encode());
         for (TransactionInput in : inputs)
-            in.bitcoinSerialize(stream);
+            in.ulordSerialize(stream);
         stream.write(new VarInt(outputs.size()).encode());
         for (TransactionOutput out : outputs)
-            out.bitcoinSerialize(stream);
+            out.ulordSerialize(stream);
         if (serializeWit) {
             for (int i = 0; i < inputs.size(); i++) {
                 TransactionWitness witness = getWitness(i);

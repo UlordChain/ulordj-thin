@@ -49,12 +49,12 @@ public class FilteredBlock extends Message {
     }
 
     @Override
-    public void bitcoinSerializeToStream(OutputStream stream) throws IOException {
+    public void ulordSerializeToStream(OutputStream stream) throws IOException {
         if (header.transactions == null)
-            header.bitcoinSerializeToStream(stream);
+            header.ulordSerializeToStream(stream);
         else
-            header.cloneAsHeader().bitcoinSerializeToStream(stream);
-        merkleTree.bitcoinSerializeToStream(stream);
+            header.cloneAsHeader().ulordSerializeToStream(stream);
+        merkleTree.ulordSerializeToStream(stream);
     }
 
     @Override

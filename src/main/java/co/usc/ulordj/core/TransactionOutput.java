@@ -164,7 +164,7 @@ public class TransactionOutput extends ChildMessage {
     }
 
     @Override
-    protected void bitcoinSerializeToStream(OutputStream stream) throws IOException {
+    protected void ulordSerializeToStream(OutputStream stream) throws IOException {
         checkNotNull(scriptBytes);
         Utils.int64ToByteStreamLE(value, stream);
         // TODO: Move script serialization into the Script class, where it belongs.
@@ -234,7 +234,7 @@ public class TransactionOutput extends ChildMessage {
         // formula is wrong for anything that's not a pay-to-address output, unfortunately, we must follow Bitcoin Core's
         // wrongness in order to ensure we're considered standard. A better formula would either estimate the
         // size of data needed to satisfy all different script types, or just hard code 33 below.
-        final long size = this.unsafeBitcoinSerialize().length + 148;
+        final long size = this.unsafeUlordSerialize().length + 148;
         return feePerKb.multiply(size).divide(1000);
     }
 

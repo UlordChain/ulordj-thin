@@ -17,8 +17,6 @@
 package co.usc.ulordj.crypto;
 
 import co.usc.ulordj.core.UldECKey;
-import co.usc.ulordj.core.UldECKey;
-import co.usc.ulordj.core.UldECKey;
 import co.usc.ulordj.core.UldTransaction;
 import co.usc.ulordj.core.VerificationException;
 import co.usc.ulordj.core.UldTransaction.SigHash;
@@ -143,7 +141,7 @@ public class TransactionSignature extends UldECKey.ECDSASignature {
      * of the type used by Bitcoin we have to encode them using DER encoding, which is just a way to pack the two
      * components into a structure, and then we append a byte to the end for the sighash flags.
      */
-    public byte[] encodeToBitcoin() {
+    public byte[] encodeToUlord() {
         try {
             ByteArrayOutputStream bos = derByteStream();
             bos.write(sighashFlags);
@@ -164,12 +162,12 @@ public class TransactionSignature extends UldECKey.ECDSASignature {
      * @param requireCanonicalEncoding if the encoding of the signature must
      * be canonical.
      * @throws RuntimeException if the signature is invalid or unparseable in some way.
-     * @deprecated use {@link #decodeFromBitcoin(byte[], boolean, boolean} instead}.
+     * @deprecated use {@link #decodeFromUlord(byte[], boolean, boolean} instead}.
      */
     @Deprecated
-    public static TransactionSignature decodeFromBitcoin(byte[] bytes,
-                                                         boolean requireCanonicalEncoding) throws VerificationException {
-        return decodeFromBitcoin(bytes, requireCanonicalEncoding, false);
+    public static TransactionSignature decodeFromUlord(byte[] bytes,
+                                                       boolean requireCanonicalEncoding) throws VerificationException {
+        return decodeFromUlord(bytes, requireCanonicalEncoding, false);
     }
 
     /**
@@ -181,9 +179,9 @@ public class TransactionSignature extends UldECKey.ECDSASignature {
      * the order of the curve).
      * @throws RuntimeException if the signature is invalid or unparseable in some way.
      */
-    public static TransactionSignature decodeFromBitcoin(byte[] bytes,
-                                                         boolean requireCanonicalEncoding,
-                                                         boolean requireCanonicalSValue) throws VerificationException {
+    public static TransactionSignature decodeFromUlord(byte[] bytes,
+                                                       boolean requireCanonicalEncoding,
+                                                       boolean requireCanonicalSValue) throws VerificationException {
         // Bitcoin encoding is DER signature + sighash byte.
         if (requireCanonicalEncoding && !isEncodingCanonical(bytes))
             throw new VerificationException("Signature encoding is not canonical.");

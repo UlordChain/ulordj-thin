@@ -139,8 +139,8 @@ public class TransactionInput extends ChildMessage {
     }
 
     @Override
-    protected void bitcoinSerializeToStream(OutputStream stream) throws IOException {
-        outpoint.bitcoinSerialize(stream);
+    protected void ulordSerializeToStream(OutputStream stream) throws IOException {
+        outpoint.ulordSerialize(stream);
         stream.write(new VarInt(scriptBytes.length).encode());
         stream.write(scriptBytes);
         Utils.uint32ToByteStreamLE(sequence, stream);
@@ -451,7 +451,7 @@ public class TransactionInput extends ChildMessage {
 
     /** Returns a copy of the input detached from its containing transaction, if need be. */
     public TransactionInput duplicateDetached() {
-        return new TransactionInput(params, null, bitcoinSerialize(), 0);
+        return new TransactionInput(params, null, ulordSerialize(), 0);
     }
 
     @Override

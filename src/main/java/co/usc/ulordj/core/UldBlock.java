@@ -128,7 +128,7 @@ public class UldBlock extends Message {
 
     /**
      * Constructs a block object from the Bitcoin wire format.
-     * @deprecated Use {@link BitcoinSerializer#makeBlock(byte[])} instead.
+     * @deprecated Use {@link UlordSerializer#makeBlock(byte[])} instead.
      */
     @Deprecated
     public UldBlock(NetworkParameters params, byte[] payloadBytes) throws ProtocolException {
@@ -270,7 +270,7 @@ public class UldBlock extends Message {
     public int getOptimalEncodingMessageSize() {
         if (optimalEncodingMessageSize != 0)
             return optimalEncodingMessageSize;
-        optimalEncodingMessageSize = bitcoinSerialize().length;
+        optimalEncodingMessageSize = ulordSerialize().length;
         return optimalEncodingMessageSize;
     }
 
@@ -308,7 +308,7 @@ public class UldBlock extends Message {
         if (transactions != null) {
             stream.write(new VarInt(transactions.size()).encode());
             for (UldTransaction tx : transactions) {
-                tx.bitcoinSerialize(stream);
+                tx.ulordSerialize(stream);
             }
         }
     }
@@ -320,7 +320,7 @@ public class UldBlock extends Message {
      * @throws IOException
      */
     @Override
-    public byte[] bitcoinSerialize() {
+    public byte[] ulordSerialize() {
         // we have completely cached byte array.
         if (headerBytesValid && transactionBytesValid) {
             Preconditions.checkNotNull(payload, "Bytes should never be null if headerBytesValid && transactionBytesValid");
@@ -347,7 +347,7 @@ public class UldBlock extends Message {
     }
 
     @Override
-    protected void bitcoinSerializeToStream(OutputStream stream) throws IOException {
+    protected void ulordSerializeToStream(OutputStream stream) throws IOException {
         writeHeader(stream);
         // We may only have enough data to write the header.
         writeTransactions(stream);
@@ -460,12 +460,12 @@ public class UldBlock extends Message {
     /** Returns a copy of the block, but without any transactions. */
     public UldBlock cloneAsHeader() {
         UldBlock block = new UldBlock(params, BLOCK_VERSION_GENESIS);
-        copyBitcoinHeaderTo(block);
+        copyUlordHeaderTo(block);
         return block;
     }
 
     /** Copy the block without transactions into the provided empty block. */
-    protected final void copyBitcoinHeaderTo(final UldBlock block) {
+    protected final void copyUlordHeaderTo(final UldBlock block) {
         block.nonce = nonce;
         block.hashClaimTrie = hashClaimTrie;
         block.prevBlockHash = prevBlockHash;
@@ -902,7 +902,7 @@ public class UldBlock extends Message {
                 ScriptBuilder.createOutputScript(UldECKey.fromPublicOnly(pubKeyTo)).getProgram()));
         transactions.add(coinbase);
         coinbase.setParent(this);
-        coinbase.length = coinbase.unsafeBitcoinSerialize().length;
+        coinbase.length = coinbase.unsafeUlordSerialize().length;
         adjustLength(transactions.size(), coinbase.length);
     }
 

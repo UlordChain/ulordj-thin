@@ -20,7 +20,6 @@ import co.usc.ulordj.core.UldECKey;
 import co.usc.ulordj.core.UldTransaction;
 import com.google.common.collect.Lists;
 import co.usc.ulordj.core.Address;
-import co.usc.ulordj.core.UldECKey;
 import co.usc.ulordj.core.Utils;
 import co.usc.ulordj.crypto.TransactionSignature;
 
@@ -248,7 +247,7 @@ public class ScriptBuilder {
      */
     public static Script createInputScript(@Nullable TransactionSignature signature, UldECKey pubKey) {
         byte[] pubkeyBytes = pubKey.getPubKey();
-        byte[] sigBytes = signature != null ? signature.encodeToBitcoin() : new byte[]{};
+        byte[] sigBytes = signature != null ? signature.encodeToUlord() : new byte[]{};
         return new ScriptBuilder().data(sigBytes).data(pubkeyBytes).build();
     }
 
@@ -257,7 +256,7 @@ public class ScriptBuilder {
      * If given signature is null, incomplete scriptSig will be created with OP_0 instead of signature
      */
     public static Script createInputScript(@Nullable TransactionSignature signature) {
-        byte[] sigBytes = signature != null ? signature.encodeToBitcoin() : new byte[]{};
+        byte[] sigBytes = signature != null ? signature.encodeToUlord() : new byte[]{};
         return new ScriptBuilder().data(sigBytes).build();
     }
 
@@ -280,7 +279,7 @@ public class ScriptBuilder {
     public static Script createMultiSigInputScript(List<TransactionSignature> signatures) {
         List<byte[]> sigs = new ArrayList<byte[]>(signatures.size());
         for (TransactionSignature signature : signatures) {
-            sigs.add(signature.encodeToBitcoin());
+            sigs.add(signature.encodeToUlord());
         }
 
         return createMultiSigInputScriptBytes(sigs, null);
@@ -310,7 +309,7 @@ public class ScriptBuilder {
                 sigs.add(new byte[]{});
         } else {
             for (TransactionSignature signature : signatures) {
-                sigs.add(signature.encodeToBitcoin());
+                sigs.add(signature.encodeToUlord());
             }
         }
         return createMultiSigInputScriptBytes(sigs, multisigProgram.getProgram());
@@ -454,14 +453,14 @@ public class ScriptBuilder {
 
     public static Script createCLTVPaymentChannelRefund(TransactionSignature signature) {
         ScriptBuilder builder = new ScriptBuilder();
-        builder.data(signature.encodeToBitcoin());
+        builder.data(signature.encodeToUlord());
         builder.data(new byte[] { 0 }); // Use the CHECKLOCKTIMEVERIFY if branch
         return builder.build();
     }
 
     public static Script createCLTVPaymentChannelP2SHRefund(TransactionSignature signature, Script redeemScript) {
         ScriptBuilder builder = new ScriptBuilder();
-        builder.data(signature.encodeToBitcoin());
+        builder.data(signature.encodeToUlord());
         builder.data(new byte[] { 0 }); // Use the CHECKLOCKTIMEVERIFY if branch
         builder.data(redeemScript.getProgram());
         return builder.build();
@@ -477,7 +476,7 @@ public class ScriptBuilder {
     }
 
     public static Script createCLTVPaymentChannelInput(TransactionSignature from, TransactionSignature to) {
-        return createCLTVPaymentChannelInput(from.encodeToBitcoin(), to.encodeToBitcoin());
+        return createCLTVPaymentChannelInput(from.encodeToUlord(), to.encodeToUlord());
     }
 
     public static Script createCLTVPaymentChannelInput(byte[] from, byte[] to) {

@@ -25,7 +25,7 @@ import co.usc.ulordj.store.BlockStoreException;
 // TODO: Rename this class to SPVBlockChain at some point.
 
 /**
- * A BlockChain implements the <i>simplified payment verification</i> mode of the Bitcoin protocol. It is the right
+ * A BlockChain implements the <i>simplified payment verification</i> mode of the Ulord protocol. It is the right
  * choice to use for programs that have limited resources as it won't verify transactions signatures or attempt to store
  * all of the block chain. Really, this class should be called SPVBlockChain but for backwards compatibility it is not.
  */

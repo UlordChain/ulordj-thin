@@ -125,9 +125,9 @@ public class StoredBlock {
         }
         buffer.put(chainWorkBytes);
         buffer.putInt(getHeight());
-        // Using unsafeBitcoinSerialize here can give us direct access to the same bytes we read off the wire,
+        // Using unsafeUlordSerialize here can give us direct access to the same bytes we read off the wire,
         // avoiding serialization round-trips.
-        byte[] bytes = getHeader().unsafeBitcoinSerialize();
+        byte[] bytes = getHeader().unsafeUlordSerialize();
         buffer.put(bytes, 0, UldBlock.HEADER_SIZE);  // Trim the trailing 00 byte (zero transactions).
     }
 

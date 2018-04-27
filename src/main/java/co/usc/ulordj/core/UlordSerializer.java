@@ -38,11 +38,11 @@ import static co.usc.ulordj.core.Utils.*;
  * <ul>
  * <li>The proper Class instance needs to be mapped to its message name in the names variable below</li>
  * <li>There needs to be a constructor matching: NetworkParameters params, byte[] payload</li>
- * <li>Message.bitcoinSerializeToStream() needs to be properly subclassed</li>
+ * <li>Message.ulordSerializeToStream() needs to be properly subclassed</li>
  * </ul>
  */
-public class BitcoinSerializer extends MessageSerializer {
-    private static final Logger log = LoggerFactory.getLogger(BitcoinSerializer.class);
+public class UlordSerializer extends MessageSerializer {
+    private static final Logger log = LoggerFactory.getLogger(UlordSerializer.class);
     private static final int COMMAND_LEN = 12;
 
     private final NetworkParameters params;
@@ -57,12 +57,12 @@ public class BitcoinSerializer extends MessageSerializer {
     }
 
     /**
-     * Constructs a BitcoinSerializer with the given behavior.
+     * Constructs a UlordSerializer with the given behavior.
      *
      * @param params           networkParams used to create Messages instances and termining packetMagic
      * @param parseRetain      retain the backing byte array of a message for fast reserialization.
      */
-    public BitcoinSerializer(NetworkParameters params, boolean parseRetain) {
+    public UlordSerializer(NetworkParameters params, boolean parseRetain) {
         this.params = params;
         this.parseRetain = parseRetain;
     }
@@ -99,9 +99,9 @@ public class BitcoinSerializer extends MessageSerializer {
     public void serialize(Message message, OutputStream out) throws IOException {
         String name = names.get(message.getClass());
         if (name == null) {
-            throw new Error("BitcoinSerializer doesn't currently know how to serialize " + message.getClass());
+            throw new Error("UlordSerializer doesn't currently know how to serialize " + message.getClass());
         }
-        serialize(name, message.bitcoinSerialize(), out);
+        serialize(name, message.ulordSerialize(), out);
     }
 
     /**
@@ -124,7 +124,7 @@ public class BitcoinSerializer extends MessageSerializer {
         // Bitcoin Core ignores garbage before the magic header bytes. We have to do the same because
         // sometimes it sends us stuff that isn't part of any message.
         seekPastMagicBytes(in);
-        BitcoinPacketHeader header = new BitcoinPacketHeader(in);
+        UlordPacketHeader header = new UlordPacketHeader(in);
         // Now try to read the whole message.
         return deserializePayload(header, in);
     }
@@ -134,16 +134,16 @@ public class BitcoinSerializer extends MessageSerializer {
      * the payload. This method assumes you have already called seekPastMagicBytes()
      */
     @Override
-    public BitcoinPacketHeader deserializeHeader(ByteBuffer in) throws ProtocolException, IOException {
-        return new BitcoinPacketHeader(in);
+    public UlordPacketHeader deserializeHeader(ByteBuffer in) throws ProtocolException, IOException {
+        return new UlordPacketHeader(in);
     }
 
     /**
      * Deserialize payload only.  You must provide a header, typically obtained by calling
-     * {@link BitcoinSerializer#deserializeHeader}.
+     * {@link UlordSerializer#deserializeHeader}.
      */
     @Override
-    public Message deserializePayload(BitcoinPacketHeader header, ByteBuffer in) throws ProtocolException, BufferUnderflowException {
+    public Message deserializePayload(UlordPacketHeader header, ByteBuffer in) throws ProtocolException, BufferUnderflowException {
         byte[] payloadBytes = new byte[header.size];
         in.get(payloadBytes, 0, header.size);
 
@@ -256,7 +256,7 @@ public class BitcoinSerializer extends MessageSerializer {
     }
 
 
-    public static class BitcoinPacketHeader {
+    public static class UlordPacketHeader {
         /** The largest number of bytes that a header can represent */
         public static final int HEADER_LENGTH = COMMAND_LEN + 4 + 4;
 
@@ -265,7 +265,7 @@ public class BitcoinSerializer extends MessageSerializer {
         public final int size;
         public final byte[] checksum;
 
-        public BitcoinPacketHeader(ByteBuffer in) throws ProtocolException, BufferUnderflowException {
+        public UlordPacketHeader(ByteBuffer in) throws ProtocolException, BufferUnderflowException {
             header = new byte[HEADER_LENGTH];
             in.get(header, 0, header.length);
 

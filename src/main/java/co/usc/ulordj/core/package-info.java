@@ -16,7 +16,7 @@
  * The core package contains classes for network messages like {@link co.usc.ulordj.core.UldBlock} and
  * {@link co.usc.ulordj.core.UldTransaction}, peer connectivity via {@link co.usc.ulordj.core.PeerGroup},
  * and block chain management.
- * If what you're doing can be described as basic bitcoin tasks, the code is probably found here.
+ * If what you're doing can be described as basic ulord tasks, the code is probably found here.
  * To learn more please consult the documentation on the website.
  */
 package co.usc.ulordj.core;
