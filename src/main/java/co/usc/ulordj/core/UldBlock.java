@@ -410,7 +410,7 @@ public class UldBlock extends Message {
             writeHeader(bos);
             //System.out.println("Bytes to Hex:" + Sha256Hash.bytesToHex(bos.toByteArray()));
             Sha256Hash hash = Sha256Hash.wrapReversed(Sha256Hash.cryptoHelloHash(bos.toByteArray()));
-            System.out.println("Output hash: " + hash);
+            //System.out.println("Output hash: " + hash);
             return hash;
         } catch (IOException e) {
             throw new RuntimeException(e); // Cannot happen.
