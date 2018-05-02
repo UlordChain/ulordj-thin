@@ -41,7 +41,7 @@ public class TestNet2Params extends AbstractUlordNetParams {
         acceptableAddressCodes = new int[] { addressHeader, p2shHeader };
         interval = INTERVAL;
         targetTimespan = TARGET_TIMESPAN;
-        maxTarget = new BigInteger("000fffffff000000000000000000000000000000000000000000000000000000");
+        maxTarget = new BigInteger("000fffffff000000000000000000000000000000000000000000000000000000", 16);
         dumpedPrivateKeyHeader = 239;
         genesisBlock.setTime(1520308246L);
         genesisBlock.setDifficultyTarget(521142271L);

@@ -43,7 +43,7 @@ public class TestNet3Params extends AbstractUlordNetParams {
         packetMagic = 0xC2E6CEF3;
         interval = INTERVAL;
         targetTimespan = TARGET_TIMESPAN;
-        maxTarget = new BigInteger("000fffffff000000000000000000000000000000000000000000000000000000");
+        maxTarget = new BigInteger("000fffffff000000000000000000000000000000000000000000000000000000", 16);
         port = 19888;           // Ulord Testnet port
         addressHeader = 125;    // Ulord Testnet script address start with 's'
         p2shHeader = 130;       // Ulord Testnet addresses start with 'u'
