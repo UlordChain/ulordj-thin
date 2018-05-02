@@ -18,6 +18,8 @@ package co.usc.ulordj.params;
 
 import co.usc.ulordj.core.Utils;
 
+import java.math.BigInteger;
+
 import static com.google.common.base.Preconditions.checkState;
 
 /**
@@ -39,7 +41,7 @@ public class TestNet2Params extends AbstractUlordNetParams {
         acceptableAddressCodes = new int[] { addressHeader, p2shHeader };
         interval = INTERVAL;
         targetTimespan = TARGET_TIMESPAN;
-        maxTarget = Utils.decodeCompactBits(0x1d0fffffL);
+        maxTarget = new BigInteger("000fffffff000000000000000000000000000000000000000000000000000000");
         dumpedPrivateKeyHeader = 239;
         genesisBlock.setTime(1520308246L);
         genesisBlock.setDifficultyTarget(521142271L);
