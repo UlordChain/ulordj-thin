@@ -40,7 +40,7 @@ import static com.google.common.base.Preconditions.*;
  */
 public class Context {
     /** The version of this library release, as a string. */
-    public static final String ULORDJ_VERSION = "0.14.4";
+    public static final String ULORDJ_VERSION = "0.1.1";
 
     private static final Logger log = LoggerFactory.getLogger(Context.class);
 
