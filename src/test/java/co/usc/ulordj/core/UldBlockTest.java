@@ -51,6 +51,13 @@ public class UldBlockTest {
     }
 
     @Test
+    public void testReadUint256() throws Exception {
+        byte[] testBytes = Sha256Hash.hexStringToByteArray("FFFF0F1F");
+        BigInteger data = Utils.readUint256(testBytes,0);
+        assertEquals("521142271", data.toString());
+    }
+
+    @Test
     public void testWork() throws Exception {
         BigInteger work = PARAMS.getGenesisBlock().getWork();
         // This number is printed by Bitcoin Core at startup as the calculated value of chainWork on testnet:

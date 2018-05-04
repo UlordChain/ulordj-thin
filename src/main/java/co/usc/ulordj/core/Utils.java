@@ -220,38 +220,9 @@ public class Utils {
 
     /** Parse 32 bytes from the byte array (starting at the offset) as unsigned 256-bit integer in little endian format. */
     public static BigInteger readUint256(byte[] bytes, int offset) {
-        return  BigInteger.valueOf((bytes[offset] & 0xffl) |
-                ((bytes[offset + 1] & 0xffl) << 8) |
-                ((bytes[offset + 2] & 0xffl) << 16) |
-                ((bytes[offset + 3] & 0xffl) << 24) |
-                ((bytes[offset + 4] & 0xffl) << 32) |
-                ((bytes[offset + 5] & 0xffl) << 40) |
-                ((bytes[offset + 6] & 0xffl) << 48) |
-                ((bytes[offset + 7] & 0xffl) << 56) |
-                ((bytes[offset + 8] & 0xffl) << 64) |
-                ((bytes[offset + 9] & 0xffl) << 72) |
-                ((bytes[offset + 10] & 0xffl) << 80) |
-                ((bytes[offset + 11] & 0xffl) << 88) |
-                ((bytes[offset + 12] & 0xffl) << 96) |
-                ((bytes[offset + 13] & 0xffl) << 104) |
-                ((bytes[offset + 14] & 0xffl) << 112) |
-                ((bytes[offset + 15] & 0xffl) << 120) |
-                ((bytes[offset + 16] & 0xffl) << 128) |
-                ((bytes[offset + 17] & 0xffl) << 136) |
-                ((bytes[offset + 18] & 0xffl) << 144) |
-                ((bytes[offset + 19] & 0xffl) << 152) |
-                ((bytes[offset + 20] & 0xffl) << 160) |
-                ((bytes[offset + 21] & 0xffl) << 168) |
-                ((bytes[offset + 22] & 0xffl) << 176) |
-                ((bytes[offset + 23] & 0xffl) << 184) |
-                ((bytes[offset + 24] & 0xffl) << 192) |
-                ((bytes[offset + 25] & 0xffl) << 200) |
-                ((bytes[offset + 26] & 0xffl) << 208) |
-                ((bytes[offset + 27] & 0xffl) << 216) |
-                ((bytes[offset + 28] & 0xffl) << 224) |
-                ((bytes[offset + 29] & 0xffl) << 232) |
-                ((bytes[offset + 30] & 0xffl) << 240) |
-                ((bytes[offset + 31] & 0xffl) << 248));
+        byte[] newBytes = Arrays.copyOfRange(bytes, offset, offset + 32);
+        Sha256Hash data = Sha256Hash.wrapReversed(newBytes);
+        return new BigInteger(Sha256Hash.bytesToHex(data.getBytes()), 16);
     }
 
     /** Parse 4 bytes from the byte array (starting at the offset) as unsigned 32-bit integer in big endian format. */
