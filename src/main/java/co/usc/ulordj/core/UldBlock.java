@@ -200,6 +200,7 @@ public class UldBlock extends Message {
         this.version = version;
         this.prevBlockHash = prevBlockHash;
         this.merkleRoot = merkleRoot;
+        this.hashClaimTrie = new BigInteger("0",16);
         this.time = time;
         this.difficultyTarget = difficultyTarget;
         this.nonce = nonce;
@@ -256,10 +257,11 @@ public class UldBlock extends Message {
         version = readUint32();
         prevBlockHash = readHash();
         merkleRoot = readHash();
+        hashClaimTrie = readUint256();
         time = readUint32();
         difficultyTarget = readUint32();
         nonce = readUint256();
-        hash = Sha256Hash.wrapReversed(Sha256Hash.hashTwice(payload, offset, cursor - offset));
+        hash = Sha256Hash.wrapReversed(Sha256Hash.cryptoHelloHash(payload, offset, cursor - offset));
         headerBytesValid = serializer.isParseRetainMode();
 
         // transactions

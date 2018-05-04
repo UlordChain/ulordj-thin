@@ -52,7 +52,7 @@ public class TestNet3Params extends AbstractUlordNetParams {
         //genesisBlock.setTime(1520308246L);
         genesisBlock.setTime(1524057440L);
         genesisBlock.setDifficultyTarget(521142271L);
-        genesisBlock.setNonce(new BigInteger("000020f00dd1af082323e02e1f5b1d866d777abbcf63ba720d35dcf585840073", 16)); //"a12949fc4a1735c8cbd6444bf9b4aea61300bc7aee9fec741af5a8c2fe386216"
+        genesisBlock.setNonce(new BigInteger("000020f00dd1af082323e02e1f5b1d866d777abbcf63ba720d35dcf585840073", 16));
 
         spendableCoinbaseDepth = 100;
         subsidyDecreaseBlockCount = 840960;
@@ -66,6 +66,7 @@ public class TestNet3Params extends AbstractUlordNetParams {
                 "testnet-seed1.ulord.io",
                 "testnet-seed1.fcash.cc",
                 "node.ulord.one",
+                "10.221.153.180"
         };
         addrSeeds = null;
         bip32HeaderPub = 0x043587CF;
