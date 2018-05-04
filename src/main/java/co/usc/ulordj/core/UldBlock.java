@@ -96,8 +96,8 @@ public class UldBlock extends Message {
     private Sha256Hash merkleRoot;
     private long time;             // "nTime"
     private long difficultyTarget; // "nBits"
-    private BigInteger nonce = BigInteger.ZERO;
-    private BigInteger hashClaimTrie = new BigInteger("0", 16); // for claim operation
+    private BigInteger nonce;
+    private BigInteger hashClaimTrie; // for claim operation
 
     // TODO: Get rid of all the direct accesses to this field. It's a long-since unnecessary holdover from the Dalvik days.
     /** If null, it means this object holds only the headers. */
