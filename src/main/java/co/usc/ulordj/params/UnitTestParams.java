@@ -33,8 +33,8 @@ public class UnitTestParams extends AbstractUlordNetParams {
         super(ID_UNITTESTNET);
         //id = ID_UNITTESTNET;
         packetMagic = 0xC2E6CEF3;
-        addressHeader = 125;
-        p2shHeader = 130;
+        addressHeader = 130;
+        p2shHeader = 125;
         acceptableAddressCodes = new int[] { addressHeader, p2shHeader };
         maxTarget = new BigInteger("00ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", 16);
         genesisBlock.setTime(System.currentTimeMillis() / 1000);

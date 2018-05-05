@@ -36,8 +36,8 @@ public class TestNet2Params extends AbstractUlordNetParams {
         super(ID_TESTNET);
         packetMagic = 0xfabfb5daL;
         port = 19888;
-        addressHeader = 125;
-        p2shHeader = 130;
+        addressHeader = 130;
+        p2shHeader = 125;
         acceptableAddressCodes = new int[] { addressHeader, p2shHeader };
         interval = INTERVAL;
         targetTimespan = TARGET_TIMESPAN;

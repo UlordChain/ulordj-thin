@@ -43,8 +43,8 @@ public class RegTestParams extends AbstractUlordNetParams {
         port = 29888;
 
         packetMagic = 0xf0c5bbd0L;
-        addressHeader = 120;            // Regtest Ulord script addresses start with 'q'
-        p2shHeader = 140;               // Regtest Ulord addresses start with 'y'
+    addressHeader = 140;           // Regtest Ulord addresses start with 'y'
+        p2shHeader = 120;           // Regtest Ulord script addresses start with 'q'
         acceptableAddressCodes = new int[] { addressHeader, p2shHeader };
         targetTimespan = TARGET_TIMESPAN;
         dumpedPrivateKeyHeader = 239;

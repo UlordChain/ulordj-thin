@@ -38,8 +38,8 @@ public class MainNetParams extends AbstractUlordNetParams {
         targetTimespan = TARGET_TIMESPAN;
         maxTarget = new BigInteger("000009b173000000000000000000000000000000000000000000000000000000", 16);
         dumpedPrivateKeyHeader = 128;   // Ulord private keys start with '5' or 'K' or 'L'(as in Bitcoin)
-        addressHeader = 63;     // Ulord script addresses start with 'S'
-        p2shHeader = 68;        // Ulord addresses start with 'U'
+        addressHeader = 68;     // Ulord addresses start with 'U'
+        p2shHeader = 63;        // Ulord script addresses start with 'S'
         acceptableAddressCodes = new int[] { addressHeader, p2shHeader };
         port = 9888;
         packetMagic = 0xb3016fb1L;

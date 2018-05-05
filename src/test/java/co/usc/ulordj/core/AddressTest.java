@@ -45,7 +45,7 @@ public class AddressTest {
     public void testPublicKeyToAddress() throws Exception {
         UldECKey publicKey = UldECKey.fromPublicOnly(Hex.decode("03f0ed482997fd16e2b4aed02fe3a386749052fd44d00a75a221e11eac7348d0b6"));
         byte[] addressHash = sha256hash160(publicKey.getPubKey());
-        Address address = new Address(testParams, testParams.getP2SHHeader(), addressHash);
+        Address address = new Address(testParams, testParams.getAddressHeader(), addressHash);
         System.out.println(address.toString());
         assertEquals("ufGHmxvSDsXMKUm23a76JrrjvQqhpfL5E3", address.toString());
     }
@@ -70,8 +70,8 @@ public class AddressTest {
     @Test
     public void stringification() throws Exception {
         // Test a testnet address.
-        Address a = new Address(testParams, HEX.decode("ba74df8342800b07e231cc33d956aa91fde30675")); // TODO: <---Update this address
-        assertEquals("sbFHmjrzwVApCgLxFJ28DkBtNQcnoJq2ae", a.toString());
+        Address a = new Address(testParams, HEX.decode("ba74df8342800b07e231cc33d956aa91fde30675"));
+        assertEquals("ubwJhHMSVPVCHr3PNPgieNYpWvuWG5XvcQ", a.toString());
         assertFalse(a.isP2SHAddress());
 
 //        Address b = new Address(mainParams, HEX.decode("4a22c3c4cbb31e4d03b15550636762bda0baf85a"));
@@ -82,7 +82,7 @@ public class AddressTest {
     @Test
     public void decoding() throws Exception {
         Address a = Address.fromBase58(testParams, "ubwJhHMSVPVCHr3PNPgieNYpWvuWG5XvcQ");
-        assertEquals("ba74df8342800b07e231cc33d956aa91fde30675", Utils.HEX.encode(a.getHash160())); // TODO: <---Update this address
+        assertEquals("ba74df8342800b07e231cc33d956aa91fde30675", Utils.HEX.encode(a.getHash160()));
 
 //        Address b = Address.fromBase58(mainParams, "uVvfixZ1rAXx7ktFCNuRgHrU5yWoDNurEy");
 //        assertEquals("4a22c3c4cbb31e4d03b15550636762bda0baf85a", Utils.HEX.encode(b.getHash160()));
@@ -125,9 +125,9 @@ public class AddressTest {
 
     @Test
     public void getNetwork() throws Exception {
-        NetworkParameters params = Address.getParametersFromAddress("uVvfixZ1rAXx7ktFCNuRgHrU5yWoDNurEy");
-        assertEquals(MainNetParams.get().getId(), params.getId());
-        params = Address.getParametersFromAddress("ubwJhHMSVPVCHr3PNPgieNYpWvuWG5XvcQ");
+        //NetworkParameters params = Address.getParametersFromAddress("uVvfixZ1rAXx7ktFCNuRgHrU5yWoDNurEy");
+        //assertEquals(MainNetParams.get().getId(), params.getId());
+        NetworkParameters params = Address.getParametersFromAddress("ubwJhHMSVPVCHr3PNPgieNYpWvuWG5XvcQ");
         assertEquals(TestNet3Params.get().getId(), params.getId());
     }
 
@@ -168,29 +168,29 @@ public class AddressTest {
 //        Address mainNetP2SHAddress = Address.fromBase58(MainNetParams.get(), "35b9vsyH1KoFT5a5KtrKusaCcPLkiSo1tU");
 //        assertEquals(mainNetP2SHAddress.version, MainNetParams.get().p2shHeader);
 //        assertTrue(mainNetP2SHAddress.isP2SHAddress());
-        Address testNetP2SHAddress = Address.fromBase58(TestNet3Params.get(), "uV8j9BE12osj3KcunPrPyBy71aAyeg1Dxz");
+        Address testNetP2SHAddress = Address.fromBase58(TestNet3Params.get(), "saxvYV4oy1eu9ZDotsh94F9xc6BqsqgcvT");
         assertEquals(testNetP2SHAddress.version, TestNet3Params.get().p2shHeader);
         assertTrue(testNetP2SHAddress.isP2SHAddress());
 
         // Test that we can determine what network a P2SH address belongs to
 //        NetworkParameters mainNetParams = Address.getParametersFromAddress("35b9vsyH1KoFT5a5KtrKusaCcPLkiSo1tU");
 //        assertEquals(MainNetParams.get().getId(), mainNetParams.getId());
-        NetworkParameters testNetParams = Address.getParametersFromAddress("uV8j9BE12osj3KcunPrPyBy71aAyeg1Dxz"); // NOTE: This test requires to remove MainNetParams from Networks as
+        NetworkParameters testNetParams = Address.getParametersFromAddress("saxvYV4oy1eu9ZDotsh94F9xc6BqsqgcvT"); // NOTE: This test requires to remove MainNetParams from Networks as
         assertEquals(TestNet3Params.get().getId(), testNetParams.getId());                                        // MainNet is not implement yet.
 
         // Test that we can convert them from hashes
 //        byte[] hex = HEX.decode("2ac4b0b501117cc8119c5797b519538d4942e90e");
 //        Address a = Address.fromP2SHHash(mainParams, hex);
 //        assertEquals("35b9vsyH1KoFT5a5KtrKusaCcPLkiSo1tU", a.toString());
-        Address b = Address.fromP2SHHash(testParams, HEX.decode("18a0e827269b5211eb51a4af1b2fa69333efa722"));
-        assertEquals("uMBdyizi4UjUfXqWaKUZ9CjPLyhcqvPLAs", b.toString());
+        Address b = Address.fromP2SHHash(testParams, HEX.decode("b75c7f3c962d5124ed54c0d8014cb26976c070cd"));
+        assertEquals("saxvYV4oy1eu9ZDotsh94F9xc6BqsqgcvT", b.toString());
 //        Address c = Address.fromP2SHScript(mainParams, ScriptBuilder.createP2SHOutputScript(hex));
 //        assertEquals("35b9vsyH1KoFT5a5KtrKusaCcPLkiSo1tU", c.toString());
     }
 
     @Test
     public void cloning() throws Exception {
-        Address a = new Address(testParams, HEX.decode("fda79a24e50ff70ff42f7d89585da5bd19d9e5cc"));
+        Address a = new Address(testParams, HEX.decode("b75c7f3c962d5124ed54c0d8014cb26976c070cd"));
         Address b = a.clone();
 
         assertEquals(a, b);
