@@ -55,7 +55,7 @@ public class TestNet2Params extends AbstractUlordNetParams {
         addrSeeds = null;
         bip32HeaderPub = 0x043587CF;    // Ulord BIP32 pubkeys start with 'xpub' (Bitcoin defaults)
         bip32HeaderPriv = 0x04358394;   // Ulord BIP32 prvkeys start with 'xprv' (Bitcoin defaults)
-        bip44HeaderCoin = 0x800000f7;   // Ulord BIP44 coin type is '247'
+        bip44HeaderCoin = 0x80000001;   // Ulord BIP44 coin type is '247'
 
         majorityEnforceBlockUpgrade = TESTNET_MAJORITY_ENFORCE_BLOCK_UPGRADE;
         majorityRejectBlockOutdated = TESTNET_MAJORITY_REJECT_BLOCK_OUTDATED;
