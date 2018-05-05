@@ -23,20 +23,32 @@ import co.usc.ulordj.params.RegTestParams;
 import co.usc.ulordj.params.TestNet3Params;
 import co.usc.ulordj.script.ScriptBuilder;
 import org.junit.Test;
+import org.spongycastle.util.encoders.Hex;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.security.interfaces.ECKey;
 import java.util.Arrays;
 
 import static co.usc.ulordj.core.Utils.HEX;
+import static co.usc.ulordj.core.Utils.sha256hash160;
 import static org.junit.Assert.*;
 
 public class AddressTest {
     //static final NetworkParameters regtestParams = RegTestParams.get();
     static final NetworkParameters testParams = TestNet3Params.get();
     //static final NetworkParameters mainParams = MainNetParams.get();
+
+    @Test
+    public void testPublicKeyToAddress() throws Exception {
+        UldECKey publicKey = UldECKey.fromPublicOnly(Hex.decode("03f0ed482997fd16e2b4aed02fe3a386749052fd44d00a75a221e11eac7348d0b6"));
+        byte[] addressHash = sha256hash160(publicKey.getPubKey());
+        Address address = new Address(testParams, testParams.getP2SHHeader(), addressHash);
+        System.out.println(address.toString());
+        assertEquals("ufGHmxvSDsXMKUm23a76JrrjvQqhpfL5E3", address.toString());
+    }
 
     @Test
     public void testJavaSerialization() throws Exception {
