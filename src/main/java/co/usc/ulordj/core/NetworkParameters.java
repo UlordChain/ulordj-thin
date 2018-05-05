@@ -377,6 +377,11 @@ public abstract class NetworkParameters {
         return bip32HeaderPriv;
     }
 
+    /** Returns the 4 byte header for BIP44 (HD) wallet - coin key part */
+    public int getBip44HeaderCoin() {
+        return bip44HeaderCoin;
+    }
+
     /**
      * Returns the number of coins that will be produced in total, on this
      * network. Where not applicable, a very large number of coins is returned
