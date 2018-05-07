@@ -122,6 +122,8 @@ public class Utils {
     }
 
     public static void uint256ToByteStreamLE(BigInteger val, OutputStream stream) throws IOException {
+        if (val == null)
+            val = BigInteger.ONE;
         byte[] bytes = val.toByteArray();
         if(bytes.length > 32) {
             throw new RuntimeException("Input too large to encode into a uint256");

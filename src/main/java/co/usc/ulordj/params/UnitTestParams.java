@@ -39,6 +39,7 @@ public class UnitTestParams extends AbstractUlordNetParams {
         maxTarget = new BigInteger("00ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", 16);
         genesisBlock.setTime(System.currentTimeMillis() / 1000);
         genesisBlock.setDifficultyTarget(UldBlock.EASIEST_DIFFICULTY_TARGET);
+        genesisBlock.setNonce(BigInteger.ZERO);
         genesisBlock.solve();
         port = 19888;
         interval = 10;

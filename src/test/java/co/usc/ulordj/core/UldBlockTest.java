@@ -60,10 +60,10 @@ public class UldBlockTest {
     @Test
     public void testWork() throws Exception {
         BigInteger work = PARAMS.getGenesisBlock().getWork();
-        // This number is printed by Bitcoin Core at startup as the calculated value of chainWork on testnet:
+        // This number is printed by Ulord Core at startup as the calculated value of chainWork on testnet:
         //
-        // SetBestChain: new best=00000007199508e34a9f  height=0  work=536879104
-        assertEquals(BigInteger.valueOf(536879104L), work);
+        // SetBestChain: new best=000f378be841f44e75346eebd931b13041f0dee561af6a80cfea6669c1bfec03  height=0  work=4096
+        assertEquals(BigInteger.valueOf(4096L), work);
     }
 
     @Test
@@ -142,6 +142,8 @@ public class UldBlockTest {
         //
         // NB: This tests the bitcoin serialization protocol.
         UldBlock block = PARAMS.getDefaultSerializer().makeBlock(blockBytes);
+        System.out.println(Sha256Hash.bytesToHex(blockBytes));
+        System.out.println(Sha256Hash.bytesToHex(block.ulordSerialize()));
         assertTrue(Arrays.equals(blockBytes, block.ulordSerialize()));
     }
     

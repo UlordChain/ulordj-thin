@@ -148,11 +148,11 @@ public class FakeTxBuilder {
     }
 
     /**
-     * Transaction[0] is a feeder transaction, supplying BTC to Transaction[1]
+     * Transaction[0] is a feeder transaction, supplying ULD to Transaction[1]
      */
     public static UldTransaction[] createFakeTx(NetworkParameters params, Coin value,
                                                 Address to, Address from) {
-        // Create fake TXes of sufficient realism to exercise the unit tests. This transaction send BTC from the
+        // Create fake TXes of sufficient realism to exercise the unit tests. This transaction send ULD from the
         // from address, to the to address with to one to somewhere else to simulate change.
         UldTransaction t = new UldTransaction(params);
         TransactionOutput outputToMe = new TransactionOutput(params, t, value, to);

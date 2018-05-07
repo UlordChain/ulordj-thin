@@ -45,20 +45,20 @@ import co.usc.ulordj.core.Monetary;
  */
 public final class MonetaryFormat {
 
-    /** Standard format for the BTC denomination. */
-    public static final MonetaryFormat BTC = new MonetaryFormat().shift(0).minDecimals(2).repeatOptionalDecimals(2, 3);
-    /** Standard format for the mBTC denomination. */
-    public static final MonetaryFormat MBTC = new MonetaryFormat().shift(3).minDecimals(2).optionalDecimals(2);
-    /** Standard format for the µBTC denomination. */
-    public static final MonetaryFormat UBTC = new MonetaryFormat().shift(6).minDecimals(0).optionalDecimals(2);
+    /** Standard format for the ULD denomination. */
+    public static final MonetaryFormat ULD = new MonetaryFormat().shift(0).minDecimals(2).repeatOptionalDecimals(2, 3);
+    /** Standard format for the mULD denomination. */
+    public static final MonetaryFormat MULD = new MonetaryFormat().shift(3).minDecimals(2).optionalDecimals(2);
+    /** Standard format for the µULD denomination. */
+    public static final MonetaryFormat UULD = new MonetaryFormat().shift(6).minDecimals(0).optionalDecimals(2);
     /** Standard format for fiat amounts. */
     public static final MonetaryFormat FIAT = new MonetaryFormat().shift(0).minDecimals(2).repeatOptionalDecimals(2, 1);
-    /** Currency code for base 1 Bitcoin. */
-    public static final String CODE_BTC = "BTC";
-    /** Currency code for base 1/1000 Bitcoin. */
-    public static final String CODE_MBTC = "mBTC";
-    /** Currency code for base 1/1000000 Bitcoin. */
-    public static final String CODE_UBTC = "µBTC";
+    /** Currency code for base 1 Ulord coin. */
+    public static final String CODE_ULD = "ULD";
+    /** Currency code for base 1/1000 Ulord coin. */
+    public static final String CODE_MULD = "mULD";
+    /** Currency code for base 1/1000000 Ulord coin. */
+    public static final String CODE_UULD = "µULD";
 
     public static final int MAX_DECIMALS = 8;
 
@@ -191,7 +191,7 @@ public final class MonetaryFormat {
     }
 
     /**
-     * Set number of digits to shift the decimal separator to the right, coming from the standard BTC notation that was
+     * Set number of digits to shift the decimal separator to the right, coming from the standard ULD notation that was
      * common pre-2014. Note this will change the currency code if enabled.
      */
     public MonetaryFormat shift(int shift) {
@@ -301,9 +301,9 @@ public final class MonetaryFormat {
         this.shift = 0;
         this.roundingMode = RoundingMode.HALF_UP;
         this.codes = new String[MAX_DECIMALS];
-        this.codes[0] = CODE_BTC;
-        this.codes[3] = CODE_MBTC;
-        this.codes[6] = CODE_UBTC;
+        this.codes[0] = CODE_ULD;
+        this.codes[3] = CODE_MULD;
+        this.codes[6] = CODE_UULD;
         this.codeSeparator = ' ';
         this.codePrefixed = true;
     }

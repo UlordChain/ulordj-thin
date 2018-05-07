@@ -54,7 +54,7 @@ import static com.google.common.base.Preconditions.*;
  * </ol>
  *
  * <p>Checkpoints are used by the SPV {@link UldBlockChain} to initialize fresh
- * {@link org.bitcoinj.store.SPVBlockStore}s. They are not used by fully validating mode, which instead has a
+ * {@link org.ulordj.store.SPVBlockStore}s. They are not used by fully validating mode, which instead has a
  * different concept of checkpoints that are used to hard-code the validity of blocks that violate BIP30 (duplicate
  * coinbase transactions). Those "checkpoints" can be found in NetworkParameters.</p>
  *
@@ -64,7 +64,7 @@ import static com.google.common.base.Preconditions.*;
  * sign the hash of all bytes that follow the last signature.</p>
  *
  * <p>After the signatures come an int32 containing the number of checkpoints in the file. Then each checkpoint follows
- * one after the other. A checkpoint is 12 bytes for the total work done field, 4 bytes for the height, 80 bytes
+ * one after the other. A checkpoint is 12 bytes for the total work done field, 4 bytes for the height, 140 bytes
  * for the block header and then 1 zero byte at the end (i.e. number of transactions in the block: always zero).</p>
  */
 public class CheckpointManager {
