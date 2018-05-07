@@ -43,7 +43,7 @@ public class RegTestParams extends AbstractUlordNetParams {
         port = 29888;
 
         packetMagic = 0xf0c5bbd0L;
-    addressHeader = 140;           // Regtest Ulord addresses start with 'y'
+        addressHeader = 140;           // Regtest Ulord addresses start with 'y'
         p2shHeader = 120;           // Regtest Ulord script addresses start with 'q'
         acceptableAddressCodes = new int[] { addressHeader, p2shHeader };
         targetTimespan = TARGET_TIMESPAN;
@@ -77,10 +77,10 @@ public class RegTestParams extends AbstractUlordNetParams {
         synchronized (RegTestParams.class) {
             if (genesis == null) {
                 genesis = super.getGenesisBlock();
-                genesis.setNonce(BigInteger.valueOf(2));
-                genesis.setDifficultyTarget(0x207fFFFFL);
-                genesis.setTime(1296688602L);
-                checkState(genesis.getHashAsString().toLowerCase().equals("0f9188f13cb7b2c71f2a335e3a4fc328bf5beb436012afca590b1a11466e2206"));
+                genesis.setNonce(new BigInteger("0000841e2005651582301a339bdd8550c02bdea8b05ceabbf98a5b60467b0004", 16));
+                genesis.setDifficultyTarget(537857807L);
+                genesis.setTime(1519895551L);
+                checkState(genesis.getHashAsString().toLowerCase().equals("083dfbb3e5e7c20948e7e32640090c1f4ce2791f875ccb2164888d0c70e279be"));
             }
             return genesis;
         }
