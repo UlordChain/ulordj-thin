@@ -470,8 +470,8 @@ public abstract class NetworkParameters {
     public static enum ProtocolVersion {
         MINIMUM(70000),
         PONG(60001),
-        BLOOM_FILTER(70000),
-        CURRENT(70001);
+        BLOOM_FILTER(70201),
+        CURRENT(70206);
 
         private final int ulordProtocol;
 

@@ -26,10 +26,12 @@ import co.usc.ulordj.script.ScriptOpCodes;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.math.BigInteger;
+import java.security.interfaces.ECKey;
 import java.util.Arrays;
 import java.util.EnumSet;
 
@@ -58,6 +60,14 @@ public class UldBlockTest {
         byte[] testBytes = Sha256Hash.hexStringToByteArray("FFFF0F1F");
         BigInteger data = Utils.readUint256(testBytes,0);
         assertEquals("521142271", data.toString());
+    }
+
+    @Test
+    public void testUint256ToByteStreamLE() throws Exception {
+        BigInteger value = new BigInteger("000020f00dd1af082323e02e1f5b1d866d777abbcf63ba720d35dcf585840073", 16);
+        ByteArrayOutputStream stream = new UnsafeByteArrayOutputStream(value.bitLength());
+        Utils.uint256ToByteStreamLE(value, stream);
+        System.out.println(value.toString());
     }
 
     @Test
@@ -197,63 +207,23 @@ public class UldBlockTest {
         assertEquals("0000005fec80847c2f821b5454233deae31e25bc13bc1180680e7391b155e5b3", block.getHashAsString());
         block.verify(11215, EnumSet.of(UldBlock.VerifyFlag.HEIGHT_IN_COINBASE));
 
+
         // Testnet block 1001 (hash 0000021bb15ff80345d788f3796f1aba35dd70fc2b1fc1d1269391bea0c280dd)
         // contains a coinbase transaction whose height is three bytes, but could
         // fit in two bytes. This test primarily ensures script encoding checks
         // are applied correctly.
 
-        block = TestNet3Params.get().getDefaultSerializer().makeBlock(
+        UldBlock block1 = TestNet3Params.get().getDefaultSerializer().makeBlock(
             ByteStreams.toByteArray(getClass().getResourceAsStream("block_testnet1001.dat")));
 
         // Check block.
-        assertEquals("0000021bb15ff80345d788f3796f1aba35dd70fc2b1fc1d1269391bea0c280dd", block.getHashAsString());
-        block.verify(1001, EnumSet.of(UldBlock.VerifyFlag.HEIGHT_IN_COINBASE));
+        assertEquals("0000021bb15ff80345d788f3796f1aba35dd70fc2b1fc1d1269391bea0c280dd", block1.getHashAsString());
+        block1.verify(1001, EnumSet.of(UldBlock.VerifyFlag.HEIGHT_IN_COINBASE));
     }
 
 
     @Test
     public void isBIPs() throws Exception {
-        final TestNet3Params testnet = TestNet3Params.get();
-        final UldBlock genesis = testnet.getGenesisBlock();
-        assertFalse(genesis.isBIP34());
-        assertFalse(genesis.isBIP66());
-        assertFalse(genesis.isBIP65());
-
-        // 227835/00000000000001aa077d7aa84c532a4d69bdbff519609d1da0835261b7a74eb6: last version 1 block
-        final UldBlock block227835 = testnet.getDefaultSerializer()
-                .makeBlock(ByteStreams.toByteArray(getClass().getResourceAsStream("block227835.dat")));
-        assertFalse(block227835.isBIP34());
-        assertFalse(block227835.isBIP66());
-        assertFalse(block227835.isBIP65());
-
-        // 227836/00000000000000d0dfd4c9d588d325dce4f32c1b31b7c0064cba7025a9b9adcc: version 2 block
-        final UldBlock block227836 = testnet.getDefaultSerializer()
-                .makeBlock(ByteStreams.toByteArray(getClass().getResourceAsStream("block227836.dat")));
-        assertTrue(block227836.isBIP34());
-        assertFalse(block227836.isBIP66());
-        assertFalse(block227836.isBIP65());
-
-        // 363703/0000000000000000011b2a4cb91b63886ffe0d2263fd17ac5a9b902a219e0a14: version 3 block
-        final UldBlock block363703 = testnet.getDefaultSerializer()
-                .makeBlock(ByteStreams.toByteArray(getClass().getResourceAsStream("block363703.dat")));
-        assertTrue(block363703.isBIP34());
-        assertTrue(block363703.isBIP66());
-        assertFalse(block363703.isBIP65());
-
-        // 383616/00000000000000000aab6a2b34e979b09ca185584bd1aecf204f24d150ff55e9: version 4 block
-        final UldBlock block383616 = testnet.getDefaultSerializer()
-                .makeBlock(ByteStreams.toByteArray(getClass().getResourceAsStream("block383616.dat")));
-        assertTrue(block383616.isBIP34());
-        assertTrue(block383616.isBIP66());
-        assertTrue(block383616.isBIP65());
-
-        // 370661/00000000000000001416a613602d73bbe5c79170fd8f39d509896b829cf9021e: voted for BIP101
-        final UldBlock block370661 = testnet.getDefaultSerializer()
-                .makeBlock(ByteStreams.toByteArray(getClass().getResourceAsStream("block370661.dat")));
-        assertTrue(block370661.isBIP34());
-        assertTrue(block370661.isBIP66());
-        assertTrue(block370661.isBIP65());
-
 //        final MainNetParams mainnet = MainNetParams.get();
 //        final UldBlock genesis = mainnet.getGenesisBlock();
 //        assertFalse(genesis.isBIP34());
