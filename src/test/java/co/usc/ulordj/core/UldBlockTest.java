@@ -26,6 +26,8 @@ import co.usc.ulordj.script.ScriptOpCodes;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.math.BigInteger;
 import java.util.Arrays;
@@ -185,27 +187,27 @@ public class UldBlockTest {
     @Test
     public void testCoinbaseHeightTestnet() throws Exception {
         // TODO: Create a .dat file for this test
-        // Testnet block 21066 (hash 0000000004053156021d8e42459d284220a7f6e087bf78f30179c3703ca4eefa)
+        // Testnet block 11215 (hash 0000005fec80847c2f821b5454233deae31e25bc13bc1180680e7391b155e5b3)
         // contains a coinbase transaction whose height is two bytes, which is
         // shorter than we see in most other cases.
         UldBlock block = TestNet3Params.get().getDefaultSerializer().makeBlock(
-            ByteStreams.toByteArray(getClass().getResourceAsStream("block_testnet21066.dat")));
+            ByteStreams.toByteArray(getClass().getResourceAsStream("block_testnet11215.dat")));
 
         // Check block.
         assertEquals("0000005fec80847c2f821b5454233deae31e25bc13bc1180680e7391b155e5b3", block.getHashAsString());
-        block.verify(21066, EnumSet.of(UldBlock.VerifyFlag.HEIGHT_IN_COINBASE));
+        block.verify(11215, EnumSet.of(UldBlock.VerifyFlag.HEIGHT_IN_COINBASE));
 
-        // Testnet block 32768 (hash 000000007590ba495b58338a5806c2b6f10af921a70dbd814e0da3c6957c0c03)
+        // Testnet block 1001 (hash 0000021bb15ff80345d788f3796f1aba35dd70fc2b1fc1d1269391bea0c280dd)
         // contains a coinbase transaction whose height is three bytes, but could
         // fit in two bytes. This test primarily ensures script encoding checks
         // are applied correctly.
 
         block = TestNet3Params.get().getDefaultSerializer().makeBlock(
-            ByteStreams.toByteArray(getClass().getResourceAsStream("block_testnet32768.dat")));
+            ByteStreams.toByteArray(getClass().getResourceAsStream("block_testnet1001.dat")));
 
         // Check block.
-        assertEquals("000000007590ba495b58338a5806c2b6f10af921a70dbd814e0da3c6957c0c03", block.getHashAsString());
-        block.verify(32768, EnumSet.of(UldBlock.VerifyFlag.HEIGHT_IN_COINBASE));
+        assertEquals("0000021bb15ff80345d788f3796f1aba35dd70fc2b1fc1d1269391bea0c280dd", block.getHashAsString());
+        block.verify(1001, EnumSet.of(UldBlock.VerifyFlag.HEIGHT_IN_COINBASE));
     }
 
 
@@ -217,7 +219,6 @@ public class UldBlockTest {
         assertFalse(genesis.isBIP66());
         assertFalse(genesis.isBIP65());
 
-        OutputStream oStream =
         // 227835/00000000000001aa077d7aa84c532a4d69bdbff519609d1da0835261b7a74eb6: last version 1 block
         final UldBlock block227835 = testnet.getDefaultSerializer()
                 .makeBlock(ByteStreams.toByteArray(getClass().getResourceAsStream("block227835.dat")));
@@ -293,5 +294,23 @@ public class UldBlockTest {
 //        assertTrue(block370661.isBIP34());
 //        assertTrue(block370661.isBIP66());
 //        assertTrue(block370661.isBIP65());
+    }
+
+    @Test
+    public void testReadWrite() {
+        byte[] blockBytes = HEX.decode("000000202d41b7147b772270d51478689401a8dfb6f200995b4f581082719e583003000039a9f34dc2d754d4f9362925d2fcb183fbd99ba1b3e164f663b7479a4a1929e90000000000000000000000000000000000000000000000000000000000000000c5dad95a17a4071e9b0000205f7d538980edbf9e181439c21a559b2653268c4767c7fac6be8172bd0101000000010000000000000000000000000000000000000000000000000000000000000000ffffffff2202e90304c5dad95a192f746573746e65742d706f6f6c322e756c6f72642e6f6e652f000000000250b6989a020000001976a9141098a6ed76a601874aac92b38207621be56f8e7088ac70b9bb06000000001976a914788541a7f20b86328ceb935e9a284a35ef58259788ac00000000");
+        writeBlockToDat(blockBytes, "block_testnet1001.dat");
+
+    }
+
+    public void writeBlockToDat(byte[] data, String filename)
+    {
+        try {
+            OutputStream out = new FileOutputStream(filename);
+            // write a byte sequence
+            out.write(data);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
