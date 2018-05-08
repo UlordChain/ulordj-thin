@@ -52,7 +52,7 @@ public class FakeTxBuilder {
         TransactionInput input = new TransactionInput(params, null, new byte[0], outpoint);
         UldTransaction tx = new UldTransaction(params);
         tx.addInput(input);
-        TransactionOutput outputToMe = new TransactionOutput(params, tx, Coin.FIFTY_COINS,
+        TransactionOutput outputToMe = new TransactionOutput(params, tx, Coin.ONE_COIN,
                 new UldECKey().toAddress(params));
         tx.addOutput(outputToMe);
 

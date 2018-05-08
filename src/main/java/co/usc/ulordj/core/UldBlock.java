@@ -74,7 +74,7 @@ public class UldBlock extends Message {
     public static final int MAX_BLOCK_SIGOPS = MAX_BLOCK_SIZE / 50;
 
     /** A value for difficultyTarget (nBits) that allows half of all possible hash solutions. Used in unit testing. */
-    public static final long EASIEST_DIFFICULTY_TARGET = 0x207fFFFFL;
+    public static final long EASIEST_DIFFICULTY_TARGET = 0x206fFFFFL;
 
     /** Value to use if the block height is unknown */
     public static final int BLOCK_HEIGHT_UNKNOWN = -1;
@@ -119,7 +119,7 @@ public class UldBlock extends Message {
         super(params);
         // Set up a few basic things. We are not complete after this though.
         version = setVersion;
-        difficultyTarget = 0x1d07fff8L;
+        difficultyTarget = 521142271L;
         time = System.currentTimeMillis() / 1000;
         prevBlockHash = Sha256Hash.ZERO_HASH;
         hashClaimTrie = new BigInteger("1", 16);
@@ -219,7 +219,7 @@ public class UldBlock extends Message {
      * </p>
      */
     public Coin getBlockInflation(int height) {
-        return FIFTY_COINS.shiftRight(height / params.getSubsidyDecreaseBlockCount());
+        return ONE_COIN.shiftRight(height / params.getSubsidyDecreaseBlockCount());
     }
 
     /**
@@ -919,7 +919,7 @@ public class UldBlock extends Message {
      */
     @VisibleForTesting
     public UldBlock createNextBlock(Address to, long version, long time, int blockHeight) {
-        return createNextBlock(to, version, null, time, pubkeyForTesting, FIFTY_COINS, blockHeight);
+        return createNextBlock(to, version, null, time, pubkeyForTesting, ONE_COIN, blockHeight);
     }
 
     /**
@@ -935,11 +935,14 @@ public class UldBlock extends Message {
         UldBlock b = new UldBlock(params, version);
         b.setDifficultyTarget(difficultyTarget);
         b.addCoinbaseTransaction(pubKey, coinbaseValue, height);
+        b.hashClaimTrie = BigInteger.ZERO;
+        if(b.getNonce() == null)
+            b.setNonce(BigInteger.ZERO);
 
         if (to != null) {
             // Add a transaction paying 50 coins to the "to" address.
             UldTransaction t = new UldTransaction(params);
-            t.addOutput(new TransactionOutput(params, t, FIFTY_COINS, to));
+            t.addOutput(new TransactionOutput(params, t, ONE_COIN, to));
             // The input does not really need to be a valid signature, as long as it has the right general form.
             TransactionInput input;
             if (prevOut == null) {
@@ -977,7 +980,7 @@ public class UldBlock extends Message {
 
     @VisibleForTesting
     public UldBlock createNextBlock(@Nullable Address to, TransactionOutPoint prevOut) {
-        return createNextBlock(to, BLOCK_VERSION_GENESIS, prevOut, getTimeSeconds() + 5, pubkeyForTesting, FIFTY_COINS, BLOCK_HEIGHT_UNKNOWN);
+        return createNextBlock(to, BLOCK_VERSION_GENESIS, prevOut, getTimeSeconds() + 5, pubkeyForTesting, ONE_COIN, BLOCK_HEIGHT_UNKNOWN);
     }
 
     @VisibleForTesting
@@ -987,7 +990,7 @@ public class UldBlock extends Message {
 
     @VisibleForTesting
     public UldBlock createNextBlock(@Nullable Address to) {
-        return createNextBlock(to, FIFTY_COINS);
+        return createNextBlock(to, ONE_COIN);
     }
 
     @VisibleForTesting
@@ -1003,7 +1006,7 @@ public class UldBlock extends Message {
     @VisibleForTesting
     UldBlock createNextBlockWithCoinbase(long version, byte[] pubKey, final int height) {
         return createNextBlock(null, version, (TransactionOutPoint) null,
-                               Utils.currentTimeSeconds(), pubKey, FIFTY_COINS, height);
+                               Utils.currentTimeSeconds(), pubKey, ONE_COIN, height);
     }
 
     @VisibleForTesting
