@@ -27,6 +27,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
@@ -60,7 +61,7 @@ public class ParseByteCacheTest {
             "22 5e 88 ac 80 fa e9 c7  00 00 00 00 19 76 a9 14" +
             "0e ab 5b ea 43 6a 04 84  cf ab 12 48 5e fd a0 b7" +
             "8b 4e cc 52 88 ac 00 00  00 00");
-    
+
     private final byte[] txMessagePart = HEX.withSeparator(" ", 2).decode(
             "08 5b 1d 8a f7 51 84 f0  bc 01 fa d5 8d 12 66 e9" +
             "b6 3b 50 88 19 90 e4 b4  0d 6a ee 36 29 00 00 00" +
@@ -70,22 +71,36 @@ public class ParseByteCacheTest {
 
     //Ulord Transaction.
     private final byte[] txMessage = HEX.withSeparator(" ", 2).decode(
-            "01 00 00 00 01 00 00 00  00 00 00 00 00 00 00 00" +
-            "00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00" +
-            "00 00 00 00 00 ff ff ff  ff 22 02 e9 03 04 c5 da" +
-            "d9 5a 19 2f 74 65 73 74  6e 65 74 2d 70 6f 6f 6c" +
-            "32 2e 75 6c 6f 72 64 2e  6f 6e 65 2f 00 00 00 00" +
-            "02 50 b6 98 9a 02 00 00  00 19 76 a9 14 10 98 a6" +
-            "ed 76 a6 01 87 4a ac 92  b3 82 07 62 1b e5 6f 8e" +
-            "70 88 ac 70 b9 bb 06 00  00 00 00 19 76 a9 14 78" +
-            "85 41 a7 f2 0b 86 32 8c  eb 93 5e 9a 28 4a 35 ef" +
-            "58 25 97 88 ac 00 00 00 00");
+                "c2 e6 ce f3 74 78 00 00  00 00 00 00 00 00 00 00" +
+                "99 00 00 00 39 a9 f3 4d  01 00 00 00 01 00 00 00" +
+                "00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00" +
+                "00 00 00 00 00 00 00 00  00 00 00 00 00 ff ff ff" +
+                "ff 22 02 e9 03 04 c5 da  d9 5a 19 2f 74 65 73 74" +
+                "6e 65 74 2d 70 6f 6f 6c  32 2e 75 6c 6f 72 64 2e" +
+                "6f 6e 65 2f 00 00 00 00  02 50 b6 98 9a 02 00 00" +
+                "00 19 76 a9 14 10 98 a6  ed 76 a6 01 87 4a ac 92" +
+                "b3 82 07 62 1b e5 6f 8e  70 88 ac 70 b9 bb 06 00" +
+                "00 00 00 19 76 a9 14 78  85 41 a7 f2 0b 86 32 8c" +
+                "eb 93 5e 9a 28 4a 35 ef  58 25 97 88 ac 00 00 00" +
+                "00");
+
+//    private final byte[] txMessage = HEX.withSeparator(" ", 2).decode(
+//            "01 00 00 00 01 00 00 00  00 00 00 00 00 00 00 00" +
+//            "00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00" +
+//            "00 00 00 00 00 ff ff ff  ff 22 02 e9 03 04 c5 da" +
+//            "d9 5a 19 2f 74 65 73 74  6e 65 74 2d 70 6f 6f 6c" +
+//            "32 2e 75 6c 6f 72 64 2e  6f 6e 65 2f 00 00 00 00" +
+//            "02 50 b6 98 9a 02 00 00  00 19 76 a9 14 10 98 a6" +
+//            "ed 76 a6 01 87 4a ac 92  b3 82 07 62 1b e5 6f 8e" +
+//            "70 88 ac 70 b9 bb 06 00  00 00 00 19 76 a9 14 78" +
+//            "85 41 a7 f2 0b 86 32 8c  eb 93 5e 9a 28 4a 35 ef" +
+//            "58 25 97 88 ac 00 00 00 00");
 
     private final byte[] txMessagePart = HEX.withSeparator(" ", 2).decode(
-            "00 00 00 00 00 ff ff ff  ff 22 02 e9 03 04 c5 da" +
-            "d9 5a 19 2f 74 65 73 74  6e 65 74 2d 70 6f 6f 6c" +
-            "32 2e 75 6c 6f 72 64 2e  6f 6e 65 2f 00 00 00 00" +
-            "02 50 b6 98 9a 02 00 00  00 19 76 a9 14 10 98 a6");
+                "ff 22 02 e9 03 04 c5 da  d9 5a 19 2f 74 65 73 74" +
+                "6e 65 74 2d 70 6f 6f 6c  32 2e 75 6c 6f 72 64 2e" +
+                "6f 6e 65 2f 00 00 00 00  02 50 b6 98 9a 02 00 00" +
+                "00 19 76 a9 14 10 98 a6  ed 76 a6 01 87 4a ac 92");
 
     private UldBlockStore blockStore;
     private static final NetworkParameters PARAMS = UnitTestParams.get();
@@ -113,7 +128,7 @@ public class ParseByteCacheTest {
         UldTransaction tx1 = createFakeTx(PARAMS,
                 valueOf(2, 0),
                 new UldECKey().toAddress(PARAMS));
-        
+
         // add a second input so can test granularity of byte cache.
         UldTransaction prevTx = new UldTransaction(PARAMS);
         TransactionOutput prevOut = new TransactionOutput(PARAMS, prevTx, COIN, new UldECKey().toAddress(PARAMS));
@@ -182,7 +197,12 @@ public class ParseByteCacheTest {
     public void testCreateTransactionFromBytes() throws Exception {
         byte[] txData = HEX.decode("01000000010000000000000000000000000000000000000000000000000000000000000000ffffffff2202e90304c5dad95a192f746573746e65742d706f6f6c322e756c6f72642e6f6e652f000000000250b6989a020000001976a9141098a6ed76a601874aac92b38207621be56f8e7088ac70b9bb06000000001976a914788541a7f20b86328ceb935e9a284a35ef58259788ac00000000");
         UldTransaction tx = new UldTransaction(TestNet3Params.get(), txData);
+        UlordSerializer bs = PARAMS.getSerializer(true);
+
         System.out.println(tx.toString());
+        OutputStream stream = new ByteArrayOutputStream();
+        bs.serialize( tx, stream);
+        System.out.println(Sha256Hash.bytesToHex(((ByteArrayOutputStream) stream).toByteArray()).toLowerCase());
     }
 
 

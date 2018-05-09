@@ -18,6 +18,7 @@
 package co.usc.ulordj.core;
 
 import co.usc.ulordj.params.MainNetParams;
+import co.usc.ulordj.params.TestNet3Params;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -56,7 +57,7 @@ public class UlordSerializerTest {
 
     @Test
     public void testCachedParsing() throws Exception {
-        MessageSerializer serializer = MainNetParams.get().getSerializer(true);
+        MessageSerializer serializer = TestNet3Params.get().getSerializer(true);
         
         // first try writing to a fields to ensure uncaching and children are not affected
         UldTransaction transaction = (UldTransaction) serializer.deserialize(ByteBuffer.wrap(TRANSACTION_MESSAGE_BYTES));
@@ -124,7 +125,7 @@ public class UlordSerializerTest {
     public void testSeekPastMagicBytes() {
         // Fail in another way, there is data in the stream but no magic bytes.
         byte[] brokenMessage = HEX.decode("000000");
-        MainNetParams.get().getDefaultSerializer().seekPastMagicBytes(ByteBuffer.wrap(brokenMessage));
+        TestNet3Params.get().getDefaultSerializer().seekPastMagicBytes(ByteBuffer.wrap(brokenMessage));
     }
 
     /**
@@ -132,7 +133,7 @@ public class UlordSerializerTest {
      */
     @Test(expected = Error.class)
     public void testSerializeUnknownMessage() throws Exception {
-        MessageSerializer serializer = MainNetParams.get().getDefaultSerializer();
+        MessageSerializer serializer = TestNet3Params.get().getDefaultSerializer();
 
         Message unknownMessage = new Message() {
             @Override
