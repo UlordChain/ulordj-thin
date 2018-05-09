@@ -178,6 +178,14 @@ public class ParseByteCacheTest {
         testBlock(b1BytesWithHeader, false, true);
     }
 
+    @Test
+    public void testCreateTransactionFromBytes() throws Exception {
+        byte[] txData = HEX.decode("01000000010000000000000000000000000000000000000000000000000000000000000000ffffffff2202e90304c5dad95a192f746573746e65742d706f6f6c322e756c6f72642e6f6e652f000000000250b6989a020000001976a9141098a6ed76a601874aac92b38207621be56f8e7088ac70b9bb06000000001976a914788541a7f20b86328ceb935e9a284a35ef58259788ac00000000");
+        UldTransaction tx = new UldTransaction(TestNet3Params.get(), txData);
+        System.out.println(tx.toString());
+    }
+
+
     public void testBlock(byte[] blockBytes, boolean isChild, boolean retain) throws Exception {
         // reference serializer to produce comparison serialization output after changes to
         // message structure.
