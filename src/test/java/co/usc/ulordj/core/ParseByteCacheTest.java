@@ -18,6 +18,7 @@
 package co.usc.ulordj.core;
 
 import co.usc.ulordj.params.MainNetParams;
+import co.usc.ulordj.params.TestNet3Params;
 import co.usc.ulordj.params.UnitTestParams;
 import co.usc.ulordj.store.UldBlockStore;
 import co.usc.ulordj.store.UldMemoryBlockStore;
@@ -39,6 +40,7 @@ import static org.junit.Assert.*;
 public class ParseByteCacheTest {
     private static final int BLOCK_HEIGHT_GENESIS = 0;
 
+    /*
     private final byte[] txMessage = HEX.withSeparator(" ", 2).decode(
             "f9 be b4 d9 74 78 00 00  00 00 00 00 00 00 00 00" +
             "02 01 00 00 e2 93 cd be  01 00 00 00 01 6d bd db" +
@@ -64,6 +66,26 @@ public class ParseByteCacheTest {
             "b6 3b 50 88 19 90 e4 b4  0d 6a ee 36 29 00 00 00" +
             "00 8b 48 30 45 02 21 00  f3 58 1e 19 72 ae 8a c7" +
             "c7 36 7a 7a 25 3b c1 13  52 23 ad b9 a4 68 bb 3a");
+     */
+
+    //Ulord Transaction.
+    private final byte[] txMessage = HEX.withSeparator(" ", 2).decode(
+            "01 00 00 00 01 00 00 00  00 00 00 00 00 00 00 00" +
+            "00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00" +
+            "00 00 00 00 00 ff ff ff  ff 22 02 e9 03 04 c5 da" +
+            "d9 5a 19 2f 74 65 73 74  6e 65 74 2d 70 6f 6f 6c" +
+            "32 2e 75 6c 6f 72 64 2e  6f 6e 65 2f 00 00 00 00" +
+            "02 50 b6 98 9a 02 00 00  00 19 76 a9 14 10 98 a6" +
+            "ed 76 a6 01 87 4a ac 92  b3 82 07 62 1b e5 6f 8e" +
+            "70 88 ac 70 b9 bb 06 00  00 00 00 19 76 a9 14 78" +
+            "85 41 a7 f2 0b 86 32 8c  eb 93 5e 9a 28 4a 35 ef" +
+            "58 25 97 88 ac 00 00 00 00");
+
+    private final byte[] txMessagePart = HEX.withSeparator(" ", 2).decode(
+            "00 00 00 00 00 ff ff ff  ff 22 02 e9 03 04 c5 da" +
+            "d9 5a 19 2f 74 65 73 74  6e 65 74 2d 70 6f 6f 6c" +
+            "32 2e 75 6c 6f 72 64 2e  6f 6e 65 2f 00 00 00 00" +
+            "02 50 b6 98 9a 02 00 00  00 19 76 a9 14 10 98 a6");
 
     private UldBlockStore blockStore;
     private static final NetworkParameters PARAMS = UnitTestParams.get();
@@ -138,14 +160,14 @@ public class ParseByteCacheTest {
     
     @Test
     public void testTransactionsRetain() throws Exception {
-        testTransaction(MainNetParams.get(), txMessage, false, true);
+        testTransaction(TestNet3Params.get(), txMessage, false, true);
         testTransaction(PARAMS, tx1BytesWithHeader, false, true);
         testTransaction(PARAMS, tx2BytesWithHeader, false, true);
     }
     
     @Test
     public void testTransactionsNoRetain() throws Exception {
-        testTransaction(MainNetParams.get(), txMessage, false, false);
+        testTransaction(TestNet3Params.get(), txMessage, false, false);
         testTransaction(PARAMS, tx1BytesWithHeader, false, false);
         testTransaction(PARAMS, tx2BytesWithHeader, false, false);
     }
