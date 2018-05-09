@@ -83,7 +83,7 @@ public class UlordSerializer extends MessageSerializer {
 
         Utils.uint32ToByteArrayLE(message.length, header, 4 + COMMAND_LEN);
 
-        byte[] hash = Sha256Hash.cryptoHelloHash(message);
+        byte[] hash = Sha256Hash.hashTwice(message); //message is a transaction byte[]
         System.arraycopy(hash, 0, header, 4 + COMMAND_LEN + 4, 4);
         out.write(header);
         out.write(message);
