@@ -29,6 +29,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.math.BigInteger;
 import java.security.interfaces.ECKey;
 import java.util.Arrays;
 
@@ -46,7 +47,6 @@ public class AddressTest {
         UldECKey publicKey = UldECKey.fromPublicOnly(Hex.decode("03f0ed482997fd16e2b4aed02fe3a386749052fd44d00a75a221e11eac7348d0b6"));
         byte[] addressHash = sha256hash160(publicKey.getPubKey());
         Address address = new Address(testParams, testParams.getAddressHeader(), addressHash);
-        System.out.println(address.toString());
         assertEquals("ufGHmxvSDsXMKUm23a76JrrjvQqhpfL5E3", address.toString());
     }
 
@@ -112,7 +112,7 @@ public class AddressTest {
 
         // Check the case of a mismatched network.
         try {
-            Address.fromBase58(testParams, "UVvfixZ1rAXx7ktFCNuRgHrU5yWoDNurEy");
+            Address.fromBase58(testParams, "UNAiJ2pgTzRR4xvQYKzanEtscc3fybcJgi");
             fail();
         } catch (WrongNetworkException e) {
             // Success.

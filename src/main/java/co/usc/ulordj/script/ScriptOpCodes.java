@@ -399,11 +399,11 @@ public class ScriptOpCodes {
         .put("NOP4", OP_NOP4)
         .put("NOP5", OP_NOP5)
         .put("CLAIM_NAME", OP_CLAIM_NAME)
-        .put("NOP6", OP_NOP6)
+        //.put("NOP6", OP_NOP6)
         .put("SUPPORT_CLAIM", OP_SUPPORT_CLAIM)
-        .put("NOP7", OP_NOP7)
+        //.put("NOP7", OP_NOP7)
         .put("UPDATE_CLAIM", OP_UPDATE_CLAIM)
-        .put("NOP8", OP_NOP8)
+        //.put("NOP8", OP_NOP8)
         .put("NOP9", OP_NOP9)
         .put("NOP10", OP_NOP10).build();
 
