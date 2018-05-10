@@ -211,13 +211,13 @@ public class MonetaryFormatTest {
     @Test
     public void standardCodes() throws Exception {
         assertEquals("ULD 0.00", MonetaryFormat.ULD.format(Coin.ZERO).toString());
-        assertEquals("mBTC 0.00", MonetaryFormat.MULD.format(Coin.ZERO).toString());
-        assertEquals("µBTC 0", MonetaryFormat.UULD.format(Coin.ZERO).toString());
+        assertEquals("mULD 0.00", MonetaryFormat.MULD.format(Coin.ZERO).toString());
+        assertEquals("µULD 0", MonetaryFormat.UULD.format(Coin.ZERO).toString());
     }
 
     @Test
     public void customCode() throws Exception {
-        assertEquals("dBTC 0", MonetaryFormat.UULD.code(1, "dBTC").shift(1).format(Coin.ZERO).toString());
+        assertEquals("dULD 0", MonetaryFormat.UULD.code(1, "dULD").shift(1).format(Coin.ZERO).toString());
     }
 
     /**
@@ -227,7 +227,7 @@ public class MonetaryFormatTest {
     public void noCode() throws Exception {
         assertEquals("0", MonetaryFormat.UULD.noCode().shift(0).format(Coin.ZERO).toString());
         // Ensure that inserting a code after codes are wiped, works
-        assertEquals("dBTC 0", MonetaryFormat.UULD.noCode().code(1, "dBTC").shift(1).format(Coin.ZERO).toString());
+        assertEquals("dULD 0", MonetaryFormat.UULD.noCode().code(1, "dULD").shift(1).format(Coin.ZERO).toString());
     }
 
     @Test
