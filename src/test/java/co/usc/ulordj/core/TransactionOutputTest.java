@@ -14,6 +14,7 @@
 
 package co.usc.ulordj.core;
 
+import co.usc.ulordj.params.TestNet3Params;
 import co.usc.ulordj.params.UnitTestParams;
 import co.usc.ulordj.params.MainNetParams;
 import co.usc.ulordj.script.Script;
@@ -28,17 +29,17 @@ public class TransactionOutputTest {
 
     @Test
     public void testP2SHOutputScript() throws Exception {
-        String P2SHAddressString = "35b9vsyH1KoFT5a5KtrKusaCcPLkiSo1tU";
-        Address P2SHAddress = Address.fromBase58(MainNetParams.get(), P2SHAddressString);
+        String P2SHAddressString = "sgfvWQ2rYyNs323fg3Fch2eyfTKasVcd2x";
+        Address P2SHAddress = Address.fromBase58(TestNet3Params.get(), P2SHAddressString);
         Script script = ScriptBuilder.createOutputScript(P2SHAddress);
-        UldTransaction tx = new UldTransaction(MainNetParams.get());
+        UldTransaction tx = new UldTransaction(TestNet3Params.get());
         tx.addOutput(Coin.COIN, script);
-        assertEquals(P2SHAddressString, tx.getOutput(0).getAddressFromP2SH(MainNetParams.get()).toString());
+        assertEquals(P2SHAddressString, tx.getOutput(0).getAddressFromP2SH(TestNet3Params.get()).toString());
     }
 
     @Test
     public void getAddressTests() throws Exception {
-        UldTransaction tx = new UldTransaction(MainNetParams.get());
+        UldTransaction tx = new UldTransaction(TestNet3Params.get());
         tx.addOutput(Coin.CENT, ScriptBuilder.createOpReturnScript("hello world!".getBytes()));
         assertNull(tx.getOutput(0).getAddressFromP2SH(PARAMS));
         assertNull(tx.getOutput(0).getAddressFromP2PKHScript(PARAMS));
