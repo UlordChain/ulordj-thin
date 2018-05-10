@@ -862,6 +862,7 @@ public class UldBlock extends Message {
 
     /** Sets the nonce and clears any cached data. */
     public void setNonce(BigInteger nonce) {
+        unCacheHeader();
         this.nonce = nonce;
         this.hash = null;
     }
