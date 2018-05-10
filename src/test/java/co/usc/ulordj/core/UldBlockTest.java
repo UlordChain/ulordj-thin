@@ -122,7 +122,7 @@ public class UldBlockTest {
         // Should find an acceptable nonce.
         block.solve();
         block.verify(UldBlock.BLOCK_HEIGHT_GENESIS, EnumSet.noneOf(UldBlock.VerifyFlag.class));
-        assertEquals(new BigInteger("2"), block.getNonce());
+        assertEquals(new BigInteger("5"), block.getNonce());
     }
 
     @Test
