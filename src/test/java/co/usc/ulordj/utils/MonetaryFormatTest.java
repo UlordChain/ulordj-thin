@@ -62,7 +62,7 @@ public class MonetaryFormatTest {
     }
 
     @Test
-    public void btcRounding() throws Exception {
+    public void uldRounding() throws Exception {
         assertEquals("0", format(ZERO, 0, 0));
         assertEquals("0.00", format(ZERO, 0, 2));
 
@@ -108,7 +108,7 @@ public class MonetaryFormatTest {
     }
 
     @Test
-    public void mBtcRounding() throws Exception {
+    public void mUldRounding() throws Exception {
         assertEquals("0", format(ZERO, 3, 0));
         assertEquals("0.00", format(ZERO, 3, 2));
 
@@ -150,7 +150,7 @@ public class MonetaryFormatTest {
     }
 
     @Test
-    public void uBtcRounding() throws Exception {
+    public void uUldRounding() throws Exception {
         assertEquals("0", format(ZERO, 6, 0));
         assertEquals("0.00", format(ZERO, 6, 2));
 
