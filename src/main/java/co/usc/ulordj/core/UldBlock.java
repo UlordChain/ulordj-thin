@@ -74,7 +74,7 @@ public class UldBlock extends Message {
     public static final int MAX_BLOCK_SIGOPS = MAX_BLOCK_SIZE / 50;
 
     /** A value for difficultyTarget (nBits) that allows half of all possible hash solutions. Used in unit testing. */
-    public static final long EASIEST_DIFFICULTY_TARGET = 0x206fFFFFL;
+    public static final long EASIEST_DIFFICULTY_TARGET = 1l;
 
     /** Value to use if the block height is unknown */
     public static final int BLOCK_HEIGHT_UNKNOWN = -1;
@@ -596,6 +596,10 @@ public class UldBlock extends Message {
     private Sha256Hash calculateMerkleRoot() {
         List<byte[]> tree = buildMerkleTree();
         return Sha256Hash.wrap(tree.get(tree.size() - 1));
+    }
+
+    public List<byte[]> getMerkleTree() {
+        return buildMerkleTree();
     }
 
     private List<byte[]> buildMerkleTree() {
