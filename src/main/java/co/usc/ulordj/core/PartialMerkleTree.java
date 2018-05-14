@@ -264,6 +264,8 @@ public class PartialMerkleTree extends Message {
         return transactionCount;
     }
 
+    public List<Sha256Hash> getHashes() { return hashes; }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
