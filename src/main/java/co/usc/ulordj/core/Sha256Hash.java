@@ -245,13 +245,6 @@ public class Sha256Hash implements Serializable, Comparable<Sha256Hash> {
         return digest.digest(digest.digest());
     }
 
-    public static byte[] cryptoHelloHash(byte[] input, int offset, int length) {
-        byte[] newInput = Arrays.copyOfRange(input, offset, length);
-        byte[] output = new byte[LENGTH];
-        CryptoHelloContext.helloHash(newInput, newInput.length, output);
-        return output;
-    }
-
     /**
      * Calculates the hash of hash on the given byte ranges. This is equivalent to
      * concatenating the two ranges and then passing the result to {@link #hashTwice(byte[])}.
@@ -264,9 +257,16 @@ public class Sha256Hash implements Serializable, Comparable<Sha256Hash> {
         return digest.digest(digest.digest());
     }
 
+    public static byte[] cryptoHelloHash(byte[] input, int offset, int length) {
+        byte[] newInput = Arrays.copyOfRange(input, offset, offset + length);
+        byte[] output = new byte[LENGTH];
+        CryptoHelloContext.helloHash(newInput, 140, output);
+        return output;
+    }
+
     public static byte[] cryptoHelloHash(byte[] input) {
         byte[] output = new byte[LENGTH];
-        CryptoHelloContext.helloHash(input, input.length, output);
+        CryptoHelloContext.helloHash(input, 140, output);
         return output;
     }
 

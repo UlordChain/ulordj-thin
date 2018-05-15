@@ -269,9 +269,28 @@ public class UldBlockTest {
     @Test
     public void verifyBlockHeader() {
         //UldBlock block = new UldBlock(PARAMS, Sha256Hash.hexStringToByteArray("00000020050fbd12443f15673ed34818fd907283a9daa9c75d8b5f65894c5432400100006cae35ec3ca92e365af79f71777609b5ac4b4d71d7eeb8f76979288327b59b2500000000000000000000000000000000000000000000000000000000000000009047f55a7579011e45eaf22dc74bbe0a362808cb6ee378cdf280978b2fca8f6382317a9f9767a6e2"));
-        UldBlock block = new UldBlock(PARAMS, Sha256Hash.hexStringToByteArray("0000002003ecbfc16966eacf806aaf61e5def04130b131d9eb6e34754ef441e88b370f0074f050495a03b0614a576465681d51d18c3fb90346a4eebdd195d69196a7d6c20000000000000000000000000000000000000000000000000000000000000000e3eed75affff0f1f0e04f535c2de360f3e8d3b99504fb5b3a9d0ac340e2ae25a1fb2e530ed3f0000"));
+        /*  Block Number 12978
+        {
+            "hash": "000000caa0de82a7fdf68334ac4b61ae516161c44f668a82e4fd38bc06a6b0c3",
+            "confirmations": 2172,
+            "height": 12978,
+            "version": 536870912,
+            "merkleroot": "259bb52783287969f7b8eed7714d4bacb5097677719ff75a362ea93cec35ae6c",
+            "nameclaimroot": "0000000000000000000000000000000000000000000000000000000000000000",
+            "time": 1526024080,
+            "mediantime": 1526022611,
+            "nonce": "e2a667979f7a3182638fca2f8b9780f2cd78e36ecb0828360abe4bc72df2ea45",
+            "bits": "1e017975",
+            "difficulty": 0.002649267753469456,
+            "chainwork": "0000000000000000000000000000000000000000000000000000000e5bb8a171",
+            "previousblockhash": "0000014032544c89655f8b5dc7a9daa9837290fd1848d33e67153f4412bd0f05",
+            "nextblockhash": "0000000918eda46e070a88731c0f8b32892af58c06726b8925aec35825c79a28"
+        } */
 
-        System.out.println(block.isHeaderBytesValid());
+        UldBlock block = new UldBlock(PARAMS, Sha256Hash.hexStringToByteArray("00000020050fbd12443f15673ed34818fd907283a9daa9c75d8b5f65894c5432400100006cae35ec3ca92e365af79f71777609b5ac4b4d71d7eeb8f76979288327b59b2500000000000000000000000000000000000000000000000000000000000000009047f55a7579011e45eaf22dc74bbe0a362808cb6ee378cdf280978b2fca8f6382317a9f9767a6e2"));
+
+        System.out.println("Is block valid: " + block.isHeaderBytesValid());
+        System.out.println(block.toString());
 
     }
 

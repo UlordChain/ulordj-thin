@@ -354,11 +354,9 @@ void powNistTest(const char *outFileName) {
 
 
 void helloHash(const uint8_t *mess, uint32_t messLen, uint8_t output[OUTPUT_LEN]) {
-    if(messLen != INPUT_LEN)
-    {
-	//won't get in
-	printf("helloHash:Invalid message length %d\n", messLen);
-	return;
+    if(messLen != INPUT_LEN) {
+	    printf("helloHash:Invalid message length %d\n", messLen);
+	    return;
     }
     int64_t j;
     uint32_t inputLen =messLen; 
@@ -370,7 +368,6 @@ void helloHash(const uint8_t *mess, uint32_t messLen, uint8_t output[OUTPUT_LEN]
     assert(NULL != Maddr);
     memset(Maddr, 0, WORK_MEMORY_SIZE*sizeof(uint8_t));
 
-    //printf("Test message: %s\n", mess);
     powFunction(input, inputLen,Maddr, output);
     //view_data_u8("PoW", output, OUTPUT_LEN);        //output
     
