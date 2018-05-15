@@ -1,4 +1,5 @@
-﻿#include <stdio.h>
+// Copyright (c) 2016-2018 The Ulord Core Foundation
+#include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
@@ -24,7 +25,7 @@ int main(int argc, const char *argv[]) {
 	
 	// Test for oneWayFunction
 	initOneWayFunction();
-	testOneWayFunction(mess, 5000000);
+	//testOneWayFunction(mess, messLen, 50000);
 	
 	testPowFunction(input, messLen, 5000);
 	

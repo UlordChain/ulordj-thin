@@ -1,4 +1,5 @@
-﻿#ifndef ONE_WAY_FUNCTION_H
+// Copyright (c) 2016-2018 The Ulord Core Foundation
+#ifndef ONE_WAY_FUNCTION_H
 #define ONE_WAY_FUNCTION_H
 
 #include <stdint.h>
@@ -19,7 +20,7 @@ extern "C" {
 #endif
 
 	void initOneWayFunction();
-	void testOneWayFunction(const char *mess, const int64_t iterNum);
+	void testOneWayFunction(const char *mess, uint32_t messLen, const int64_t iterNum);
 	
 #ifdef __cplusplus
 }
