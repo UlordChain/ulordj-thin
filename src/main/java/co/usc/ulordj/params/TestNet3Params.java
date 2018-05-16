@@ -66,7 +66,8 @@ public class TestNet3Params extends AbstractUlordNetParams {
                 "testnet-seed1.ulord.io",
                 "testnet-seed1.fcash.cc",
                 "node.ulord.one",
-                "10.221.153.180"
+                "10.221.153.180",
+                "119.27.188.44"
         };
         addrSeeds = null;
         bip32HeaderPub = 0x043587CF;    // Ulord BIP32 pubkeys start with 'xpub' (Bitcoin defaults)
