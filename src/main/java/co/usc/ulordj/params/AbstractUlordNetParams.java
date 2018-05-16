@@ -61,15 +61,15 @@ public abstract class AbstractUlordNetParams extends NetworkParameters {
         UldBlock prev = storedPrev.getHeader();
 
         // Is this supposed to be a difficulty transition point?
-//        if (!isDifficultyTransitionPoint(storedPrev)) {
-//
-//            // No ... so check the difficulty didn't actually change.
-//            if (nextBlock.getDifficultyTarget() != prev.getDifficultyTarget())
-//                throw new VerificationException("Unexpected change in difficulty at height " + storedPrev.getHeight() +
-//                        ": " + Long.toHexString(nextBlock.getDifficultyTarget()) + " vs " +
-//                        Long.toHexString(prev.getDifficultyTarget()));
-//            return;
-//        }
+        if (!isDifficultyTransitionPoint(storedPrev)) {
+
+            // No ... so check the difficulty didn't actually change.
+            if (nextBlock.getDifficultyTarget() != prev.getDifficultyTarget())
+                throw new VerificationException("Unexpected change in difficulty at height " + storedPrev.getHeight() +
+                        ": " + Long.toHexString(nextBlock.getDifficultyTarget()) + " vs " +
+                        Long.toHexString(prev.getDifficultyTarget()));
+            return;
+        }
 
         // We need to find a block far back in the chain. It's OK that this is expensive because it only occurs every
         // two weeks after the initial block chain download.

@@ -712,12 +712,12 @@ public abstract class UldAbstractBlockChain {
         final long timeDelta = next.getTimeSeconds() - prev.getTimeSeconds();
         // There is an integer underflow bug in bitcoin-qt that means mindiff blocks are accepted when time
         // goes backwards.
-        if (timeDelta >= 0 && timeDelta > params.TARGET_SPACING * 2) {
-            if (next.getDifficultyTargetAsInteger().equals(params.getMaxTarget()))
-                return;
-            else throw new VerificationException("Unexpected change in difficulty");
-        }
-        else {
+        //if (timeDelta > params.TARGET_SPACING * 2) {
+        //    if (next.getDifficultyTargetAsInteger().equals(params.getMaxTarget()))
+        //        return;
+        //    else throw new VerificationException("Unexpected change in difficulty");
+        //}
+        if (timeDelta >=0 && timeDelta <= params.TARGET_SPACING * 2) {
             // Walk backwards until we find a block that doesn't have the easiest proof of work, then check
             // that difficulty is equal to that one.
             StoredBlock cursor = storedPrev;
@@ -727,10 +727,10 @@ public abstract class UldAbstractBlockChain {
                 cursor = cursor.getPrev(blockStore);
             BigInteger cursorTarget = cursor.getHeader().getDifficultyTargetAsInteger();
             BigInteger newTarget = next.getDifficultyTargetAsInteger();
-            if (!cursorTarget.equals(newTarget))
-                throw new VerificationException("Testnet block transition that is not allowed: " +
-                        Long.toHexString(cursor.getHeader().getDifficultyTarget()) + " vs " +
-                        Long.toHexString(next.getDifficultyTarget()));
+//            if (!cursorTarget.equals(newTarget))
+//                throw new VerificationException("Testnet block transition that is not allowed: " +
+//                        Long.toHexString(cursor.getHeader().getDifficultyTarget()) + " vs " +
+//                        Long.toHexString(next.getDifficultyTarget()));
         }
     }
 
