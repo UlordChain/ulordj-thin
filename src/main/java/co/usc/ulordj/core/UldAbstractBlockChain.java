@@ -349,7 +349,7 @@ public abstract class UldAbstractBlockChain {
      * Throws an exception if the blocks difficulty is not correct.
      */
     private void checkDifficultyTransitions(StoredBlock storedPrev, UldBlock nextBlock) throws BlockStoreException, VerificationException {
-        checkState(lock.isHeldByCurrentThread());
+        //checkState(lock.isHeldByCurrentThread());
 
         int DiffMode = 1;
         if (params.getId().equals(NetworkParameters.ID_TESTNET)) {
@@ -705,7 +705,7 @@ public abstract class UldAbstractBlockChain {
     }
 
     private void checkTestnetDifficulty(StoredBlock storedPrev, UldBlock prev, UldBlock next) throws VerificationException, BlockStoreException {
-        checkState(lock.isHeldByCurrentThread());
+        //checkState(lock.isHeldByCurrentThread());
         // After 15th February 2012 the rules on the testnet change to avoid people running up the difficulty
         // and then leaving, making it too hard to mine a block. On non-difficulty transition points, easy
         // blocks are allowed if there has been a span of 20 minutes without one.
