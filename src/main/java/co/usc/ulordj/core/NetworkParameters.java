@@ -133,9 +133,9 @@ public abstract class NetworkParameters {
         }
     }
 
-    public static final int TARGET_TIMESPAN = 24 * 60 * 60;  // 1 day per difficulty cycle, on average.
-    public static final int TARGET_SPACING = (int)(2.5 * 60);  // 2.5 minutes per block.
-    public static final int INTERVAL = TARGET_TIMESPAN / TARGET_SPACING;
+    public static final int TARGET_TIMESPAN = (int)(24 * 60 * 60);          // 1 day per difficulty cycle, on average.
+    public static final int TARGET_SPACING = (int)(2.5 * 60);               // 2.5 minutes per block.
+    public static final int INTERVAL = TARGET_TIMESPAN / TARGET_SPACING;    //57 blocks
     
     /**
      * Blocks with a timestamp after this should enforce BIP 16, aka "Pay to script hash". This BIP changed the
@@ -468,7 +468,7 @@ public abstract class NetworkParameters {
     public abstract int getProtocolVersionNum(final ProtocolVersion version);
 
     public static enum ProtocolVersion {
-        MINIMUM(70000),
+        MINIMUM(70103), // Disconnect from peers older than this version
         PONG(60001),
         BLOOM_FILTER(70201),
         CURRENT(70206);

@@ -369,7 +369,6 @@ public abstract class UldAbstractBlockChain {
         UlordGravityWave3(storedPrev, nextBlock);
 
         return;
-
     }
 
     private void checkDifficultyTransitions_V1(StoredBlock storedPrev, UldBlock nextBlock) throws BlockStoreException, VerificationException {
@@ -442,9 +441,9 @@ public abstract class UldAbstractBlockChain {
         newTarget = newTarget.and(mask);
         long newTargetCompact = Utils.encodeCompactBits(newTarget);
 
-        if (newTargetCompact != receivedTargetCompact)
-            throw new VerificationException("Network provided difficulty bits do not match what was calculated: " +
-                    newTargetCompact + " vs " + receivedTargetCompact);
+//        if (newTargetCompact != receivedTargetCompact)
+//            throw new VerificationException("Network provided difficulty bits do not match what was calculated: " +
+//                    newTargetCompact + " vs " + receivedTargetCompact);
     }
 
     private void checkDifficultyTransitions_V2(StoredBlock storedPrev, UldBlock nextBlock) throws BlockStoreException, VerificationException {
@@ -595,9 +594,9 @@ public abstract class UldAbstractBlockChain {
         calcDiff = calcDiff.and(mask);
         if(params.getId().compareTo(params.ID_TESTNET) == 0)
         {
-            if (calcDiff.compareTo(receivedDifficulty) != 0)
-                throw new VerificationException("Network provided difficulty bits do not match what was calculated: " +
-                        receivedDifficulty.toString(16) + " vs " + calcDiff.toString(16));
+//            if (calcDiff.compareTo(receivedDifficulty) != 0)
+//                throw new VerificationException("Network provided difficulty bits do not match what was calculated: " +
+//                        receivedDifficulty.toString(16) + " vs " + calcDiff.toString(16));
         }
         else
         {

@@ -54,7 +54,7 @@ public class TestNet3Params extends AbstractUlordNetParams {
         genesisBlock.setDifficultyTarget(521142271L);
         genesisBlock.setNonce(new BigInteger("000020f00dd1af082323e02e1f5b1d866d777abbcf63ba720d35dcf585840073", 16));
 
-        spendableCoinbaseDepth = 100;
+        spendableCoinbaseDepth = 100;   // consensus.h COINBASE_MATURITY
         subsidyDecreaseBlockCount = 840960;
 
         String genesisHash = genesisBlock.getHashAsString();
