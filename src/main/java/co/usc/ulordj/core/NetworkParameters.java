@@ -136,7 +136,15 @@ public abstract class NetworkParameters {
     public static final int TARGET_TIMESPAN = (int)(24 * 60 * 60);          // 1 day per difficulty cycle, on average.
     public static final int TARGET_SPACING = (int)(2.5 * 60);               // 2.5 minutes per block.
     public static final int INTERVAL = TARGET_TIMESPAN / TARGET_SPACING;    //57 blocks
-    
+
+    /** Used to validate and update block's difficulty*/
+    protected final int N_POW_AVERAGING_WINDOW = 17;                              // nPowAveragingWindow = 17 chainparams.cpp
+    protected int averagingWindowTimespan = N_POW_AVERAGING_WINDOW * INTERVAL;
+    protected int nPowMaxAdjustDown = 32;
+    protected int nPowMaxAdjustUp = 48;
+    protected int minActualTimespan;
+    protected int maxActualTimespan;
+
     /**
      * Blocks with a timestamp after this should enforce BIP 16, aka "Pay to script hash". This BIP changed the
      * network rules in a soft-forking manner, that is, blocks that don't follow the rules are accepted but not

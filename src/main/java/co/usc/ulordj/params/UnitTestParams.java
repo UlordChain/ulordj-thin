@@ -53,6 +53,11 @@ public class UnitTestParams extends AbstractUlordNetParams {
         bip32HeaderPriv = 0x04358394;   // Ulord BIP32 prvkeys start with 'xprv' (Bitcoin defaults)
         bip44HeaderCoin = 0x80000001;   // Ulord BIP44 coin type is '247'
 
+        nPowMaxAdjustDown = 0;
+        nPowMaxAdjustUp = 0;
+        minActualTimespan = averagingWindowTimespan * (100 - nPowMaxAdjustUp)/100;
+        maxActualTimespan = averagingWindowTimespan * (100 + nPowMaxAdjustDown)/100;
+
         majorityEnforceBlockUpgrade = 3;
         majorityRejectBlockOutdated = 4;
         majorityWindow = 7;

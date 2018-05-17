@@ -20,15 +20,13 @@ package co.usc.ulordj.params;
 import java.math.BigInteger;
 import java.util.Date;
 
-import co.usc.ulordj.core.UldBlock;
 import co.usc.ulordj.core.NetworkParameters;
+import co.usc.ulordj.core.UldBlock;
 import co.usc.ulordj.core.StoredBlock;
-import co.usc.ulordj.core.Utils;
 import co.usc.ulordj.core.VerificationException;
 import co.usc.ulordj.store.UldBlockStore;
 import co.usc.ulordj.store.BlockStoreException;
-import co.usc.ulordj.core.Sha256Hash;
-import org.spongycastle.asn1.cryptopro.ECGOST3410ParamSetParameters;
+import com.google.common.base.Stopwatch;
 
 import static com.google.common.base.Preconditions.checkState;
 
@@ -53,6 +51,9 @@ public class TestNet3Params extends AbstractUlordNetParams {
         genesisBlock.setTime(1524057440L);
         genesisBlock.setDifficultyTarget(521142271L);
         genesisBlock.setNonce(new BigInteger("000020f00dd1af082323e02e1f5b1d866d777abbcf63ba720d35dcf585840073", 16));
+
+        minActualTimespan = averagingWindowTimespan * (100 - nPowMaxAdjustUp)/100;
+        maxActualTimespan = averagingWindowTimespan * (100 + nPowMaxAdjustDown)/100;
 
         spendableCoinbaseDepth = 100;   // consensus.h COINBASE_MATURITY
         subsidyDecreaseBlockCount = 840960;
@@ -98,32 +99,25 @@ public class TestNet3Params extends AbstractUlordNetParams {
     @Override
     public void checkDifficultyTransitions(final StoredBlock storedPrev, final UldBlock nextBlock,
         final UldBlockStore blockStore) throws VerificationException, BlockStoreException {
-        if (!isDifficultyTransitionPoint(storedPrev) && nextBlock.getTime().after(testnetDiffDate)) {
-            UldBlock prev = storedPrev.getHeader();
 
-            // After 15th February 2012 the rules on the testnet change to avoid people running up the difficulty
-            // and then leaving, making it too hard to mine a block. On non-difficulty transition points, easy
-            // blocks are allowed if there has been a span of 20 minutes without one.
-            final long timeDelta = nextBlock.getTimeSeconds() - prev.getTimeSeconds();
-            // There is an integer underflow bug in bitcoin-qt that means mindiff blocks are accepted when time
-            // goes backwards.
-            if (timeDelta >= 0 && timeDelta <= NetworkParameters.TARGET_SPACING * 2) {
-                // Walk backwards until we find a block that doesn't have the easiest proof of work, then check
-                // that difficulty is equal to that one.
-                StoredBlock cursor = storedPrev;
-                while (!cursor.getHeader().equals(getGenesisBlock()) &&
-                           cursor.getHeight() % getInterval() != 0 &&
-                           cursor.getHeader().getDifficultyTargetAsInteger().equals(getMaxTarget()))
-                        cursor = cursor.getPrev(blockStore);
-                BigInteger cursorTarget = cursor.getHeader().getDifficultyTargetAsInteger();
-                BigInteger newTarget = nextBlock.getDifficultyTargetAsInteger();
-                if (!cursorTarget.equals(newTarget))
-                        throw new VerificationException("Testnet block transition that is not allowed: " +
-                        Long.toHexString(cursor.getHeader().getDifficultyTarget()) + " vs " +
-                        Long.toHexString(nextBlock.getDifficultyTarget()));
-            }
-        } else {
+        UldBlock prev = storedPrev.getHeader();
+
+        if(nextBlock.getTime().after(prev.getTime())) {
+//            if(storedPrev.getHeight() < 19) {
+//                // Check if for first 19 block if the difficulty didn't change
+//                if(nextBlock.getDifficultyTarget() !=  prev.getDifficultyTarget())
+//                    throw new VerificationException("Unexpected change in difficulty at height " + storedPrev.getHeight() +
+//                            ": " + Long.toHexString(nextBlock.getDifficultyTarget()) + " vs " +
+//                            Long.toHexString(prev.getDifficultyTarget()));
+//            }
+//            else {
+//                super.checkDifficultyTransitions(storedPrev, nextBlock, blockStore);
+//            }
             super.checkDifficultyTransitions(storedPrev, nextBlock, blockStore);
+        }
+        else {
+            throw new VerificationException("Next block time cannot be before previous block time. " +
+                    nextBlock.getTimeSeconds() + " vs " + prev.getTimeSeconds());
         }
     }
 }

@@ -17,7 +17,6 @@
 package co.usc.ulordj.params;
 
 import co.usc.ulordj.core.UldBlock;
-import co.usc.ulordj.core.Utils;
 
 import java.math.BigInteger;
 
@@ -59,6 +58,11 @@ public class RegTestParams extends AbstractUlordNetParams {
         bip32HeaderPub = 0x043587CF;    // Ulord BIP32 pubkeys start with 'xpub' (Bitcoin defaults)
         bip32HeaderPriv = 0x04358394;   // Ulord BIP32 prvkeys start with 'xprv' (Bitcoin defaults)
         bip44HeaderCoin = 0x80000001;   // Ulord BIP44 coin type is '247'
+
+        nPowMaxAdjustDown = 0;
+        nPowMaxAdjustUp = 0;
+        minActualTimespan = averagingWindowTimespan * (100 - nPowMaxAdjustUp)/100;
+        maxActualTimespan = averagingWindowTimespan * (100 + nPowMaxAdjustDown)/100;
 
         majorityEnforceBlockUpgrade = TESTNET_MAJORITY_ENFORCE_BLOCK_UPGRADE;
         majorityRejectBlockOutdated = TESTNET_MAJORITY_REJECT_BLOCK_OUTDATED;

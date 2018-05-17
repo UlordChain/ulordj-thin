@@ -17,8 +17,6 @@
 
 package co.usc.ulordj.params;
 
-import co.usc.ulordj.core.*;
-
 import java.math.BigInteger;
 
 import static com.google.common.base.Preconditions.*;
@@ -57,6 +55,9 @@ public class MainNetParams extends AbstractUlordNetParams {
 
         subsidyDecreaseBlockCount = 840960;
         spendableCoinbaseDepth = 100;
+
+        minActualTimespan = averagingWindowTimespan * (100 - nPowMaxAdjustUp)/100;
+        maxActualTimespan = averagingWindowTimespan * (100 + nPowMaxAdjustDown)/100;
 
         String genesisHash = genesisBlock.getHashAsString();
         checkState(genesisHash.equals("0000083331b8aa57aaae020d79aabe4136ebea6ce29be3a50fcaa2a55777e79c"), genesisHash);
