@@ -18,6 +18,7 @@
 package co.usc.ulordj.params;
 
 import java.math.BigInteger;
+import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 import co.usc.ulordj.core.*;
@@ -55,47 +56,82 @@ public abstract class AbstractUlordNetParams extends NetworkParameters {
         return ((storedPrev.getHeight() + 1) % this.getInterval()) == 0;
     }
 
+
+    // TODO: This function requires further improvements
+    // Currently this function can only verify blocks only if the blocks starts from genesis. We need to find a way
+    // so that the blocks can be verified from any given block for checkpoints functionality. One way is to start verifying the blocks
+    // once it has at least 17 blocks on top of the genesis, this way computing average difficulty of 17 blocks and
+    // median time of 11 blocks won't be a problem
     @Override
     public void checkDifficultyTransitions(final StoredBlock storedPrev, final UldBlock nextBlock,
     	final UldBlockStore blockStore) throws VerificationException, BlockStoreException {
+
         UldBlock prev = storedPrev.getHeader();
+        // Find the first block in the averaging interval
+        StoredBlock cursor = blockStore.get(nextBlock.getPrevBlockHash());
+        BigInteger nBitsTotal = BigInteger.ZERO;
+        for(int i = 0; !cursor.getHeader().getHash().equals(this.genesisBlock.getHash())  && i < this.N_POW_AVERAGING_WINDOW; ++i) {
+            BigInteger nBitsTemp = cursor.getHeader().getDifficultyTargetAsInteger();
+            nBitsTotal = nBitsTotal.add(nBitsTemp);
+            cursor = blockStore.get(cursor.getHeader().getPrevBlockHash());
+        }
 
-        // Return if the previous block of prev is genesis
-        if(prev.getPrevBlockHash().compareTo(this.genesisBlock.getHash()) == 0)
+        if(cursor.getHeader().getHash() == genesisBlock.getHash())
+        {
+            // Check if the difficulty didn't change
+            if(nextBlock.getDifficultyTarget() != prev.getDifficultyTarget())
+                throw new VerificationException("Difficulty did not match");
             return;
+        }
 
-        // We need one block before the prev block
-        StoredBlock cursor = blockStore.get(prev.getPrevBlockHash());
+        // Find the average
+        BigInteger nBitsAvg = nBitsTotal.divide(BigInteger.valueOf(this.N_POW_AVERAGING_WINDOW));
 
-        UldBlock blockBeforePrevBlock = cursor.getHeader();
-        int timespan = (int) (prev.getTimeSeconds() - blockBeforePrevBlock.getTimeSeconds());
-        timespan = this.averagingWindowTimespan + (timespan - this.averagingWindowTimespan)/4;
+        long prevBlockTimeSpan = getMedianTimestampOfRecentBlocks(storedPrev, blockStore);
+        long firstBlockTimeSpan = getMedianTimestampOfRecentBlocks(cursor, blockStore);
+        long timespan = (prevBlockTimeSpan - firstBlockTimeSpan);//cursor.getHeader().getTimeSeconds());
+        timespan = this.averagingWindowTimespan + (timespan - this.averagingWindowTimespan) / 4;
 
         if(timespan < this.minActualTimespan)
             timespan = minActualTimespan;
         if(timespan > this.maxActualTimespan)
             timespan = maxActualTimespan;
 
-        BigInteger newTarget = Utils.decodeCompactBits(nextBlock.getDifficultyTarget());
-        newTarget = newTarget.divide(BigInteger.valueOf(averagingWindowTimespan));
-        newTarget = newTarget.multiply(BigInteger.valueOf(timespan));
+        BigInteger expectedTarget = nBitsAvg;
+        expectedTarget = expectedTarget.divide(BigInteger.valueOf(averagingWindowTimespan));
+        expectedTarget = expectedTarget.multiply(BigInteger.valueOf(timespan));
 
-        if(newTarget.compareTo(this.getMaxTarget()) > 0) {
-            newTarget = this.getMaxTarget();
-            log.info("Difficulty hit proof of work limit: {}", newTarget.toString(16));
+        if(expectedTarget.compareTo(this.getMaxTarget()) > 0) {
+            expectedTarget = this.getMaxTarget();
+            log.info("Difficulty hit proof of work limit: {}", expectedTarget.toString(16));
         }
 
-        int accuracyByts = (int) (nextBlock.getDifficultyTarget() >>> 24) - 3;
         long receivedTargetCompact = nextBlock.getDifficultyTarget();
+        long expectedTargetCompact = Utils.encodeCompactBits(expectedTarget);
 
-        BigInteger mask = BigInteger.valueOf(0xFFFFFFL).shiftLeft(accuracyByts * 8);
-        newTarget = newTarget.and(mask);
-        long newTargetCompact = Utils.encodeCompactBits(newTarget);
-
-        if(newTargetCompact != receivedTargetCompact)
+        if(expectedTargetCompact != receivedTargetCompact)
+        {
+            System.out.println("Network provided difficulty bits do not match what was calculated: " +
+                    Long.toHexString(expectedTargetCompact) + " vs " + Long.toHexString(receivedTargetCompact));
             throw new VerificationException("Network provided difficulty bits do not match what was calculated: " +
-                        Long.toHexString(newTargetCompact) + " vs " + Long.toHexString(receivedTargetCompact));
+                    Long.toHexString(expectedTargetCompact) + " vs " + Long.toHexString(receivedTargetCompact));
+        }
 
+    }
+
+    /**
+     * Gets the median timestamp of the last 11 blocks
+     */
+    private long getMedianTimestampOfRecentBlocks(StoredBlock storedBlock,
+                                                  UldBlockStore store) throws BlockStoreException {
+        long[] timestamps = new long[11];
+        int unused = 9;
+        timestamps[10] = storedBlock.getHeader().getTimeSeconds();
+        while (unused >= 0 && (storedBlock = storedBlock.getPrev(store)).getHeader().getHash() != this.genesisBlock.getHash())
+            timestamps[unused--] = storedBlock.getHeader().getTimeSeconds();
+
+        Arrays.sort(timestamps, unused+1, 11);
+        return timestamps[unused + (11-unused)/2];
     }
 
     @Override

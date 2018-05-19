@@ -55,8 +55,8 @@ public class UnitTestParams extends AbstractUlordNetParams {
 
         nPowMaxAdjustDown = 0;
         nPowMaxAdjustUp = 0;
-        minActualTimespan = averagingWindowTimespan * (100 - nPowMaxAdjustUp)/100;
-        maxActualTimespan = averagingWindowTimespan * (100 + nPowMaxAdjustDown)/100;
+        minActualTimespan = (averagingWindowTimespan * (100 - nPowMaxAdjustUp))/100;
+        maxActualTimespan = (averagingWindowTimespan * (100 + nPowMaxAdjustDown))/100;
 
         majorityEnforceBlockUpgrade = 3;
         majorityRejectBlockOutdated = 4;

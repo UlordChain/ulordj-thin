@@ -55,8 +55,8 @@ public class TestNet2Params extends AbstractUlordNetParams {
         bip32HeaderPriv = 0x04358394;   // Ulord BIP32 prvkeys start with 'xprv' (Bitcoin defaults)
         bip44HeaderCoin = 0x80000001;   // Ulord BIP44 coin type is '247'
 
-        minActualTimespan = averagingWindowTimespan * (100 - nPowMaxAdjustUp)/100;
-        maxActualTimespan = averagingWindowTimespan * (100 + nPowMaxAdjustDown)/100;
+        minActualTimespan = (averagingWindowTimespan * (100 - nPowMaxAdjustUp))/100;
+        maxActualTimespan = (averagingWindowTimespan * (100 + nPowMaxAdjustDown))/100;
 
         majorityEnforceBlockUpgrade = TESTNET_MAJORITY_ENFORCE_BLOCK_UPGRADE;
         majorityRejectBlockOutdated = TESTNET_MAJORITY_REJECT_BLOCK_OUTDATED;

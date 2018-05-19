@@ -52,8 +52,8 @@ public class TestNet3Params extends AbstractUlordNetParams {
         genesisBlock.setDifficultyTarget(521142271L);
         genesisBlock.setNonce(new BigInteger("000020f00dd1af082323e02e1f5b1d866d777abbcf63ba720d35dcf585840073", 16));
 
-        minActualTimespan = averagingWindowTimespan * (100 - nPowMaxAdjustUp)/100;
-        maxActualTimespan = averagingWindowTimespan * (100 + nPowMaxAdjustDown)/100;
+        minActualTimespan = (averagingWindowTimespan * (100 - nPowMaxAdjustUp))/100;
+        maxActualTimespan = (averagingWindowTimespan * (100 + nPowMaxAdjustDown))/100;
 
         spendableCoinbaseDepth = 100;   // consensus.h COINBASE_MATURITY
         subsidyDecreaseBlockCount = 840960;
@@ -91,33 +91,5 @@ public class TestNet3Params extends AbstractUlordNetParams {
     @Override
     public String getPaymentProtocolId() {
         return PAYMENT_PROTOCOL_ID_TESTNET;
-    }
-
-    // February 16th 2012
-    private static final Date testnetDiffDate = new Date(1329264000000L);
-
-    @Override
-    public void checkDifficultyTransitions(final StoredBlock storedPrev, final UldBlock nextBlock,
-        final UldBlockStore blockStore) throws VerificationException, BlockStoreException {
-
-        UldBlock prev = storedPrev.getHeader();
-
-        if(nextBlock.getTime().after(prev.getTime())) {
-//            if(storedPrev.getHeight() < 19) {
-//                // Check if for first 19 block if the difficulty didn't change
-//                if(nextBlock.getDifficultyTarget() !=  prev.getDifficultyTarget())
-//                    throw new VerificationException("Unexpected change in difficulty at height " + storedPrev.getHeight() +
-//                            ": " + Long.toHexString(nextBlock.getDifficultyTarget()) + " vs " +
-//                            Long.toHexString(prev.getDifficultyTarget()));
-//            }
-//            else {
-//                super.checkDifficultyTransitions(storedPrev, nextBlock, blockStore);
-//            }
-            super.checkDifficultyTransitions(storedPrev, nextBlock, blockStore);
-        }
-        else {
-            throw new VerificationException("Next block time cannot be before previous block time. " +
-                    nextBlock.getTimeSeconds() + " vs " + prev.getTimeSeconds());
-        }
     }
 }
