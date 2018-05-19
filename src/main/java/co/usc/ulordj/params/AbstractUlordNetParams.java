@@ -127,7 +127,7 @@ public abstract class AbstractUlordNetParams extends NetworkParameters {
         long[] timestamps = new long[11];
         int unused = 9;
         timestamps[10] = storedBlock.getHeader().getTimeSeconds();
-        while (unused >= 0 && (storedBlock = storedBlock.getPrev(store)) != null && !(storedBlock = storedBlock.getPrev(store)).getHeader().getHash().equals(this.genesisBlock.getHash()))
+        while (unused >= 0 && (storedBlock = storedBlock.getPrev(store)) != null)
             timestamps[unused--] = storedBlock.getHeader().getTimeSeconds();
 
         Arrays.sort(timestamps, unused+1, 11);
