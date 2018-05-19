@@ -76,7 +76,7 @@ public abstract class AbstractUlordNetParams extends NetworkParameters {
             cursor = blockStore.get(cursor.getHeader().getPrevBlockHash());
         }
 
-        if(cursor.getHeader().getHash() == genesisBlock.getHash())
+        if(cursor.getHeader().getHash().equals(genesisBlock.getHash()))
         {
             // Check if the difficulty didn't change
             if(nextBlock.getDifficultyTarget() != prev.getDifficultyTarget())
@@ -127,7 +127,7 @@ public abstract class AbstractUlordNetParams extends NetworkParameters {
         long[] timestamps = new long[11];
         int unused = 9;
         timestamps[10] = storedBlock.getHeader().getTimeSeconds();
-        while (unused >= 0 && (storedBlock = storedBlock.getPrev(store)) != null && (storedBlock = storedBlock.getPrev(store)).getHeader().getHash() != this.genesisBlock.getHash())
+        while (unused >= 0 && (storedBlock = storedBlock.getPrev(store)) != null && !(storedBlock = storedBlock.getPrev(store)).getHeader().getHash().equals(this.genesisBlock.getHash()))
             timestamps[unused--] = storedBlock.getHeader().getTimeSeconds();
 
         Arrays.sort(timestamps, unused+1, 11);
