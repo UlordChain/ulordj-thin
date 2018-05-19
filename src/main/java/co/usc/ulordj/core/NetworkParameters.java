@@ -139,7 +139,7 @@ public abstract class NetworkParameters {
 
     /** Used to validate and update block's difficulty*/
     protected final int N_POW_AVERAGING_WINDOW = 17;                              // nPowAveragingWindow = 17 chainparams.cpp
-    protected int averagingWindowTimespan = N_POW_AVERAGING_WINDOW * INTERVAL;
+    protected int averagingWindowTimespan = N_POW_AVERAGING_WINDOW * TARGET_SPACING;
     protected int nPowMaxAdjustDown = 32;
     protected int nPowMaxAdjustUp = 48;
     protected int minActualTimespan;
