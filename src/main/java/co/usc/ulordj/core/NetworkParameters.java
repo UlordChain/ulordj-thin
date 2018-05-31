@@ -345,7 +345,7 @@ public abstract class NetworkParameters {
      * How much time in seconds is supposed to pass between "interval" blocks. If the actual elapsed time is
      * significantly different from this value, the network difficulty formula will produce a different value. 
      *
-     * Since the Ulord chain adjust the difficulty every block, the function is obsoleted!!
+     * Since the Ulord chain adjust the difficulty every block, the function is obsoleted!
      */
     public int getTargetTimespan() {
         return targetTimespan;
