@@ -1,7 +1,7 @@
 /*
  * Copyright 2011 Google Inc.
  * Copyright 2014 Andreas Schildbach
- *
+ * Copyright 2016 - 2018 Ulord development team
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -94,6 +94,7 @@ public class UldBlock extends Message {
     private long version;
     private Sha256Hash prevBlockHash;
     private Sha256Hash merkleRoot;
+   // private Sha256Hash hashClaimTrie; //for claim operation, added by Kwuaint@Ulord, 2018/05/30
     private long time;             // "nTime"
     private long difficultyTarget; // "nBits"
     private BigInteger nonce;
