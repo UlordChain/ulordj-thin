@@ -1,6 +1,7 @@
 /*
  * Copyright 2011 Google Inc.
  * Copyright 2014 Andreas Schildbach
+ * Copyright 2016 - 2018 Ulord developer team.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -257,6 +258,7 @@ public class Sha256Hash implements Serializable, Comparable<Sha256Hash> {
         return digest.digest(digest.digest());
     }
 
+    //Add cryptoHelloHash which is Ulord  chain's hashing algorithm by Ulord developer team
     public static byte[] cryptoHelloHash(byte[] input, int offset, int length) {
         byte[] newInput = Arrays.copyOfRange(input, offset, offset + length);
         byte[] output = new byte[LENGTH];
