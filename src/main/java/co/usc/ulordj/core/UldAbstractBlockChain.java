@@ -251,15 +251,18 @@ public abstract class UldAbstractBlockChain {
             return add(block, tryConnecting, filteredTxHashList, filteredTxn, filteredBlock);
         } catch (BlockStoreException e) {
             // TODO: Figure out a better way to propagate this exception to the user.
+            log.error("Unable to add block to the blockstore: " + e);
             throw new RuntimeException(e);
         } catch (VerificationException e) {
             try {
+                log.error("Chain head not set: " + e);
                 notSettingChainHead();
             } catch (BlockStoreException e1) {
+                log.error("Unable to add block to the blockstore: " + e1);
                 throw new RuntimeException(e1);
             }
-            throw new VerificationException("Could not verify block " + block.getHash().toString() + "\n" +
-                    block.toString(), e);
+            log.warn("Could not verify block " + block.getHash().toString() + "\n" + block.toString(), e);
+            throw new VerificationException("Could not verify block " + block.getHash().toString() + "\n" + block.toString(), e);
         }
     }
 
