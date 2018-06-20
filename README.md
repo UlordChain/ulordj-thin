@@ -2,7 +2,7 @@
 # Welcome to ulordj
 [![](https://jitpack.io/v/UlordChain/ulordj-thin.svg)](https://jitpack.io/#UlordChain/ulordj-thin)
 
-The ulordj library is a Java implementation of the Ulord protocol, which allows it to maintain a wallet and send/receive transactions without needing a local copy of Ulord Core. It comes with full documentation and some example apps showing how to use it.
+The ulordj library is a Java implementation of the Ulord protocol, which allows it to maintain a wallet and send/receive transactions without needing a local copy of Ulord Core. It comes with full documentation and some example apps showing how to use it. Ulordj-thin is a reduced version of Ulord implemented in java.
 USC made a "thin" version of ulordj including just the components needed by the USC node.
 
 ### Technologies
