@@ -1,6 +1,7 @@
 /*
  * Copyright 2011 Google Inc.
  * Copyright 2014 Andreas Schildbach
+ * Copyright 2016 - 2018 Ulord team
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +34,7 @@ import java.util.*;
 import static co.usc.ulordj.core.Coin.*;
 
 /**
- * <p>NetworkParameters contains the data needed for working with an instantiation of a Bitcoin chain.</p>
+ * <p>NetworkParameters contains the data needed for working with an instantiation of a Ulord chain.</p>
  *
  * <p>This is an abstract class, concrete instantiations can be found in the params package. There are four:
  * one for the main network ({@link MainNetParams}), one for the public test network, and two others that are
@@ -297,7 +298,7 @@ public abstract class NetworkParameters {
     /**
      * <p>Genesis block for this chain.</p>
      *
-     * <p>The first block in every chain is a well known constant shared between all Bitcoin implemenetations. For a
+     * <p>The first block in every chain is a well known constant shared between all Ulord implemenetations. For a
      * block to be valid, it must be eventually possible to work backwards to the genesis block by following the
      * prevBlockHash pointers in the block headers.</p>
      *
@@ -342,8 +343,9 @@ public abstract class NetworkParameters {
 
     /**
      * How much time in seconds is supposed to pass between "interval" blocks. If the actual elapsed time is
-     * significantly different from this value, the network difficulty formula will produce a different value. Both
-     * test and main Bitcoin networks use 2 weeks (1209600 seconds).
+     * significantly different from this value, the network difficulty formula will produce a different value. 
+     *
+     * Since the Ulord chain adjust the difficulty every block, the function is obsoleted!
      */
     public int getTargetTimespan() {
         return targetTimespan;
@@ -365,7 +367,7 @@ public abstract class NetworkParameters {
         return true;
     }
 
-    /** How many blocks pass between difficulty adjustment periods. Bitcoin standardises this to be 2015. */
+    /** How many blocks pass between difficulty adjustment periods. */
     public int getInterval() {
         return interval;
     }
@@ -415,7 +417,7 @@ public abstract class NetworkParameters {
 
     /**
      * Returns whether this network has a maximum number of coins (finite supply) or
-     * not. Always returns true for Bitcoin, but exists to be overriden for other
+     * not. Always returns true for Ulord, but exists to be overriden for other
      * networks.
      */
     public abstract boolean hasMaxMoney();

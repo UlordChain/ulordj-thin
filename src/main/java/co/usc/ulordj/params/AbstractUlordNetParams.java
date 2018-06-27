@@ -1,6 +1,7 @@
 /*
  * Copyright 2013 Google Inc.
  * Copyright 2015 Andreas Schildbach
+ * Copyright 2016-2018 Ulord Dev team.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -127,8 +128,11 @@ public abstract class AbstractUlordNetParams extends NetworkParameters {
         long[] timestamps = new long[11];
         int unused = 9;
         timestamps[10] = storedBlock.getHeader().getTimeSeconds();
-        while (unused >= 0 && (storedBlock = storedBlock.getPrev(store)) != null && !(storedBlock = storedBlock.getPrev(store)).getHeader().getHash().equals(this.genesisBlock.getHash()))
-            timestamps[unused--] = storedBlock.getHeader().getTimeSeconds();
+        if(storedBlock.getPrev(store) != null){
+            while (unused >= 0 && !((storedBlock = storedBlock.getPrev(store)).getHeader().getHash()).equals(this.genesisBlock.getHash()) ){
+                timestamps[unused--] = storedBlock.getHeader().getTimeSeconds();
+            	}
+        }
 
         Arrays.sort(timestamps, unused+1, 11);
         return timestamps[unused + (11-unused)/2];
