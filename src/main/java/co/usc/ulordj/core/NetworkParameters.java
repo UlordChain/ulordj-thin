@@ -108,9 +108,8 @@ public abstract class NetworkParameters {
             UldTransaction t = new UldTransaction(n);
             ByteArrayOutputStream scriptPubKeyBytes = new ByteArrayOutputStream();
             if(n.id == ID_MAINNET || n.id == ID_REGTEST) {
-                // A script containing the difficulty bits and the following message: "abracadabra."
-                byte[] bytes = Utils.HEX.decode
-                        ("04ffff001d01040b6162726163616461627261");
+                // A script containing the difficulty bits and the following message: "Change the World with Us. 22/May/2018, 00:00:00, GMT"
+                byte[] bytes = Utils.HEX.decode("04ffff001d0104344368616e67652074686520576f726c6420776974682055732e2032322f4d61792f323031382c2030303a30303a30302c20474d54");
                 t.addInput(new TransactionInput(n, t, bytes));
                 Script.writeBytes(scriptPubKeyBytes, Utils.HEX.decode
                         ("041c508f27e982c369486c0f1a42779208b3f5dc96c21a2af6004cb18d1529f42182425db1e1632dc6e73ff687592e148569022cee52b4b4eb10e8bb11bd927ec0"));
@@ -118,8 +117,7 @@ public abstract class NetworkParameters {
             else
             {
                 // A script containing the difficulty bits and the following message: "ulord hold value testnet."
-                byte[] bytes = Utils.HEX.decode
-                        ("04ffff001d010419756c6f726420686f6c642076616c756520746573746e65742e");
+                byte[] bytes = Utils.HEX.decode("04ffff001d010419756c6f726420686f6c642076616c756520746573746e65742e");
                 t.addInput(new TransactionInput(n, t, bytes));
                 Script.writeBytes(scriptPubKeyBytes, Utils.HEX.decode
                         ("034c73d75f59061a08032b68369e5034390abc5215b3df79be01fb4319173a88f8"));
