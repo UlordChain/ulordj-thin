@@ -10,17 +10,6 @@ OBJS    = PoW.o c_hmac_md5.o c_aes128.o c_camellia128.o c_crc32.o c_gost.o c_rip
 LIB_FILE = libCryptoHello.so
 TARGETS = PoW $(LIB_FILE)
 
-ifeq ($(OS),Windows_NT)
-	OSFLAG = WIN32
-	LIB_FILE = CryptoHello.dll
-else
-	UNAME_S := $(shell uname -s)
-	ifeq ($(UNAME_S),Linux)
-		OSFLAG = LINUX
-		LIB_FILE = libCryptoHello.so
-	endif
-endif
-
 .PHONY:all
 all : $(TARGETS)
 

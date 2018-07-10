@@ -17,6 +17,7 @@
 
 package co.usc.ulordj.core;
 
+import co.usc.ulordj.params.RegTestParams;
 import com.google.common.io.ByteStreams;
 
 import co.usc.ulordj.params.MainNetParams;
@@ -41,7 +42,7 @@ import static org.junit.Assert.*;
 public class UldBlockTest {
     //private static final NetworkParameters PARAMS = TestNet2Params.get();
     private static final NetworkParameters PARAMS = TestNet3Params.get();
-
+    private static final NetworkParameters params = RegTestParams.get();
     public static final byte[] blockBytes;
 
     static {
