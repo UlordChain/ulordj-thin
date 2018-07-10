@@ -108,9 +108,9 @@ public abstract class NetworkParameters {
             UldTransaction t = new UldTransaction(n);
             ByteArrayOutputStream scriptPubKeyBytes = new ByteArrayOutputStream();
             if(n.id == ID_MAINNET || n.id == ID_REGTEST) {
-                // A script containing the difficulty bits and the following message: "abracadabra."
+                // A script containing the difficulty bits and the following message: "Change the World with Us. 22/May/2018, 00:00:00, GMT"
                 byte[] bytes = Utils.HEX.decode
-                        ("04ffff001d01040b6162726163616461627261");
+                        ("04ffff001d0104344368616e67652074686520576f726c6420776974682055732e2032322f4d61792f323031382c2030303a30303a30302c20474d54");
                 t.addInput(new TransactionInput(n, t, bytes));
                 Script.writeBytes(scriptPubKeyBytes, Utils.HEX.decode
                         ("041c508f27e982c369486c0f1a42779208b3f5dc96c21a2af6004cb18d1529f42182425db1e1632dc6e73ff687592e148569022cee52b4b4eb10e8bb11bd927ec0"));
