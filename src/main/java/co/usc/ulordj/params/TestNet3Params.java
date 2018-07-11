@@ -52,6 +52,8 @@ public class TestNet3Params extends AbstractUlordNetParams {
         genesisBlock.setDifficultyTarget(521142271L);
         genesisBlock.setNonce(new BigInteger("000020f00dd1af082323e02e1f5b1d866d777abbcf63ba720d35dcf585840073", 16));
 
+        nPowMaxAdjustDown = 32;
+        nPowMaxAdjustUp = 48;
         minActualTimespan = (averagingWindowTimespan * (100 - nPowMaxAdjustUp))/100;
         maxActualTimespan = (averagingWindowTimespan * (100 + nPowMaxAdjustDown))/100;
 
