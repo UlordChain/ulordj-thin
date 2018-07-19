@@ -107,24 +107,6 @@
         </profile>
 
         <profile>
-        <id>doclint-java8-disable</id>
-        <activation>
-          <jdk>[1.8,)</jdk>
-        </activation>
-        <build>
-          <plugins>
-            <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-javadoc-plugin</artifactId>
-              <configuration>
-                <additionalparam>-Xdoclint:none</additionalparam>
-              </configuration>
-            </plugin>
-          </plugins>
-        </build>
-        </profile>
-
-        <profile>
           <id>release</id>
           <build>
               <plugins>
@@ -142,18 +124,6 @@
                       </executions>
                   </plugin>
 
-                  <plugin>
-                      <groupId>org.apache.maven.plugins</groupId>
-                      <artifactId>maven-javadoc-plugin</artifactId>
-                      <executions>
-                          <execution>
-                              <id>attach-javadocs</id>
-                              <goals>
-                                  <goal>jar</goal>
-                              </goals>
-                          </execution>
-                      </executions>
-                  </plugin>
 
                   <plugin>
                       <groupId>org.apache.maven.plugins</groupId>
@@ -191,42 +161,6 @@
                   <addMavenDescriptor>false</addMavenDescriptor>
                 </archive>
               </configuration>
-            </plugin>
-            <!-- Generate source and javadoc jars: Maven Central requires this -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>jar-no-fork</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <detectLinks/>
-                    <links>
-                        <link>http://docs.guava-libraries.googlecode.com/git-history/release/javadoc/</link>
-                    </links>
-                    <detectJavaApiLink/>
-                    <quiet>true</quiet>
-                    <notimestamp>true</notimestamp>
-                </configuration>
             </plugin>
 
             <!-- Verify the dependency chain: see https://github.com/gary-rowe/UlordjEnforcerRules for
@@ -273,7 +207,6 @@
                                         <urn>org.apache.maven.plugins:maven-enforcer-plugin:1.0:maven-plugin:null:runtime:ad032b7593576e9fe9305c73865633e163895b29</urn>
                                         <urn>org.apache.maven.plugins:maven-install-plugin:2.5.2:maven-plugin:null:runtime:8a67631619fc3c1d1f036e59362ddce71e1e496f</urn>
                                         <urn>org.apache.maven.plugins:maven-jar-plugin:2.6:maven-plugin:null:runtime:618f08d0fcdd3929af846ef1b65503b5904f93e3</urn>
-                                        <urn>org.apache.maven.plugins:maven-javadoc-plugin:2.10.2:maven-plugin:null:runtime:5f391697fa85cecc7e5bac7ce5a6f9d056a58ba3</urn>
                                         <urn>org.apache.maven.plugins:maven-resources-plugin:2.7:maven-plugin:null:runtime:94af11389943a480ecec7db01b4ded1b9cdf57c5</urn>
                                         <urn>org.apache.maven.plugins:maven-shade-plugin:2.3:maven-plugin:null:runtime:d136adc7abccc9c12adcad6ae7a9bc51b2b7184b</urn>
                                         <urn>org.apache.maven.plugins:maven-site-plugin:3.4:maven-plugin:null:runtime:659cd5f1dd8bff554cf52603339494cbf7f283c5</urn>
@@ -283,7 +216,6 @@
                                         <urn>org.eluder.coveralls:coveralls-maven-plugin:3.1.0:maven-plugin:null:runtime:ca9d2915e2b1e99f15c9f54ad653eda893d42a69</urn>
                                         <urn>org.fusesource.leveldbjni:leveldbjni-all:1.8:jar:null:compile:707350a2eeb1fa2ed77a32ddb3893ed308e941db</urn>
                                         <urn>org.hamcrest:hamcrest-core:1.3:jar:null:test:42a25dc3219429f0e5d060061f71acb49bf010a0</urn>
-                                        <urn>org.jacoco:jacoco-maven-plugin:0.7.5.201505241946:maven-plugin:null:runtime:0a5e4dbbcd9b00e5ee42d928e10ab84f6f0b0835</urn>
                                         <urn>org.objenesis:objenesis:1.2:jar:null:test:bfcb0539a071a4c5a30690388903ac48c0667f2a</urn>
                                         <urn>com.squareup.okhttp:okhttp:2.7.2:jar:null:runtime:20f6463eb19ac61960c5d91a094c2f4f0727dc2e</urn>
                                         <urn>com.squareup.okio:okio:1.6.0:jar:null:runtime:98476622f10715998eacf9240d6b479f12c66143</urn>
@@ -341,52 +273,6 @@
                 </executions>
             </plugin>
 
-            <!-- Code coverage plugin, generates coverage report to target/site/jacoco/
-                To skip coverage generation add -Djacoco.skip=true
-             -->
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.7.5.201505241946</version>
-                <configuration>
-                    <excludes>
-                        <exclude>**/Protos*.class</exclude> <!-- Exclude generated protobuf classes -->
-                        <exclude>org/ulordj/jni/*</exclude> <!-- Exclude JNI classes -->
-                        <exclude>org/ulord/*</exclude> <!-- Exclude native classes -->
-                    </excludes>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>pre-unit-test</id>
-                        <goals>
-                            <goal>prepare-agent</goal>
-                        </goals>
-                        <configuration>
-                            <destFile>${project.build.directory}/coverage-reports/jacoco.exec</destFile>
-                            <propertyName>surefireArgLine</propertyName>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>post-unit-test</id>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>report</goal>
-                        </goals>
-                        <configuration>
-                            <dataFile>${project.build.directory}/coverage-reports/jacoco.exec</dataFile>
-                            <outputDirectory>${project.reporting.outputDirectory}/jacoco</outputDirectory>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>default-report</id>
-                        <phase>prepare-package</phase>
-                        <goals>
-                            <goal>report</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
             <!-- Unit tests plugin, to skip runing test add -Dmaven.test.skip -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -440,10 +326,6 @@
             <plugin>
               <artifactId>maven-jar-plugin</artifactId>
               <version>2.6</version>
-            </plugin>
-            <plugin>
-              <artifactId>maven-javadoc-plugin</artifactId>
-              <version>2.10.2</version>
             </plugin>
             <plugin>
               <artifactId>maven-resources-plugin</artifactId>
