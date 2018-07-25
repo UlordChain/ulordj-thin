@@ -91,7 +91,6 @@ public class UldBlockChain extends UldAbstractBlockChain {
 
     @Override
     protected StoredBlock getStoredBlockInCurrentScope(Sha256Hash hash) throws BlockStoreException {
-        System.out.println("blockStore chain head: " + blockStore.getChainHead().getHeight());
         return blockStore.get(hash);
     }
 
