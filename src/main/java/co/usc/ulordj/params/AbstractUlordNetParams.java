@@ -72,8 +72,9 @@ public abstract class AbstractUlordNetParams extends NetworkParameters {
         StoredBlock cursor = blockStore.get(nextBlock.getPrevBlockHash());
         BigInteger nBitsTotal = BigInteger.ZERO;
         for(int i = 0; !cursor.getHeader().getHash().equals(this.genesisBlock.getHash())  && i < this.N_POW_AVERAGING_WINDOW; ++i) {
-            BigInteger nBitsTemp = cursor.getHeader().getDifficultyTargetAsInteger();
-            nBitsTotal = nBitsTotal.add(nBitsTemp);
+            //BigInteger nBitsTemp = cursor.getHeader().getDifficultyTargetAsInteger();
+            //nBitsTotal = nBitsTotal.add(nBitsTemp);
+            nBitsTotal = nBitsTotal.add(cursor.getHeader().getDifficultyTargetAsInteger());
             cursor = blockStore.get(cursor.getHeader().getPrevBlockHash());
         }
 
