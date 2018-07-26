@@ -67,9 +67,6 @@ public abstract class AbstractUlordNetParams extends NetworkParameters {
     public void checkDifficultyTransitions(final StoredBlock storedPrev, final UldBlock nextBlock,
     	final UldBlockStore blockStore) throws VerificationException, BlockStoreException {
 
-        if(true)
-            return;
-
         UldBlock prev = storedPrev.getHeader();
         // Find the first block in the averaging interval
         StoredBlock cursor = blockStore.get(nextBlock.getPrevBlockHash());
