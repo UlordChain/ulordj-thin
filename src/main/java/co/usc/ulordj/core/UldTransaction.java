@@ -40,13 +40,13 @@ import java.math.BigInteger;
 
 /**
  * <p>A transaction represents the movement of coins from some addresses to some other addresses. It can also represent
- * the minting of new coins. A Transaction object corresponds to the equivalent in the Bitcoin C++ implementation.</p>
+ * the minting of new coins. A Transaction object corresponds to the equivalent in the Ulord C++ implementation.</p>
  *
- * <p>Transactions are the fundamental atoms of Bitcoin and have many powerful features. Read
- * <a href="https://bitcoinj.github.io/working-with-transactions">"Working with transactions"</a> in the
+ * <p>Transactions are the fundamental atoms of Ulord and have many powerful features. Read
+ * <a href="https://ulordj.github.io/working-with-transactions">"Working with transactions"</a> in the
  * documentation to learn more about how to use this class.</p>
  *
- * <p>All Bitcoin transactions are at risk of being reversed, though the risk is much less than with traditional payment
+ * <p>All Ulord transactions are at risk of being reversed, though the risk is much less than with traditional payment
  * systems. Transactions have <i>confidence levels</i>, which help you decide whether to trust a transaction or not.
  * Whether to trust a transaction is something that needs to be decided on a case by case basis - a rule that makes
  * sense for selling MP3s might not make sense for selling cars, or accepting payments from a family member. If you
@@ -80,7 +80,7 @@ public class UldTransaction extends ChildMessage {
     public static final int MAX_STANDARD_TX_SIZE = 100000;
 
     /**
-     * If feePerKb is lower than this, Bitcoin Core will treat it as if there were no fee.
+     * If feePerKb is lower than this, Ulord Core will treat it as if there were no fee.
      */
     public static final Coin REFERENCE_DEFAULT_MIN_TX_FEE = Coin.valueOf(5000); // 0.05 mBTC
 
@@ -97,7 +97,7 @@ public class UldTransaction extends ChildMessage {
      */
     public static final Coin MIN_NONDUST_OUTPUT = Coin.valueOf(5460); // satoshis
 
-    // These are bitcoin serialized.
+    // These are ulord serialized.
     private long version;
     private ArrayList<TransactionInput> inputs;
     private ArrayList<TransactionOutput> outputs;
@@ -191,7 +191,7 @@ public class UldTransaction extends ChildMessage {
     /**
      * Creates a transaction by reading payload starting from offset bytes in. Length of a transaction is fixed.
      * @param params NetworkParameters object.
-     * @param payload Bitcoin protocol formatted byte array containing message content.
+     * @param payload Ulord protocol formatted byte array containing message content.
      * @param offset The location of the first payload byte within the array.
      * @param parseRetain Whether to retain the backing byte array for quick reserialization.
      * If true and the backing byte array is invalidated due to modification of a field then
@@ -622,10 +622,10 @@ public class UldTransaction extends ChildMessage {
     /**
      * Nasty hack to be able to deserialize txs without inputs (incomplete txs).
      * Segwit serialization added a marker "0x00" where the number of inputs was.
-     * Since a tx without inputs is invalid in the bitcoin network, there are no consensus issues.
+     * Since a tx without inputs is invalid in the ulord network, there are no consensus issues.
      * But txs without inputs are reasonable in the process of building a tx.
      * So we implemented this alternative parse method to indicate we are parsing a tx without inputs.
-     * See https://groups.google.com/forum/#!topic/bitcoinj/6TM0dy3StlU
+     * See https://groups.google.com/forum/#!topic/ulordj/6TM0dy3StlU
      * @param noInputsPayload
      * @throws ProtocolException
      */
@@ -715,7 +715,7 @@ public class UldTransaction extends ChildMessage {
 
     /**
      * A coinbase transaction is one that creates a new coin. They are the first transaction in each block and their
-     * value is determined by a formula that all implementations of Bitcoin share. In 2011 the value of a coinbase
+     * value is determined by a formula that all implementations of Ulord share. In 2011 the value of a coinbase
      * transaction is 50 coins, but in future it will be less. A coinbase transaction is defined not only by its
      * position in a block but by the data in the inputs.
      */
@@ -882,7 +882,7 @@ public class UldTransaction extends ChildMessage {
 
     /**
      * Adds a new and fully signed input for the given parameters. Note that this method is <b>not</b> thread safe
-     * and requires external synchronization. Please refer to general documentation on Bitcoin scripting and contracts
+     * and requires external synchronization. Please refer to general documentation on Ulord scripting and contracts
      * to understand the values of sigHash and anyoneCanPay: otherwise you can use the other form of this method
      * that sets them to typical defaults.
      *
@@ -1066,7 +1066,7 @@ public class UldTransaction extends ChildMessage {
         // The SIGHASH flags are used in the design of contracts, please see this page for a further understanding of
         // the purposes of the code in this method:
         //
-        //   https://en.bitcoin.it/wiki/Contracts
+        //   https://en.ulord.it/wiki/Contracts
 
         try {
             // Create a copy of this transaction to operate upon because we need make changes to the inputs and outputs.
@@ -1080,8 +1080,8 @@ public class UldTransaction extends ChildMessage {
                 tx.inputs.get(i).clearScriptBytes();
             }
 
-            // This step has no purpose beyond being synchronized with Bitcoin Core's bugs. OP_CODESEPARATOR
-            // is a legacy holdover from a previous, broken design of executing scripts that shipped in Bitcoin 0.1.
+            // This step has no purpose beyond being synchronized with Ulord Core's bugs. OP_CODESEPARATOR
+            // is a legacy holdover from a previous, broken design of executing scripts that shipped in Ulord 0.1.
             // It was seriously flawed and would have let anyone take anyone elses money. Later versions switched to
             // the design we use today where scripts are executed independently but share a stack. This left the
             // OP_CODESEPARATOR instruction having no purpose as it was only meant to be used internally, not actually
@@ -1089,7 +1089,7 @@ public class UldTransaction extends ChildMessage {
             // do it, we could split off the main chain.
             connectedScript = Script.removeAllInstancesOfOp(connectedScript, ScriptOpCodes.OP_CODESEPARATOR);
 
-            // Set the input to the script of its output. Bitcoin Core does this but the step has no obvious purpose as
+            // Set the input to the script of its output. Ulord Core does this but the step has no obvious purpose as
             // the signature covers the hash of the prevout transaction which obviously includes the output script
             // already. Perhaps it felt safer to him in some way, or is another leftover from how the code was written.
             TransactionInput input = tx.inputs.get(inputIndex);
@@ -1106,12 +1106,12 @@ public class UldTransaction extends ChildMessage {
                 // SIGHASH_SINGLE means only sign the output at the same index as the input (ie, my output).
                 if (inputIndex >= tx.outputs.size()) {
                     // The input index is beyond the number of outputs, it's a buggy signature made by a broken
-                    // Bitcoin implementation. Bitcoin Core also contains a bug in handling this case:
+                    // Ulord implementation. Ulord Core also contains a bug in handling this case:
                     // any transaction output that is signed in this case will result in both the signed output
                     // and any future outputs to this public key being steal-able by anyone who has
                     // the resulting signature and the public key (both of which are part of the signed tx input).
 
-                    // Bitcoin Core's bug is that SignatureHash was supposed to return a hash and on this codepath it
+                    // Ulord Core's bug is that SignatureHash was supposed to return a hash and on this codepath it
                     // actually returns the constant "1" to indicate an error, which is never checked for. Oops.
                     return Sha256Hash.wrap("0100000000000000000000000000000000000000000000000000000000000000");
                 }
@@ -1183,7 +1183,7 @@ public class UldTransaction extends ChildMessage {
     /**
      * Transactions can have an associated lock time, specified either as a block height or in seconds since the
      * UNIX epoch. A transaction is not allowed to be confirmed by miners until the lock time is reached, and
-     * since Bitcoin 0.8+ a transaction that did not end its lock period (non final) is considered to be non
+     * since Ulord 0.8+ a transaction that did not end its lock period (non final) is considered to be non
      * standard and won't be relayed or included in the memory pool either.
      */
     public long getLockTime() {
@@ -1193,7 +1193,7 @@ public class UldTransaction extends ChildMessage {
     /**
      * Transactions can have an associated lock time, specified either as a block height or in seconds since the
      * UNIX epoch. A transaction is not allowed to be confirmed by miners until the lock time is reached, and
-     * since Bitcoin 0.8+ a transaction that did not end its lock period (non final) is considered to be non
+     * since Ulord 0.8+ a transaction that did not end its lock period (non final) is considered to be non
      * standard and won't be relayed or included in the memory pool either.
      */
     public void setLockTime(long lockTime) {
@@ -1384,7 +1384,7 @@ public class UldTransaction extends ChildMessage {
 
     /**
      * Returns whether this transaction will opt into the
-     * <a href="https://github.com/bitcoin/bips/blob/master/bip-0125.mediawiki">full replace-by-fee </a> semantics.
+     * <a href="https://github.com/ulord/bips/blob/master/bip-0125.mediawiki">full replace-by-fee </a> semantics.
      */
     public boolean isOptInFullRBF() {
         for (TransactionInput input : getInputs())
@@ -1396,10 +1396,10 @@ public class UldTransaction extends ChildMessage {
     /**
      * <p>Returns true if this transaction is considered finalized and can be placed in a block. Non-finalized
      * transactions won't be included by miners and can be replaced with newer versions using sequence numbers.
-     * This is useful in certain types of <a href="http://en.bitcoin.it/wiki/Contracts">contracts</a>, such as
+     * This is useful in certain types of <a href="http://en.ulord.it/wiki/Contracts">contracts</a>, such as
      * micropayment channels.</p>
      *
-     * <p>Note that currently the replacement feature is disabled in Bitcoin Core and will need to be
+     * <p>Note that currently the replacement feature is disabled in Ulord Core and will need to be
      * re-activated before this functionality is useful.</p>
      */
     public boolean isFinal(int height, long blockTimeSeconds) {

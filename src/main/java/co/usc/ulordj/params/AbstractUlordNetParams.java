@@ -80,6 +80,10 @@ public abstract class AbstractUlordNetParams extends NetworkParameters {
             cursor = blockStore.get(cursor.getHeader().getPrevBlockHash());
         }
 
+        // Disable validation for RegTest
+        if(this instanceof RegTestParams)
+            return;
+
         if(cursor.getHeader().getHash().equals(genesisBlock.getHash()))
         {
             // Check if the difficulty didn't change

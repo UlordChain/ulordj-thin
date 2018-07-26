@@ -47,12 +47,12 @@ public class RegTestParams extends AbstractUlordNetParams {
         acceptableAddressCodes = new int[] { addressHeader, p2shHeader };
         targetTimespan = TARGET_TIMESPAN;
         dumpedPrivateKeyHeader = 239;
-        genesisBlock.setTime(1519895551L);
-        genesisBlock.setDifficultyTarget(537857807L);
-        genesisBlock.setNonce(new BigInteger("0000841e2005651582301a339bdd8550c02bdea8b05ceabbf98a5b60467b0004", 16));
+        genesisBlock.setTime(1526946000L);
+        genesisBlock.setDifficultyTarget(Long.parseLong("200f0f0f", 16));
+        genesisBlock.setNonce(new BigInteger("0000ec7bfb02cb74cc021bbc03773834a65f8a16655212b5abc8841efbea0000", 16));
         spendableCoinbaseDepth = 100;
         String genesisHash = genesisBlock.getHashAsString();
-        checkState(genesisHash.equals("083dfbb3e5e7c20948e7e32640090c1f4ce2791f875ccb2164888d0c70e279be"));
+        checkState(genesisHash.equals("0c1417be9488c5bc9c2974a8c2edf89089fdf9fa3e0e4a0d4c668ab973fcf8b4"));
         dnsSeeds = null;
         addrSeeds = null;
         bip32HeaderPub = 0x043587CF;    // Ulord BIP32 pubkeys start with 'xpub' (Bitcoin defaults)
@@ -81,10 +81,10 @@ public class RegTestParams extends AbstractUlordNetParams {
         synchronized (RegTestParams.class) {
             if (genesis == null) {
                 genesis = super.getGenesisBlock();
-                genesis.setNonce(new BigInteger("0000841e2005651582301a339bdd8550c02bdea8b05ceabbf98a5b60467b0004", 16));
-                genesis.setDifficultyTarget(537857807L);
-                genesis.setTime(1519895551L);
-                checkState(genesis.getHashAsString().toLowerCase().equals("083dfbb3e5e7c20948e7e32640090c1f4ce2791f875ccb2164888d0c70e279be"));
+                genesis.setNonce(new BigInteger("0000ec7bfb02cb74cc021bbc03773834a65f8a16655212b5abc8841efbea0000", 16));
+                genesis.setDifficultyTarget(Long.parseLong("200f0f0f", 16));
+                genesis.setTime(1526946000L);
+                checkState(genesis.getHashAsString().toLowerCase().equals("0c1417be9488c5bc9c2974a8c2edf89089fdf9fa3e0e4a0d4c668ab973fcf8b4"));
             }
             return genesis;
         }
