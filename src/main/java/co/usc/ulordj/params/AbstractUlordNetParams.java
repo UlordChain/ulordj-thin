@@ -61,7 +61,7 @@ public abstract class AbstractUlordNetParams extends NetworkParameters {
     // TODO: This function requires further improvements
     // Currently this function can only verify blocks only if the blocks starts from genesis. We need to find a way
     // so that the blocks can be verified from any given block for checkpoints functionality. One way is to start verifying the blocks
-    // once it has at least 17 blocks on top of the genesis, this way computing average difficulty of 17 blocks and
+    // once it has at least 17 blocks on top of a given block, this way computing average difficulty of 17 blocks and
     // median time of 11 blocks won't be a problem
     @Override
     public void checkDifficultyTransitions(final StoredBlock storedPrev, final UldBlock nextBlock,
