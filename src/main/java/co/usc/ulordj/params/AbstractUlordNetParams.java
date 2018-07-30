@@ -44,8 +44,16 @@ public abstract class AbstractUlordNetParams extends NetworkParameters {
 
     private static final Logger log = LoggerFactory.getLogger(AbstractUlordNetParams.class);
 
+    private static BigInteger lastNBit;
+    private static BigInteger prevNBitTotal;
+
+    private static int initialSeventeen;
+
     public AbstractUlordNetParams(String id) {
         super(id);
+        lastNBit = BigInteger.ZERO;
+        prevNBitTotal = BigInteger.ZERO;
+        initialSeventeen = 1;
     }
 
     /**
@@ -67,6 +75,10 @@ public abstract class AbstractUlordNetParams extends NetworkParameters {
     public void checkDifficultyTransitions(final StoredBlock storedPrev, final UldBlock nextBlock,
     	final UldBlockStore blockStore) throws VerificationException, BlockStoreException {
 
+        // Disable validation for RegTest
+        if(this instanceof RegTestParams)
+            return;
+
         UldBlock prev = storedPrev.getHeader();
         // Find the first block in the averaging interval
         StoredBlock cursor = blockStore.get(nextBlock.getPrevBlockHash());
@@ -77,10 +89,6 @@ public abstract class AbstractUlordNetParams extends NetworkParameters {
             nBitsTotal = nBitsTotal.add(cursor.getHeader().getDifficultyTargetAsInteger());
             cursor = blockStore.get(cursor.getHeader().getPrevBlockHash());
         }
-
-        // Disable validation for RegTest
-        if(this instanceof RegTestParams)
-            return;
 
         if(cursor.getHeader().getHash().equals(genesisBlock.getHash()))
         {
