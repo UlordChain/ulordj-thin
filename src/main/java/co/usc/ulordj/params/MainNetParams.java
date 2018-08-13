@@ -50,8 +50,8 @@ public class MainNetParams extends AbstractUlordNetParams {
         majorityWindow = MAINNET_MAJORITY_WINDOW;
 
         genesisBlock.setDifficultyTarget(503951731L);
-        genesisBlock.setTime(1524045652L);
-        genesisBlock.setNonce(new BigInteger("0000be7245a98c700f01293501a062837cb465afd70da22ee812b69a0c131f8c", 16));
+        genesisBlock.setTime(1526947274L);
+        genesisBlock.setNonce(new BigInteger("0000e865ca57d789ba58154ed7f29decd569ce91289d870bf54f824dea09971c", 16));
 
         subsidyDecreaseBlockCount = 840960;
         spendableCoinbaseDepth = 100;
@@ -60,7 +60,7 @@ public class MainNetParams extends AbstractUlordNetParams {
         maxActualTimespan = (averagingWindowTimespan * (100 + nPowMaxAdjustDown))/100;
 
         String genesisHash = genesisBlock.getHashAsString();
-        checkState(genesisHash.equals("0000083331b8aa57aaae020d79aabe4136ebea6ce29be3a50fcaa2a55777e79c"), genesisHash);
+        checkState(genesisHash.equals("0000079b37c3c290dc81e95bca28aa7df5636145ae35ebee86e10cc3cce96fb2"), genesisHash);
 
         // This contains (at a minimum) the blocks which are not BIP30 compliant. BIP30 changed how duplicate
         // transactions are handled. Duplicated transactions could occur in the case where a coinbase had the same
