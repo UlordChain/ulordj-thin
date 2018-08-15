@@ -17,7 +17,6 @@
 package co.usc.ulordj.wallet;
 
 import co.usc.ulordj.core.UldECKey;
-import co.usc.ulordj.core.UldECKey;
 
 import javax.annotation.Nullable;
 

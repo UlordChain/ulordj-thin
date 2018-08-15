@@ -17,8 +17,6 @@
 package co.usc.ulordj.wallet;
 
 import co.usc.ulordj.core.UldECKey;
-import co.usc.ulordj.core.UldECKey;
-import co.usc.ulordj.core.UldECKey;
 import co.usc.ulordj.script.Script;
 
 import java.util.ArrayList;

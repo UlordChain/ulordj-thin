@@ -44,16 +44,10 @@ public abstract class AbstractUlordNetParams extends NetworkParameters {
 
     private static final Logger log = LoggerFactory.getLogger(AbstractUlordNetParams.class);
 
-    private static BigInteger lastNBit;
-    private static BigInteger prevNBitTotal;
 
-    private static int initialSeventeen;
 
     public AbstractUlordNetParams(String id) {
         super(id);
-        lastNBit = BigInteger.ZERO;
-        prevNBitTotal = BigInteger.ZERO;
-        initialSeventeen = 1;
     }
 
     /**

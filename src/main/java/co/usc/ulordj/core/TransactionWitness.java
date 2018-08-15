@@ -3,6 +3,8 @@ package co.usc.ulordj.core;
 import co.usc.ulordj.crypto.TransactionSignature;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TransactionWitness {
     static TransactionWitness empty = new TransactionWitness(0);
@@ -11,22 +13,25 @@ public class TransactionWitness {
         return empty;
     }
 
-    private byte[][] pushes;
+    private List<byte[]> pushes;
 
     public TransactionWitness(int pushCount) {
-        pushes = new byte[pushCount][];
+        pushes = new ArrayList<byte[]>(Math.min(pushCount, Utils.MAX_INITIAL_ARRAY_LENGTH));
     }
 
     public byte[] getPush(int i) {
-        return pushes[i];
+        return pushes.get(i);
     }
 
     public int getPushCount() {
-        return pushes.length;
+        return pushes.size();
     }
 
     public void setPush(int i, byte[] value) {
-        pushes[i] = value;
+        while (i >= pushes.size()) {
+            pushes.add(new byte[]{});
+        }
+        pushes.set(i, value);
     }
 
     /**
@@ -45,7 +50,7 @@ public class TransactionWitness {
         if (getPushCount() == 0)
             return new byte[0];
         else
-            return pushes[pushes.length - 1];
+            return pushes.get(pushes.size() - 1);
     }
 }
 

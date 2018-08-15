@@ -241,7 +241,7 @@ public class UldBlock extends Message {
 
         int numTransactions = (int) readVarInt();
         optimalEncodingMessageSize += VarInt.sizeOf(numTransactions);
-        transactions = new ArrayList<UldTransaction>(numTransactions);
+        transactions = new ArrayList<UldTransaction>(Math.min(numTransactions, Utils.MAX_INITIAL_ARRAY_LENGTH));
         for (int i = 0; i < numTransactions; i++) {
             UldTransaction tx = new UldTransaction(params, payload, cursor, this, serializer, UNKNOWN_LENGTH);
             transactions.add(tx);

@@ -56,6 +56,7 @@ public class Utils {
 
     private static final Joiner SPACE_JOINER = Joiner.on(" ");
 
+    public static final int MAX_INITIAL_ARRAY_LENGTH = 2000;
     private static BlockingQueue<Boolean> mockSleepQueue;
 
     /**

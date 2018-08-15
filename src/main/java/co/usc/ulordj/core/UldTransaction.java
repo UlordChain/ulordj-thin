@@ -666,7 +666,7 @@ public class UldTransaction extends ChildMessage {
     private void readOutputs() {
         long numOutputs = readVarInt();
         optimalEncodingMessageSize += VarInt.sizeOf(numOutputs);
-        outputs = new ArrayList<TransactionOutput>((int) numOutputs);
+        outputs = new ArrayList<TransactionOutput>(Math.min((int) numOutputs, Utils.MAX_INITIAL_ARRAY_LENGTH));
         for (long i = 0; i < numOutputs; i++) {
             TransactionOutput output = new TransactionOutput(params, this, payload, cursor, serializer);
             outputs.add(output);
@@ -679,7 +679,7 @@ public class UldTransaction extends ChildMessage {
     private void readInputs() {
         long numInputs = readVarInt();
         optimalEncodingMessageSize += VarInt.sizeOf(numInputs);
-        inputs = new ArrayList<TransactionInput>((int) numInputs);
+        inputs = new ArrayList<TransactionInput>(Math.min((int) numInputs, Utils.MAX_INITIAL_ARRAY_LENGTH));
         for (long i = 0; i < numInputs; i++) {
             TransactionInput input = new TransactionInput(params, this, payload, cursor, serializer);
             inputs.add(input);
