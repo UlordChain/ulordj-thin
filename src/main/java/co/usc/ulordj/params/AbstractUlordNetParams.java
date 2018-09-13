@@ -75,28 +75,20 @@ public abstract class AbstractUlordNetParams extends NetworkParameters {
     public void checkDifficultyTransitions(final StoredBlock storedPrev, final UldBlock nextBlock,
     	final UldBlockStore blockStore) throws VerificationException, BlockStoreException {
 
-        // Disable validation for RegTest
-        if(this instanceof RegTestParams)
+        if((storedPrev.getHeight() + 1) % 17 != 0) {
             return;
+        }
 
-        UldBlock prev = storedPrev.getHeader();
         // Find the first block in the averaging interval
         StoredBlock cursor = blockStore.get(nextBlock.getPrevBlockHash());
         BigInteger nBitsTotal = BigInteger.ZERO;
-        for(int i = 0; !cursor.getHeader().getHash().equals(this.genesisBlock.getHash())  && i < this.N_POW_AVERAGING_WINDOW; ++i) {
-            //BigInteger nBitsTemp = cursor.getHeader().getDifficultyTargetAsInteger();
-            //nBitsTotal = nBitsTotal.add(nBitsTemp);
+        for(int i = 0; cursor != null && i < this.N_POW_AVERAGING_WINDOW; ++i) {
             nBitsTotal = nBitsTotal.add(cursor.getHeader().getDifficultyTargetAsInteger());
             cursor = blockStore.get(cursor.getHeader().getPrevBlockHash());
         }
 
-        if(cursor.getHeader().getHash().equals(genesisBlock.getHash()))
-        {
-            // Check if the difficulty didn't change
-            if(nextBlock.getDifficultyTarget() != prev.getDifficultyTarget())
-                throw new VerificationException("Difficulty did not match");
+        if(cursor == null)
             return;
-        }
 
         // Find the average
         BigInteger nBitsAvg = nBitsTotal.divide(BigInteger.valueOf(this.N_POW_AVERAGING_WINDOW));
