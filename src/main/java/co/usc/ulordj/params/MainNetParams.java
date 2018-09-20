@@ -56,6 +56,8 @@ public class MainNetParams extends AbstractUlordNetParams {
         subsidyDecreaseBlockCount = 840960;
         spendableCoinbaseDepth = 100;
 
+        nPowMaxAdjustDown = 32;
+        nPowMaxAdjustUp = 48;
         minActualTimespan = (averagingWindowTimespan * (100 - nPowMaxAdjustUp))/100;
         maxActualTimespan = (averagingWindowTimespan * (100 + nPowMaxAdjustDown))/100;
 
