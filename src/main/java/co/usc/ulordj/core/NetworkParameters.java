@@ -107,7 +107,7 @@ public abstract class NetworkParameters {
             UldBlock genesisBlock = new UldBlock(n, UldBlock.BLOCK_VERSION_GENESIS);
             UldTransaction t = new UldTransaction(n);
             ByteArrayOutputStream scriptPubKeyBytes = new ByteArrayOutputStream();
-            if(n.id == ID_MAINNET || n.id == ID_REGTEST) {
+            if(n.id.equals(ID_MAINNET) || n.id.equals(ID_REGTEST)) {
                 // A script containing the difficulty bits and the following message: "Change the World with Us. 22/May/2018, 00:00:00, GMT"
                 byte[] bytes = Utils.HEX.decode
                         ("04ffff001d0104344368616e67652074686520576f726c6420776974682055732e2032322f4d61792f323031382c2030303a30303a30302c20474d54");
