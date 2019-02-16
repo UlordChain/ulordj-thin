@@ -2,6 +2,7 @@ $ git log --format='%aN' | sort -u
 
 Yeou Sunn Liu
 Teh Sunn Liu
+Kwuaint Li
 
 Aaron Voisine
 Adam Mackler
