@@ -56,7 +56,7 @@ public class Context {
      * @param params The network parameters that will be associated with this context.
      */
     public Context(NetworkParameters params) {
-        log.info("Creating ulordj {} context.", ULORDJ_VERSION);
+        log.debug("Creating ulordj {} context.", ULORDJ_VERSION);
         this.params = params;
         lastConstructed = this;
         // We may already have a context in our TLS slot. This can happen a lot during unit tests, so just ignore it.
