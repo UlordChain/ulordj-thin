@@ -16,7 +16,7 @@ To get started, it is best to have the latest JDK and Maven installed. The HEAD 
 
 #### Building from the command line
 
-To perform a full build use
+To perform a full building use
 ```
 mvn clean package
 ```
